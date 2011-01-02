@@ -218,19 +218,22 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 	{
 		DeviceInfo &di = GetDevive(ths);
 		KeyState ks = di.keyState;
-		if (size == sizeof(BYTE) * 100)
+		if (size == sizeof(BYTE) * 0x100)
 		{
 			BYTE* kb = static_cast<BYTE*>(data);
 			ks.coin = (kb[DIK_F2] & 0x80 && ks.coin == 0) ? 1 : 0;
 			ks.start = (kb[DIK_A] & 0x80 && ks.start == 0) ? 1 : 0;
+			ks.tocontinue=(kb[DIK_ESCAPE] & 0x80 && ks.tocontinue == 0) ? 1 : 0;
 
 			di.keyState.coin = (kb[DIK_F2] & 0x80) ? 1 : 0;
 			di.keyState.start = (kb[DIK_A] & 0x80) ? 1 : 0;
+			di.keyState.tocontinue = (kb[DIK_ESCAPE] & 0x80) ? 1 : 0;
 
 			g_KeydownProc((BYTE)GetDeviceID(ths), ks);
 
 			kb[DIK_F2] = ks.coin == 1 ? kb[DIK_F2] : 0;
 			kb[DIK_A] = ks.start == 1 ? kb[DIK_A] : 0;
+			kb[DIK_ESCAPE] = ks.tocontinue == 1 ? kb[DIK_ESCAPE] : 0;
 		}
 	}
 }

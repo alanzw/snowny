@@ -1,0 +1,6 @@
+; SFCoin.def : Declares the module parameters for the DLL.
+
+LIBRARY      "SFCoin"
+
+EXPORTS
+    ; Explicit exports can go here

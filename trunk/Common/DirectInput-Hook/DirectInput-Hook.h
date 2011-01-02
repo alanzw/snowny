@@ -29,6 +29,7 @@ struct KeyState
 {
 	BYTE coin;
 	BYTE start;
+	BYTE tocontinue;
 };
 
 // 模拟按键事件

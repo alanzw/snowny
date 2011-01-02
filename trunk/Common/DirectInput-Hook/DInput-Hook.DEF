@@ -3,3 +3,4 @@ EXPORTS
 	InstallHook
 	RemoveHook
 	DIHKeyDown
+	DIHSetKDProc
