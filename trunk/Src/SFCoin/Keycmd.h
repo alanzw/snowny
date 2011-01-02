@@ -1,11 +1,13 @@
 #pragma once
 #include <vector>
 #define IDK_A		0x1e
-#define IDX_UP		0xC8
+#define IDK_UP		0xC8
 #define IDK_DOWN	0xd0
 #define IDK_RIGHT    0xCD
 #define IDK_LEFT           0xCB
 #define IDK_BACKSAPCE  0x0e
+#define IDK_ESC        0x01
+
 
 class CKeycmd
 {

@@ -7,7 +7,7 @@ CContrlCenter g_ContrlCenter;
 
 
 CContrlCenter::CContrlCenter(void):m_cmdTitle2SelectChar(L"m_cmdTitle2SelectChar"),m_cmdDemo2SelectChar(L"m_cmdDemo2SelectChar"),
-m_cmdMainmenu2Title(L"m_cmdMainmenu2Title"),m_cmdSetting(L"m_cmdSetting")
+m_cmdMainmenu2Title(L"m_cmdMainmenu2Title"),m_cmdSetting(L"m_cmdSetting"),m_bIsBusy(FALSE)
 {
 	TRACE(L"StreetFighter CContrlCenter::CContrlCenter\n");
 }
@@ -21,33 +21,40 @@ bool CContrlCenter::Init()
 	TRACE(L"StreetFighter CContrlCenter::Init()\n");
 	m_Config.ReadConfig(L"config.ini");
 	DIHSetKDProc(KeyProc);
-	DWORD interval=1000;
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_DOWN,interval);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
-
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_DOWN,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-
+	DWORD interval=500;
 	m_cmdMainmenu2Title.InsertCmd(IDK_BACKSAPCE,interval);
 	m_cmdMainmenu2Title.InsertCmd(IDK_DOWN,interval);
 	m_cmdMainmenu2Title.InsertCmd(IDK_A,interval);
 
-	//SETTING
-	m_cmdSetting.InsertCmd(IDK_A,interval);
-	m_cmdSetting.InsertCmd(IDK_DOWN,interval);
-	m_cmdSetting.InsertCmd(IDK_A,interval);
+	interval=400;
+	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval+1000);
+	m_cmdTitle2SelectChar.InsertCmd(IDK_DOWN,interval);
+	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);     //进入mainmenu
+	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval+1000);
+	interval=1000;
+	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
+	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
+	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
+
+	interval=400;
+	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
+	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval+1000);
+	m_cmdDemo2SelectChar.InsertCmd(IDK_DOWN,interval);
+	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);//进入mainmenu
+	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval+1000);
+	interval=1000;
+	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
+	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
+	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
+
+
+	//SETTING,原点：title
+	interval=400;
 	m_cmdSetting.InsertCmd(IDK_A,interval+1000);
+	m_cmdSetting.InsertCmd(IDK_DOWN,interval);
+	m_cmdSetting.InsertCmd(IDK_A,interval);     //进入mainmenu
+	m_cmdSetting.InsertCmd(IDK_A,interval+1000);//进入setting
+	interval=200;
 	int j=0;
 	for( j=0;j<abs(m_Config.Difficulty);j++)
 	{
@@ -78,7 +85,16 @@ bool CContrlCenter::Init()
 		else
 			m_cmdSetting.InsertCmd(IDK_LEFT,interval);
 	}
-	m_cmdSetting.InsertCmd(IDK_BACKSAPCE,interval);
+	//进入select
+	interval=1000;
+	m_cmdSetting.InsertCmd(IDK_A,interval);
+	m_cmdSetting.InsertCmd(IDK_A,interval);
+	m_cmdSetting.InsertCmd(IDK_A,interval);
+	//返回到mainmenu
+	interval=800;
+	m_cmdSetting.InsertCmd(IDK_BACKSAPCE,2500);
+	m_cmdSetting.InsertCmd(IDK_UP,interval);
+	m_cmdSetting.InsertCmd(IDK_A,interval);
 	TRACE(L"StreetFighter CContrlCenter::Init() compelet\n");
 	return true;
 }
@@ -87,8 +103,15 @@ void CContrlCenter::Run()
 	GAMEFLOW oldGameFlow=flow_start;
 	BOOL bSetting=FALSE;
 	Sleep(2000);
+	//快速跨越开机动画
+	while(flow_titlemenu!=g_GameFlow)
+	{
+		DIHKeyDown(0,IDK_A);
+		Sleep(1000);
+	}
 	while(1)
 	{
+		//检测状态切换
 		if(g_GameFlow!=oldGameFlow)
 		{
 			TRACE(L"StreetFighter GameFlow:%d\n",g_GameFlow);
@@ -97,44 +120,75 @@ void CContrlCenter::Run()
 			case flow_start:
 				break;
 			case flow_titlemenu:
+				//初始设置
 				if(!bSetting)
 				{
-					Sleep(1000);
+					m_bIsBusy=TRUE;
 					m_cmdSetting.Excute();
+					Sleep(2000);
 					m_cmdMainmenu2Title.Excute();
 					bSetting=TRUE;
+					m_bIsBusy=FALSE;
 				}
 				break;
 			case flow_demo:
 				break;
 			case flow_mainmenu:
+				//游戏结束后回到mainmenu
 				if(oldGameFlow==flow_continue)
 				{
+					m_bIsBusy=TRUE;
 					Sleep(1500);
 					DIHKeyDown(0,IDK_A);      //画廊里有很多画
 					m_cmdMainmenu2Title.Excute();
+					m_bIsBusy=FALSE;
 				}
 				break;
 			case flow_selectchar:
+				{
+					DWORD cunt=10;
+					while(cunt-->0)
+					{
+						Sleep(1000);
+						TRACE(L"StreetFighter count:%d\n",cunt);
+						//游戏开始
+						if(g_GameFlow==flow_game)
+							break;
+					}
+					//默认角色
+					if(g_GameFlow!=flow_game)
+					{
+						DIHKeyDown(0,IDK_A);
+						Sleep(1000);
+						DIHKeyDown(0,IDK_A);
+					}
+				}
 				break;
 			default:
 				break;
 			}
 			oldGameFlow = g_GameFlow;
 		}
-		if(!bSetting)
-		{
-			DIHKeyDown(0,IDK_A);
-			Sleep(1000);
-		}
+
 		if(m_bStart)
 		{
+			TRACE(L"StreetFighter m_bStart game_flow %d  coin %d\n",g_GameFlow,g_ContrlCenter.m_Players[0].GetCoinNumber());
 			if(g_ContrlCenter.m_Players[0].GetCoinNumber()>g_ContrlCenter.m_Config.UnitCoin)
 			{
+				//进入角色选择
 				if(flow_titlemenu==g_GameFlow)
+				{
 					g_ContrlCenter.m_cmdTitle2SelectChar.Excute();
+					//减币
+					g_ContrlCenter.m_Players[0].SetCoinNumber(g_ContrlCenter.m_Players[0].GetCoinNumber()-g_ContrlCenter.m_Config.UnitCoin);
+				}
 				else if(flow_demo==g_GameFlow)
+				{
 					g_ContrlCenter.m_cmdDemo2SelectChar.Excute();
+					//减币
+					g_ContrlCenter.m_Players[0].SetCoinNumber(g_ContrlCenter.m_Players[0].GetCoinNumber()-g_ContrlCenter.m_Config.UnitCoin);
+				}
+				
 			}
 			m_bStart=FALSE;
 		}
@@ -144,28 +198,42 @@ void CContrlCenter::Run()
 }
 VOID KeyProc(BYTE id, KeyState& state)
 {
-	//TRACE(L"StreetFighter KeyProc\n");
-	if(state.coin==1)//投币
+	if(state.coin==1)//投币,任何时候都有效
 	{
-		g_ContrlCenter.m_Players[id].SetCoinNumber(g_ContrlCenter.m_Players[0].GetCoinNumber()+1);
+		g_ContrlCenter.m_Players[id].SetCoinNumber(g_ContrlCenter.m_Players[id].GetCoinNumber()+1);
+		state.coin=0;
 		TRACE(L"StreetFighter insert coin:%d\n",g_ContrlCenter.m_Players[id].GetCoinNumber());
 	}
-	else if(state.start==1)    //开始
+	if(state.start==1&&(flow_titlemenu==g_GameFlow||flow_demo==g_GameFlow))//开始
 	{
 		TRACE(L"StreetFighter start\n");
 		g_ContrlCenter.m_bStart=TRUE;
-		switch(g_GameFlow)
+		state.start=0;
+	}
+	//start key to continue
+	if(state.start==1&&flow_continue==g_GameFlow)
+	{
+		TRACE(L"StreetFighter continue\n");
+		if(g_ContrlCenter.m_Players[id].GetCoinNumber()>g_ContrlCenter.m_Config.UnitCoin)
 		{
-		case flow_titlemenu:
-			break;
-		case flow_demo:
-			break;
-		case flow_continue:
-			break;
-		default:
-			break;
+			DIHKeyDown(0,IDK_ESC);
+			//减币
+			g_ContrlCenter.m_Players[0].SetCoinNumber(g_ContrlCenter.m_Players[0].GetCoinNumber()-g_ContrlCenter.m_Config.UnitCoin);
+			TRACE(L"StreetFighter continue coin %d\n",g_ContrlCenter.m_Players[id].GetCoinNumber());
 		}
-	}//else
-	state.coin=0;
-	state.start=0;
+		else
+			TRACE(L"StreetFighter continue failed coin %d\n",g_ContrlCenter.m_Players[id].GetCoinNumber());
+		state.start=0;
+	}
+	if(g_ContrlCenter.m_bIsBusy)
+	{
+		state.start=0;
+		TRACE(L"StreetFighter start shielded\n");
+	}
+	if(g_GameFlow!=flow_game)
+		state.esc=0;
+#ifndef DEBUG
+	state.backspace=0;
+	state.enter=0;
+#endif
 }

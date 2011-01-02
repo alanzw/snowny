@@ -223,17 +223,23 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 			BYTE* kb = static_cast<BYTE*>(data);
 			ks.coin = (kb[DIK_F2] & 0x80 && ks.coin == 0) ? 1 : 0;
 			ks.start = (kb[DIK_A] & 0x80 && ks.start == 0) ? 1 : 0;
-			ks.tocontinue=(kb[DIK_ESCAPE] & 0x80 && ks.tocontinue == 0) ? 1 : 0;
+			ks.esc=(kb[DIK_ESCAPE] & 0x80 && ks.esc == 0) ? 1 : 0;
+			ks.backspace=(kb[DIK_BACKSPACE] & 0x80 && ks.backspace == 0) ? 1 : 0;
+			ks.enter=(kb[DIK_RETURN] & 0x80 && ks.enter == 0) ? 1 : 0;
 
 			di.keyState.coin = (kb[DIK_F2] & 0x80) ? 1 : 0;
 			di.keyState.start = (kb[DIK_A] & 0x80) ? 1 : 0;
-			di.keyState.tocontinue = (kb[DIK_ESCAPE] & 0x80) ? 1 : 0;
+			di.keyState.esc = (kb[DIK_ESCAPE] & 0x80) ? 1 : 0;
+			di.keyState.backspace = (kb[DIK_BACKSPACE] & 0x80) ? 1 : 0;
+			di.keyState.enter = (kb[DIK_RETURN] & 0x80) ? 1 : 0;
 
 			g_KeydownProc((BYTE)GetDeviceID(ths), ks);
 
 			kb[DIK_F2] = ks.coin == 1 ? kb[DIK_F2] : 0;
 			kb[DIK_A] = ks.start == 1 ? kb[DIK_A] : 0;
-			kb[DIK_ESCAPE] = ks.tocontinue == 1 ? kb[DIK_ESCAPE] : 0;
+			kb[DIK_ESCAPE] = ks.esc == 1 ? kb[DIK_ESCAPE] : 0;
+			kb[DIK_BACKSPACE] = ks.backspace == 1 ? kb[DIK_BACKSPACE] : 0;
+			kb[DIK_RETURN] = ks.enter == 1 ? kb[DIK_RETURN] : 0;
 		}
 	}
 }

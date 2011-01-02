@@ -80,7 +80,11 @@ void GameFlowUpdate()
 	try
 	{
 		if(*(DWORD*)pCunterTime!=0&&g_GameFlow!=flow_continue)
+		{
+			EnterCriticalSection(&g_sc_gameflow);
 			g_GameFlow=flow_continue;
+			LeaveCriticalSection(&g_sc_gameflow);
+		}
 	}
 	catch (CException* e)
 	{
