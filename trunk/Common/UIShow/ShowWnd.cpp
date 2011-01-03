@@ -56,7 +56,10 @@ int CShowWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	TRACE(L"bbbb CShowWnd ImageEx GetWidth: %d   GetHeight: %d", m_bakWidth, m_bakHeight);
 	m_pImage->InitAnimation(this->GetSafeHwnd(), CPoint(0, 0));
 
-	//SetTimer(NULL, 100, NULL);
+	//ret = SetTimer(1, 100, NULL);
+
+	TRACE(L"bbbb ImageEx SetTimer %d  GetlastError %d\n", ret, GetLastError());
+	//::SetTimer(this->GetSafeHwnd(), 1, 100, NULL);
 
 	return 0;
 }
@@ -68,6 +71,6 @@ void CShowWnd::OnTimer(UINT_PTR nIDEvent)
 
 	TRACE(L"bbbb ImageEx OnTimer \n");
 
-	m_pImage->InitAnimation(this->GetSafeHwnd(), CPoint(0, 0));
+	//m_pImage->InitAnimation(this->GetSafeHwnd(), CPoint(0, 0));
 	CWnd::OnTimer(nIDEvent);
 }

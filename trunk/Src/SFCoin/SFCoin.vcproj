@@ -276,10 +276,6 @@
 				RelativePath=".\SFCoin.h"
 				>
 			</File>
-			<File
-				RelativePath=".\stdafx.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -292,6 +288,10 @@
 			</File>
 			<File
 				RelativePath=".\res\SFCoin.rc2"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.h"
 				>
 			</File>
 		</Filter>

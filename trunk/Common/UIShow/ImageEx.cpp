@@ -89,6 +89,7 @@ bool ImageEx::InitAnimation(HWND hWnd, CPoint pt /*= CPoint(0,0)*/, int width/* 
 
 	if (IsAnimatedGIF())
 	{
+		TRACE(_T("GIF is initialized\n"));
 		if (m_hThread == NULL)
 		{
 		
@@ -111,7 +112,6 @@ bool ImageEx::InitAnimation(HWND hWnd, CPoint pt /*= CPoint(0,0)*/, int width/* 
 	}
 	else
 	{
-		TRACE("bbbb ImageEx::InitAnimation()");
 		if (m_transparent)
 		{
 			DrawTransprentWindow();
@@ -472,6 +472,8 @@ void ImageEx::DrawTransprentWindow()
 		rect.Width = hmWidth;
 		rect.Height = hmHeight;
 		graphics.DrawImage(this, rect, 0, 0, hmWidth,hmHeight, UnitPixel );
+
+		TRACE("bbbb gif DrawImage width %d, height %d", hmWidth, hmHeight);
 
 		//RectF rect;
 		//rect.X = 50;

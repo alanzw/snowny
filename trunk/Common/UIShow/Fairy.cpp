@@ -14,20 +14,19 @@ CFairy::~CFairy(void)
 	GdiplusShutdown(m_gdiplusToken);
 }
 
-void CFairy::CreateTransparentWnd(int id, std::wstring picName, CPoint pt, int width /*= 0*/, int height/* = 0*/)
+void CFairy::CreateTransparentWnd(CWnd *parent,int id, std::wstring picName, CPoint pt, int width /*= 0*/, int height/* = 0*/)
 {
 	if ( width == 0 || height == 0)
 	{
 		width = GetSystemMetrics(SM_CXSCREEN);
 		height = GetSystemMetrics(SM_CYSCREEN);
 	}
-
 	m_showWnd = new CShowWnd(picName);
 	m_showWnd->CreateEx(WS_EX_TOPMOST   |   WS_EX_TOOLWINDOW,
 		AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW,::LoadCursor(NULL,   IDC_ARROW),  
 		HBRUSH(COLOR_WINDOW+1),   NULL),
 		_T("MyPopupWindow "), WS_POPUP,
-		CRect(CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT), NULL ,NULL ,NULL); 
+		CRect(CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT), parent ,NULL ,NULL); 
 
 	m_showWnd->ShowWindow(SW_HIDE);
 
@@ -70,7 +69,7 @@ void CFairy::DestroyWnd( int id )
 	}
 	CWnd* wnd = m_showWndList[id];
 	wnd->DestroyWindow();
-	delete m_showWnd;
+	delete wnd;
 	m_showWndList.erase(iter);
 }
 
@@ -86,7 +85,7 @@ void CFairy::DestroyAllWnd()
 }
 void CFairy::ShowWnd( int id )
 {
-	m_showWndList[id]->ShowWindow(SW_NORMAL);
+	m_showWndList[id]->ShowWindow(SW_SHOWNA);
 }
 
 void CFairy::HideWnd( int id )

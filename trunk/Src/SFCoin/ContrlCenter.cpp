@@ -22,13 +22,23 @@ bool CContrlCenter::Init()
 	TRACE(L"StreetFighter CContrlCenter::Init()\n");
 	m_Config.ReadConfig(L"config.ini");
 	TRACE("StreetFighter GAME WND:%d\n",0);
-	m_GameWnd=::FindWindow(NULL,L"STREET FIGHTER IV");
-	TRACE("StreetFighter GAME WND:%d\n",m_GameWnd);
+	HWND wnd=0;
+	while(0==wnd)
+	{
+		wnd=::FindWindow(L"STREET FIGHTER IV",L"STREET FIGHTER IV");
+		Sleep(100);
+	}
+	m_GameWnd.Attach(wnd);
+	TRACE("StreetFighter GAME WND:%d\n",wnd);
+	m_ScreenX=GetSystemMetrics(SM_CXSCREEN);
+	m_ScreenY=GetSystemMetrics(SM_CYSCREEN);
 	DIHSetKDProc(KeyProc);
 
-	m_Fairy.CreateTransparentWnd(STANDBYBG,L"SF4Con\\StandbyBG.jpg",CPoint(0,0));
-	m_Fairy.CreateTransparentWnd(INSERTCOIN,L"SF4Con\\InsertCoin.png",CPoint(50,50));
-	m_Fairy.CreateCoinInsert(CREDIT, L"SF4Con\\Num.png", 1, 0, m_Config.UnitCoin, CPoint(0,0));
+	m_Fairy.CreateTransparentWnd(&m_GameWnd,STANDBYBG,L"SF4Con\\StandbyBG.jpg",CPoint(0,0));
+	m_Fairy.CreateTransparentWnd(&m_GameWnd,INSERTCOIN,L"SF4Con\\InsertCoin.png",CPoint(m_ScreenX/2-20,m_ScreenY-200));
+	m_Fairy.CreateTransparentWnd(&m_GameWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(m_ScreenX/2-20,200));
+	m_Fairy.CreateTransparentWnd(&m_GameWnd,CREDITTEXT,L"SF4Con\\CREDIT.png",CPoint(m_ScreenX/2-150,m_ScreenY-100));
+	m_Fairy.CreateCoinInsert(CREDIT, L"SF4Con\\Num.png", 0, 0, m_Config.UnitCoin,CPoint(m_ScreenX/2-20,m_ScreenY-100));
 	
 
 
@@ -123,6 +133,7 @@ void CContrlCenter::Run()
 	while(1)
 	{
 		SetActiveWindow(m_GameWnd);
+		
 		//检测状态切换
 		if(g_GameFlow!=oldGameFlow)
 		{
@@ -132,7 +143,6 @@ void CContrlCenter::Run()
 			case flow_start:
 				break;
 			case flow_titlemenu:
-				//m_Fairy.ShowWnd(STANDBYBG);
 				//初始设置
 				if(!bSetting)
 				{
@@ -145,19 +155,28 @@ void CContrlCenter::Run()
 					m_bIsBusy=FALSE;
 					//m_CoverScreen.ShowWindow(SW_HIDE);
 				}
-				//m_Fairy.HideWnd(STANDBYBG);
+				else
+				{
+					;//m_Fairy.ShowWnd(STANDBYBG);
+				}
 				if(bSetting)
 				{
 					m_Fairy.ShowWnd(INSERTCOIN);
+					m_Fairy.ShowWnd(CREDITTEXT);
+					m_Fairy.ShowWnd(CREDIT);
 				}
 				break;
 			case flow_demo:
+				m_Fairy.HideWnd(STANDBYBG);
 				if(bSetting)
 				{
 					m_Fairy.ShowWnd(INSERTCOIN);
+					m_Fairy.ShowWnd(CREDITTEXT);
+					m_Fairy.ShowWnd(CREDIT);
 				}
 				break;
 			case flow_mainmenu:
+				m_Fairy.ShowWnd(STANDBYBG);
 				//游戏结束后回到mainmenu
 				if(oldGameFlow==flow_continue)
 				{
@@ -172,6 +191,8 @@ void CContrlCenter::Run()
 			case flow_selectchar:
 				{
 					m_Fairy.HideWnd(INSERTCOIN);
+					m_Fairy.HideWnd(STANDBYBG);
+					m_Fairy.ShowWnd(TIMECOUNTER);
 					DWORD cunt=10;
 					while(cunt-->0)
 					{
@@ -181,6 +202,7 @@ void CContrlCenter::Run()
 						if(g_GameFlow==flow_game)
 							break;
 					}
+					m_Fairy.HideWnd(TIMECOUNTER);
 					//默认角色
 					if(g_GameFlow!=flow_game)
 					{
@@ -193,23 +215,25 @@ void CContrlCenter::Run()
 			default:
 				break;
 			}
-			
-			if(m_bInsertCoin)
-			{
-				m_Fairy.DestroyWnd(CREDIT);
-				int life=m_Players[0].GetCoinNumber()/m_Config.UnitCoin;
-				int rem=m_Players[0].GetCoinNumber()%m_Config.UnitCoin;
-				m_Fairy.CreateCoinInsert(CREDIT, L"SF4Con\\Num.png", life, rem, m_Config.UnitCoin, CPoint(0,0));
-			}
-			m_Fairy.ShowWnd(CREDIT);
 			oldGameFlow = g_GameFlow;
 		}//IF
 		
-
+		if(m_bInsertCoin)
+		{
+			TRACE(L"StreetFighter m_bInsertCoin\n");
+			m_Fairy.DestroyWnd(CREDIT);
+			TRACE(L"StreetFighter m_bInsertCoin\n");
+			int life=m_Players[0].GetCoinNumber()/m_Config.UnitCoin;
+			int rem=m_Players[0].GetCoinNumber()%m_Config.UnitCoin;
+			m_Fairy.CreateCoinInsert(CREDIT, L"SF4Con\\Num.png", life, rem, m_Config.UnitCoin,CPoint(m_ScreenX/2-20,m_ScreenY-100));
+			m_Fairy.ShowWnd(CREDIT);
+			m_bInsertCoin=FALSE;
+		}
+		
 		if(m_bStart)
 		{
 			TRACE(L"StreetFighter m_bStart game_flow %d  coin %d\n",g_GameFlow,g_ContrlCenter.m_Players[0].GetCoinNumber());
-			if(g_ContrlCenter.m_Players[0].GetCoinNumber()>g_ContrlCenter.m_Config.UnitCoin)
+			if(g_ContrlCenter.m_Players[0].GetCoinNumber()>=g_ContrlCenter.m_Config.UnitCoin)
 			{
 				//进入角色选择
 				if(flow_titlemenu==g_GameFlow)

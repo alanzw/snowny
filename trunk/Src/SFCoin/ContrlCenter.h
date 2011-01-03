@@ -22,6 +22,9 @@
 #define IPSTART	3
 #define INSERTCOIN 4
 #define LOADING 5
+#define TIMECOUNTER  6
+#define CREDITTEXT 7
+
 
 
 VOID KeyProc(BYTE, KeyState&);
@@ -45,6 +48,8 @@ public:
 	 //CScreen m_CoverScreen;
 	 //CSTreetFightScene m_Scene;
 	 CFairy m_Fairy;
-	 HWND m_GameWnd;
+	 CWnd m_GameWnd;
+	 DWORD m_ScreenX;
+	 DWORD m_ScreenY;
 };
 extern CContrlCenter g_ContrlCenter;
