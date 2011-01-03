@@ -11,8 +11,6 @@ CString g_strDemo=L"Game\\Logo\\capcom";
 GAMEFLOW g_GameFlow=flow_start;
 CRITICAL_SECTION g_sc_gameflow;
 
-#pragma comment(lib,"detoured.lib")
-#pragma comment(lib,"detours.lib")
 
 HANDLE (WINAPI* Real_CreateFileW)(
 								  LPCWSTR lpFileName,
