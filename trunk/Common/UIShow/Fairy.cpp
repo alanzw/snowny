@@ -69,10 +69,14 @@ void CFairy::CreateCoinInsert(int id, int life, int coins, int cointsOneLife ,CP
 
 void CFairy::DestroyWnd( int id )
 {
+	std::map<int, CWnd*>::iterator iter = m_showWndList.find(id);
+	if (iter == m_showWndList.end())
+	{
+		return;
+	}
 	CWnd* wnd = m_showWndList[id];
 	wnd->DestroyWindow();
 	delete m_showWnd;
-	std::map<int, CWnd*>::iterator iter = m_showWndList.find(id);
 	m_showWndList.erase(iter);
 }
 
