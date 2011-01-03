@@ -3,11 +3,12 @@
 #include "GlobalVar.h"
 
 
+
 CContrlCenter g_ContrlCenter;
 
 
 CContrlCenter::CContrlCenter(void):m_cmdTitle2SelectChar(L"m_cmdTitle2SelectChar"),m_cmdDemo2SelectChar(L"m_cmdDemo2SelectChar"),
-m_cmdMainmenu2Title(L"m_cmdMainmenu2Title"),m_cmdSetting(L"m_cmdSetting"),m_bIsBusy(FALSE)
+m_cmdMainmenu2Title(L"m_cmdMainmenu2Title"),m_cmdSetting(L"m_cmdSetting"),m_bIsBusy(FALSE)/*,m_Scene(NULL)*/
 {
 	TRACE(L"StreetFighter CContrlCenter::CContrlCenter\n");
 }
@@ -21,6 +22,28 @@ bool CContrlCenter::Init()
 	TRACE(L"StreetFighter CContrlCenter::Init()\n");
 	m_Config.ReadConfig(L"config.ini");
 	DIHSetKDProc(KeyProc);
+
+	m_Fairy.CreateTransparentWnd(STANDBYBG,L"D:\\StandbyBG.jpg",CPoint(0,0));
+	m_Fairy.CreateCoinInsert(INSERTCOIN, 4, 2, 3, CPoint(0,0));
+	
+
+	////CWnd* pTargeWnd = FindWindow(NULL,"STREET FIGHTER IV");
+	//HWND pTargeWnd = GetDesktopWindow();
+	//RECT r;
+	//r.left=0;
+	//r.top=0;
+	//r.bottom=GetSystemMetrics(SM_CYSCREEN)/2;
+	//r.right=GetSystemMetrics(SM_CXSCREEN)/2;
+	//if(NULL==pTargeWnd)
+	//	pTargeWnd=GetDesktopWindow();
+	//TRACE(L"StreetFighter create window \n");
+	//BOOL ret=m_CoverScreen.Create(NULL,NULL,WS_VISIBLE,r,NULL,12345);
+	//TRACE(L"StreetFighter create window ret:%d\n",ret);
+
+	//m_CoverScreen.AddScreen(L"./SF4Con/01.jpg");
+	//m_CoverScreen.AddScreen(L"./SF4Con/02.jpg");
+
+
 	DWORD interval=500;
 	m_cmdMainmenu2Title.InsertCmd(IDK_BACKSAPCE,interval);
 	m_cmdMainmenu2Title.InsertCmd(IDK_DOWN,interval);
@@ -120,16 +143,21 @@ void CContrlCenter::Run()
 			case flow_start:
 				break;
 			case flow_titlemenu:
+				m_Fairy.ShowWnd(STANDBYBG);
+				m_Fairy.ShowWnd(INSERTCOIN);
 				//初始设置
 				if(!bSetting)
 				{
+					//m_CoverScreen.ShowWindow(SW_SHOW);
 					m_bIsBusy=TRUE;
 					m_cmdSetting.Excute();
 					Sleep(2000);
 					m_cmdMainmenu2Title.Excute();
 					bSetting=TRUE;
 					m_bIsBusy=FALSE;
+					//m_CoverScreen.ShowWindow(SW_HIDE);
 				}
+				m_Fairy.HideWnd(STANDBYBG);
 				break;
 			case flow_demo:
 				break;
@@ -137,6 +165,7 @@ void CContrlCenter::Run()
 				//游戏结束后回到mainmenu
 				if(oldGameFlow==flow_continue)
 				{
+					
 					m_bIsBusy=TRUE;
 					Sleep(1500);
 					DIHKeyDown(0,IDK_A);      //画廊里有很多画
@@ -193,7 +222,9 @@ void CContrlCenter::Run()
 			m_bStart=FALSE;
 		}
 		Sleep(1);
-		GameFlowUpdate();
+		//检测是否gameover状态
+		if(flow_game==g_GameFlow)
+			GameFlowUpdate();
 	}
 }
 VOID KeyProc(BYTE id, KeyState& state)

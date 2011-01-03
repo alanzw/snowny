@@ -26,12 +26,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectInput-Hook", "..\Comm
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFCoin", "SFCoin\SFCoin.vcproj", "{545C75C0-03E3-4B97-A9CE-567328CF6E21}"
+	ProjectSection(ProjectDependencies) = postProject
+		{33D29C18-091F-4FD7-BA94-64F93B442216} = {33D29C18-091F-4FD7-BA94-64F93B442216}
+		{A181F2F9-5D2C-4AEB-9309-291F50997A37} = {A181F2F9-5D2C-4AEB-9309-291F50997A37}
+	EndProjectSection
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-	ProjectSection(ProjectDependencies) = postProject
-		{A181F2F9-5D2C-4AEB-9309-291F50997A37} = {A181F2F9-5D2C-4AEB-9309-291F50997A37}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIShow", "..\Common\UIShow\UIShow.vcproj", "{33D29C18-091F-4FD7-BA94-64F93B442216}"

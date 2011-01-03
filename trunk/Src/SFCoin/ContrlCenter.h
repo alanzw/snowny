@@ -3,6 +3,9 @@
 #include "Player.h"
 #include "Config.h"
 #include "../../Common/DirectInput-Hook/DirectInput-Hook.h"
+#include "../../Common/UIShow/Fairy.h"
+#include "./Display/Screen.h"
+
 #define MOST_SIMPLE (-3)
 #define VERY_SIMPLE (-2)
 #define SIMPLE (-1)
@@ -12,6 +15,16 @@
 #define VERY_HARD 3
 #define MOST_HARD 4
 //最简单 非常简单  简单 中等 偏难 困难 非常困难 最难
+
+
+#define STANDBYBG 0
+#define LOADINGBG 1
+#define CREDIT	2
+#define IPSTART	3
+#define INSERTCOIN 4
+#define LOADING 5
+
+
 VOID KeyProc(BYTE, KeyState&);
 static class CContrlCenter
 {
@@ -28,5 +41,9 @@ public:
 	 CPlayer m_Players[2];
 	 BOOL m_bStart;                 //判定玩家是否点击开始
 	 BOOL m_bIsBusy;                //判定游戏是否处于设置，状态切换等忙碌状态
+
+	 //CScreen m_CoverScreen;
+	 //CSTreetFightScene m_Scene;
+	 CFairy m_Fairy;
 };
 extern CContrlCenter g_ContrlCenter;

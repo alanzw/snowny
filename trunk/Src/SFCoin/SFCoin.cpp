@@ -60,6 +60,7 @@ extern DWORD LogicThread(LPVOID pParam);
 BOOL CSFCoinApp::InitInstance()
 {
 	CWinApp::InitInstance();
+	
 	char process[512];
 	GetModuleFileNameA(GetModuleHandle(0), process, sizeof(process));
 	PathStripPathA(process);
@@ -67,10 +68,11 @@ BOOL CSFCoinApp::InitInstance()
 	TRACE("Process:%s\n",process);
 	if(_strnicmp(targetProcess, process,512) == 0)
 	{
+		//MessageBox(NULL,L"he",NULL,MB_OK);
 		DWORD id;
 		TRACE("StreetFighter CreateThread\n");
 		HANDLE h=::CreateThread(0,0,(LPTHREAD_START_ROUTINE)LogicThread,0,0,&id);
-		TRACE("StreetFighter Yes Handle:%08x\n",h);
+		//TRACE("StreetFighter Yes Handle:%08x\n",h);
 	}
 	else
 	{

@@ -53,3 +53,6 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 
+#pragma comment(lib,"gdiplus.lib")
+#include <gdiplus.h>
+using namespace Gdiplus;

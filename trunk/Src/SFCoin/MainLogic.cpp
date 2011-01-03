@@ -5,6 +5,7 @@
 DWORD LogicThread(LPVOID pParam)
 {
 	//CPlayer players[2];
+	MessageBox(NULL,L"he",NULL,MB_OK);
 	TRACE(L"StreetFighter LogicThread\n");
 	if (!InitializeLogic())
 	{

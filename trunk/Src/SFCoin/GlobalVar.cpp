@@ -42,6 +42,7 @@ HANDLE WINAPI Hook_CreateFileW(
 		g_GameFlow=flow_titlemenu;
 		LeaveCriticalSection(&g_sc_gameflow);
 		TRACE(L"StreetFighter ========================CreateFileW:%s",strFileName);
+		TRACE(L"StreetFighter g_GameFlow: %d\n",g_GameFlow);
 	}
 	else if(strFileName.Find(g_strMainmenu,0)!=-1)
 	{
@@ -49,6 +50,7 @@ HANDLE WINAPI Hook_CreateFileW(
 		g_GameFlow=flow_mainmenu;
 		LeaveCriticalSection(&g_sc_gameflow);
 		TRACE(L"StreetFighter ========================CreateFileW:%s",strFileName);
+		TRACE(L"StreetFighter g_GameFlow: %d\n",g_GameFlow);
 	}
 	else if(strFileName.Find(g_strCSelect,0)!=-1)
 	{
@@ -56,6 +58,7 @@ HANDLE WINAPI Hook_CreateFileW(
 		g_GameFlow=flow_selectchar;
 		LeaveCriticalSection(&g_sc_gameflow);
 		TRACE(L"StreetFighter ========================CreateFileW:%s",strFileName);
+		TRACE(L"StreetFighter g_GameFlow: %d\n",g_GameFlow);
 	}
 	else if(strFileName.Find(g_strStarVs,0)!=-1)
 	{
@@ -63,6 +66,7 @@ HANDLE WINAPI Hook_CreateFileW(
 		g_GameFlow=flow_game;
 		LeaveCriticalSection(&g_sc_gameflow);
 		TRACE(L"StreetFighter ========================CreateFileW:%s",strFileName);
+		TRACE(L"StreetFighter g_GameFlow: %d\n",g_GameFlow);
 	}
 	else if(strFileName.Find(g_strDemo,0)!=-1)
 	{
@@ -70,6 +74,7 @@ HANDLE WINAPI Hook_CreateFileW(
 		g_GameFlow=flow_demo;
 		LeaveCriticalSection(&g_sc_gameflow);
 		TRACE(L"StreetFighter ========================CreateFileW:%s",strFileName);
+		TRACE(L"StreetFighter g_GameFlow: %d\n",g_GameFlow);
 	}
 	//TRACE(L"StreetFighter CreateFile:%s",strFileName);
 	return h;
@@ -84,6 +89,7 @@ void GameFlowUpdate()
 			EnterCriticalSection(&g_sc_gameflow);
 			g_GameFlow=flow_continue;
 			LeaveCriticalSection(&g_sc_gameflow);
+			TRACE(L"StreetFighter g_GameFlow: %d\n",g_GameFlow);
 		}
 	}
 	catch (CException* e)
