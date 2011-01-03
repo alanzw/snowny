@@ -117,10 +117,7 @@ std::vector<int> CFairy::GetNumList( int number )
 	std::vector<int> numList;
 	while (true)
 	{
-		if (number)
-		{
-			numList.push_back(number % 10);
-		}
+		numList.push_back(number % 10);
 		number = number / 10;
 		if (number == 0)
 		{
