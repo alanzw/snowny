@@ -72,6 +72,8 @@ void CFairy::DestroyWnd( int id )
 	CWnd* wnd = m_showWndList[id];
 	wnd->DestroyWindow();
 	delete m_showWnd;
+	std::map<int, CWnd*>::iterator iter = m_showWndList.find(id);
+	m_showWndList.erase(iter);
 }
 
 void CFairy::DestroyAllWnd()
@@ -82,6 +84,7 @@ void CFairy::DestroyAllWnd()
 		(*iter).second->DestroyWindow();
 		delete (*iter).second;
 	}
+	m_showWndList.clear();
 }
 void CFairy::ShowWnd( int id )
 {
