@@ -4,7 +4,6 @@
 #include "Config.h"
 #include "../../Common/DirectInput-Hook/DirectInput-Hook.h"
 #include "../../Common/UIShow/Fairy.h"
-#include "./Display/Screen.h"
 
 #define MOST_SIMPLE (-3)
 #define VERY_SIMPLE (-2)
