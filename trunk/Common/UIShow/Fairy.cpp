@@ -36,7 +36,7 @@ void CFairy::CreateTransparentWnd(int id, std::wstring picName, CPoint pt, int w
 }
 
 
-void CFairy::CreateCoinInsert(int id, int life, int coins, int cointsOneLife ,CPoint pt, int width/* = 0*/ , int height/* = 0*/)
+void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins, int cointsOneLife ,CPoint pt, int width/* = 0*/ , int height/* = 0*/)
 {
 	if ( width == 0 || height == 0)
 	{
@@ -46,13 +46,7 @@ void CFairy::CreateCoinInsert(int id, int life, int coins, int cointsOneLife ,CP
 
 	CShowCutRectWnd::CutRectList cutRectList = GetCutRectList(life, coins, cointsOneLife);
 
-	wchar_t res[512]= {0};
-	HMODULE handle = GetModuleHandle(L"JBInjectDll.dll");
-	GetModuleFileName(handle, res, sizeof(res) * sizeof(wchar_t));
-	PathRemoveFileSpec(res);
-
-	std::wstring path = res;
-	std::wstring backgroundPath = path + L"\\Num.png";
+	std::wstring backgroundPath =picName;
 
 	mInsertCointSingleWnd = new CShowCutRectWnd(backgroundPath, cutRectList);
 	mInsertCointSingleWnd->CreateEx(WS_EX_TOPMOST   |   WS_EX_TOOLWINDOW,

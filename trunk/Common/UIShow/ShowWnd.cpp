@@ -53,9 +53,10 @@ int CShowWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_bakHeight =m_pImage->GetHeight();
 
 
-	TRACE(L"bbbb ImageEx GetWidth: %d   GetHeight: %d", m_bakWidth, m_bakHeight);
+	TRACE(L"bbbb CShowWnd ImageEx GetWidth: %d   GetHeight: %d", m_bakWidth, m_bakHeight);
+	m_pImage->InitAnimation(this->GetSafeHwnd(), CPoint(0, 0));
 
-	SetTimer(NULL, 100, NULL);
+	//SetTimer(NULL, 100, NULL);
 
 	return 0;
 }
@@ -63,6 +64,10 @@ int CShowWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CShowWnd::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: Add your message handler code here and/or call default
+
+
+	TRACE(L"bbbb ImageEx OnTimer \n");
+
 	m_pImage->InitAnimation(this->GetSafeHwnd(), CPoint(0, 0));
 	CWnd::OnTimer(nIDEvent);
 }

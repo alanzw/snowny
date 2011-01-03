@@ -73,6 +73,8 @@ bool ImageEx::InitAnimation(HWND hWnd, CPoint pt /*= CPoint(0,0)*/, int width/* 
 	m_imageWidth = width;
 	m_imageHeght = height;
 
+	TRACE("bbbb ImageEx::InitAnimation()1");
+
 	if (width ==0 || height == 0)
 	{
 		m_imageWidth = GetWidth();
@@ -109,6 +111,7 @@ bool ImageEx::InitAnimation(HWND hWnd, CPoint pt /*= CPoint(0,0)*/, int width/* 
 	}
 	else
 	{
+		TRACE("bbbb ImageEx::InitAnimation()");
 		if (m_transparent)
 		{
 			DrawTransprentWindow();
@@ -460,6 +463,8 @@ void ImageEx::DrawTransprentWindow()
 		m_Blend.SourceConstantAlpha= 255;//AC_SRC_ALPHA]
 
 		Graphics graphics(hdcMemory);
+
+		TRACE("bbbb ImageEx::DrawTransprentWindow()");
 
 		RectF rect;
 		rect.X = m_pt.x;

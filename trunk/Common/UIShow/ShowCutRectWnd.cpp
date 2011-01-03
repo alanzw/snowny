@@ -66,7 +66,9 @@ int CShowCutRectWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pImage->AddCutRect(*iter);
 	}
 
-	SetTimer(NULL, 100, NULL);
+
+	m_pImage->InitCutRectAnimation(GetSafeHwnd());
+	//SetTimer(NULL, 100, NULL);
 	return 0;
 }
 
