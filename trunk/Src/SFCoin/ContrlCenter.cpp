@@ -29,15 +29,17 @@ bool CContrlCenter::Init()
 		Sleep(100);
 	}
 	m_GameWnd.Attach(wnd);
+	m_GameWnd.SetWindowPos(NULL,-2,-30,0,0,SWP_NOSIZE);
 	TRACE("StreetFighter GAME WND:%d\n",wnd);
 	m_ScreenX=GetSystemMetrics(SM_CXSCREEN);
 	m_ScreenY=GetSystemMetrics(SM_CYSCREEN);
 	DIHSetKDProc(KeyProc);
 
 	m_Fairy.CreateTransparentWnd(&m_GameWnd,STANDBYBG,L"SF4Con\\StandbyBG.jpg",CPoint(0,0));
-	m_Fairy.CreateTransparentWnd(&m_GameWnd,INSERTCOIN,L"SF4Con\\InsertCoin.png",CPoint(m_ScreenX/2-20,m_ScreenY-200));
-	m_Fairy.CreateTransparentWnd(&m_GameWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(m_ScreenX/2-20,200));
+	m_Fairy.CreateTransparentWnd(&m_GameWnd,INSERTCOIN,L"SF4Con\\InsertCoin.png",CPoint(m_ScreenX/2-80,m_ScreenY-200));
+	//m_Fairy.CreateTransparentWnd(&m_GameWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(m_ScreenX/2-20,200));
 	m_Fairy.CreateTransparentWnd(&m_GameWnd,CREDITTEXT,L"SF4Con\\CREDIT.png",CPoint(m_ScreenX/2-150,m_ScreenY-100));
+	m_Fairy.CreateTransparentWnd(&m_GameWnd,LOADING,L"SF4Con\\Loading.png",CPoint(m_ScreenX/2-20,m_ScreenY-200));
 	m_Fairy.CreateCoinInsert(CREDIT, L"SF4Con\\Num.png", 0, 0, m_Config.UnitCoin,CPoint(m_ScreenX/2-20,m_ScreenY-100));
 	
 
@@ -112,7 +114,7 @@ bool CContrlCenter::Init()
 	m_cmdSetting.InsertCmd(IDK_A,interval);
 	m_cmdSetting.InsertCmd(IDK_A,interval);
 	//返回到mainmenu
-	interval=800;
+	interval=1000;
 	m_cmdSetting.InsertCmd(IDK_BACKSAPCE,2500);
 	m_cmdSetting.InsertCmd(IDK_UP,interval);
 	m_cmdSetting.InsertCmd(IDK_A,interval);
@@ -146,18 +148,16 @@ void CContrlCenter::Run()
 				//初始设置
 				if(!bSetting)
 				{
-					//m_CoverScreen.ShowWindow(SW_SHOW);
 					m_bIsBusy=TRUE;
 					m_cmdSetting.Excute();
 					Sleep(2000);
 					m_cmdMainmenu2Title.Excute();
 					bSetting=TRUE;
 					m_bIsBusy=FALSE;
-					//m_CoverScreen.ShowWindow(SW_HIDE);
 				}
 				else
 				{
-					;//m_Fairy.ShowWnd(STANDBYBG);
+					m_Fairy.ShowWnd(STANDBYBG);
 				}
 				if(bSetting)
 				{
@@ -192,8 +192,10 @@ void CContrlCenter::Run()
 				{
 					m_Fairy.HideWnd(INSERTCOIN);
 					m_Fairy.HideWnd(STANDBYBG);
+					m_Fairy.HideWnd(LOADING);
+					m_Fairy.CreateTransparentWnd(&m_GameWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(m_ScreenX/2-20,200));
 					m_Fairy.ShowWnd(TIMECOUNTER);
-					DWORD cunt=10;
+					DWORD cunt=20;
 					while(cunt-->0)
 					{
 						Sleep(1000);
@@ -203,6 +205,7 @@ void CContrlCenter::Run()
 							break;
 					}
 					m_Fairy.HideWnd(TIMECOUNTER);
+					m_Fairy.DestroyWnd(TIMECOUNTER);
 					//默认角色
 					if(g_GameFlow!=flow_game)
 					{
@@ -235,20 +238,24 @@ void CContrlCenter::Run()
 			TRACE(L"StreetFighter m_bStart game_flow %d  coin %d\n",g_GameFlow,g_ContrlCenter.m_Players[0].GetCoinNumber());
 			if(g_ContrlCenter.m_Players[0].GetCoinNumber()>=g_ContrlCenter.m_Config.UnitCoin)
 			{
+				m_Fairy.ShowWnd(STANDBYBG);
+				m_Fairy.ShowWnd(LOADING);
 				//进入角色选择
 				if(flow_titlemenu==g_GameFlow)
 				{
-					g_ContrlCenter.m_cmdTitle2SelectChar.Excute();
+					m_cmdTitle2SelectChar.Excute();
 					//减币
-					g_ContrlCenter.m_Players[0].SetCoinNumber(g_ContrlCenter.m_Players[0].GetCoinNumber()-g_ContrlCenter.m_Config.UnitCoin);
+					m_Players[0].SetCoinNumber(m_Players[0].GetCoinNumber()-m_Config.UnitCoin);
 				}
 				else if(flow_demo==g_GameFlow)
 				{
-					g_ContrlCenter.m_cmdDemo2SelectChar.Excute();
+
+					m_cmdDemo2SelectChar.Excute();
 					//减币
-					g_ContrlCenter.m_Players[0].SetCoinNumber(g_ContrlCenter.m_Players[0].GetCoinNumber()-g_ContrlCenter.m_Config.UnitCoin);
+					m_Players[0].SetCoinNumber(m_Players[0].GetCoinNumber()-m_Config.UnitCoin);
 				}
-				g_ContrlCenter.m_bInsertCoin=TRUE;
+				m_Fairy.HideWnd(INSERTCOIN);
+				m_bInsertCoin=TRUE;
 			}
 			m_bStart=FALSE;
 		}
@@ -277,7 +284,7 @@ VOID KeyProc(BYTE id, KeyState& state)
 	if(state.start==1&&flow_continue==g_GameFlow)
 	{
 		TRACE(L"StreetFighter continue\n");
-		if(g_ContrlCenter.m_Players[id].GetCoinNumber()>g_ContrlCenter.m_Config.UnitCoin)
+		if(g_ContrlCenter.m_Players[id].GetCoinNumber()>=g_ContrlCenter.m_Config.UnitCoin)
 		{
 			DIHKeyDown(0,IDK_ESC);
 			//减币
