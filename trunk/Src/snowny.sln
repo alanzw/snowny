@@ -26,16 +26,23 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectInput-Hook", "..\Comm
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFCoin", "SFCoin\SFCoin.vcproj", "{545C75C0-03E3-4B97-A9CE-567328CF6E21}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
+		{E9EBE313-1D5C-4E34-846B-7EBBE3EE6CDE} = {E9EBE313-1D5C-4E34-846B-7EBBE3EE6CDE}
 		{33D29C18-091F-4FD7-BA94-64F93B442216} = {33D29C18-091F-4FD7-BA94-64F93B442216}
 		{A181F2F9-5D2C-4AEB-9309-291F50997A37} = {A181F2F9-5D2C-4AEB-9309-291F50997A37}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIShow", "..\Common\UIShow\UIShow.vcproj", "{33D29C18-091F-4FD7-BA94-64F93B442216}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIShow", "..\Common\UIShow\UIShow.vcproj", "{33D29C18-091F-4FD7-BA94-64F93B442216}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFCoinSet", "SFCoinSet\SFCoinSet.vcproj", "{B9759212-7BD2-4DB5-B685-2487539D5427}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -63,6 +70,10 @@ Global
 		{33D29C18-091F-4FD7-BA94-64F93B442216}.Debug|Win32.Build.0 = Debug|Win32
 		{33D29C18-091F-4FD7-BA94-64F93B442216}.Release|Win32.ActiveCfg = Release|Win32
 		{33D29C18-091F-4FD7-BA94-64F93B442216}.Release|Win32.Build.0 = Release|Win32
+		{B9759212-7BD2-4DB5-B685-2487539D5427}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B9759212-7BD2-4DB5-B685-2487539D5427}.Debug|Win32.Build.0 = Debug|Win32
+		{B9759212-7BD2-4DB5-B685-2487539D5427}.Release|Win32.ActiveCfg = Release|Win32
+		{B9759212-7BD2-4DB5-B685-2487539D5427}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,5 +83,6 @@ Global
 		{A181F2F9-5D2C-4AEB-9309-291F50997A37} = {17D9EE71-61BA-4EA2-B74F-B2E3C5C82925}
 		{33D29C18-091F-4FD7-BA94-64F93B442216} = {17D9EE71-61BA-4EA2-B74F-B2E3C5C82925}
 		{545C75C0-03E3-4B97-A9CE-567328CF6E21} = {B8D97AB8-2F06-4189-AF81-AD5A78C08B3E}
+		{B9759212-7BD2-4DB5-B685-2487539D5427} = {B8D97AB8-2F06-4189-AF81-AD5A78C08B3E}
 	EndGlobalSection
 EndGlobal
