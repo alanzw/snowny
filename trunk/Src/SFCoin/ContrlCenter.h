@@ -28,7 +28,7 @@
 
 
 VOID KeyProc(BYTE, KeyState&);
-static class CContrlCenter
+class CContrlCenter
 {
 public:
 	CContrlCenter(void);
@@ -42,7 +42,7 @@ public:
 	 CKeycmd m_cmdMainmenu2Title;   //游戏结束后回到title画面
 	 CPlayer m_Players[2];
 	 BOOL m_bStart;                 //判定玩家是否点击开始
-	 BOOL m_bInsertCoin;
+	 BOOL m_bCoinsChanged;
 	 BOOL m_bIsBusy;                //判定游戏是否处于设置，状态切换等忙碌状态
 
 	 //CScreen m_CoverScreen;
