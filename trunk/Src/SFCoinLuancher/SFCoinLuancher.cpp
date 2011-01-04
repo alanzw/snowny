@@ -70,29 +70,31 @@ BOOL CSFCoinLuancherApp::InitInstance()
  
  		if (ERROR_SUCCESS == RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1))
 		{
+			STARTUPINFO si = {0};
+			si.cb = sizeof(si);
+			PROCESS_INFORMATION pi = {0};
+			CreateProcessW(TEXT("SF4Launcher.exe"), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+			HWND targetWnd = NULL;
+			while (targetWnd == NULL && WaitForSingleObject(pi.hProcess, 0) == WAIT_TIMEOUT)
+			{
+				Sleep(100);
+				targetWnd = FindWindow(NULL, TEXT("《街头霸王IV》"));
+			}
+			if (targetWnd != NULL)
+			{
+				targetWnd = GetDlgItem(targetWnd, 0x1);
+				SendMessage(targetWnd, WM_LBUTTONDOWN, 0, 0);
+				SendMessage(targetWnd, WM_LBUTTONUP, 0, 0);
+			}
+
+			Sleep(5000);
+
+			dll[0] = 0;
+
+			RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1);
 			RegCloseKey(appKey);
  		}
 	}
-
-	STARTUPINFO si = {0};
-	si.cb = sizeof(si);
-	PROCESS_INFORMATION pi = {0};
-	CreateProcessW(TEXT("SF4Launcher.exe"), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
-	HWND targetWnd = NULL;
-	while (targetWnd == NULL && WaitForSingleObject(pi.hProcess, 0) == WAIT_TIMEOUT)
-	{
-		Sleep(100);
-		targetWnd = FindWindow(NULL, TEXT("《街头霸王IV》"));
-	}
-	if (targetWnd != NULL)
-	{
-		targetWnd = GetDlgItem(targetWnd, 0x1);
-		TRACE(TEXT("aaaaaaaaaaaa %x"), targetWnd);
-		SendMessage(targetWnd, WM_LBUTTONDOWN, 0, 0);
-		TRACE(TEXT("bbbbbbbbbbbbb"));
-		SendMessage(targetWnd, WM_LBUTTONUP, 0, 0);
-	}
-
 
 //	CSFCoinLuancherDlg dlg;
 // 	m_pMainWnd = &dlg;
