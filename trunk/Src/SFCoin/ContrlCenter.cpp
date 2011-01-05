@@ -164,8 +164,6 @@ void CContrlCenter::Run()
 		//检测状态切换
 		if(g_GameFlow!=oldGameFlow)
 		{
-			// 因为KeyCmd会修改g_GameFlow，所以提前保存oldGameFlow,cxb
-			oldGameFlow = g_GameFlow;
 			TRACE(L"StreetFighter GameFlow change to :%d\n",g_GameFlow);
 			switch(g_GameFlow)
 			{
@@ -240,6 +238,7 @@ void CContrlCenter::Run()
 			default:
 				break;
 			}
+			oldGameFlow = g_GameFlow;
 		}//IF
 		
 		if(m_bCoinsChanged)
