@@ -12,14 +12,14 @@ public:
 	~CFairy(void);
 
 	//pt: SHowWnd×óÉÏ½ÇµÄÎ»ÖÃ
-	void CreateTransparentWnd(CWnd *parent, int id, std::wstring picName, CPoint pt, int width = 0 , int height = 0);
+	void CreateTransparentWnd(CWnd *parent, int id, std::wstring picName, CPoint pt, int imageWidth = 0 , int imageHeight = 0);
 	void DestroyWnd(int id);
 	void ShowWnd(int id);
 	void HideWnd(int id);
 	void ShowAllWnd();
 	void HideAllWnd();
 	void DestroyAllWnd();
-	void CreateCoinInsert(int id, std::wstring picName, int life, int coins, int cointsOneLife ,CPoint pt, int width = 0 , int height = 0);
+	void CreateCoinInsert(int id, std::wstring picName, int life, int coins, int cointsOneLife ,CPoint pt, int imageWidth = 0 , int imageHeight = 0);
 	void ResetCoinInsert(int life, int coins, int coinsOneLife);
 
 private:

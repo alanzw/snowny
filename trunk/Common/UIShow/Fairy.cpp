@@ -14,14 +14,10 @@ CFairy::~CFairy(void)
 	GdiplusShutdown(m_gdiplusToken);
 }
 
-void CFairy::CreateTransparentWnd(CWnd *parent,int id, std::wstring picName, CPoint pt, int width /*= 0*/, int height/* = 0*/)
+void CFairy::CreateTransparentWnd(CWnd *parent,int id, std::wstring picName, CPoint pt, int imageWidth /*= 0*/, int imageHeight/* = 0*/)
 {
-	if ( width == 0 || height == 0)
-	{
-		width = GetSystemMetrics(SM_CXSCREEN);
-		height = GetSystemMetrics(SM_CYSCREEN);
-	}
 	m_showWnd = new CShowWnd(picName);
+	m_showWnd->SetImageSize(imageWidth, imageHeight);
 	m_showWnd->CreateEx(WS_EX_TOPMOST   |   WS_EX_TOOLWINDOW,
 		AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW,::LoadCursor(NULL,   IDC_ARROW),  
 		HBRUSH(COLOR_WINDOW+1),   NULL),
@@ -29,20 +25,13 @@ void CFairy::CreateTransparentWnd(CWnd *parent,int id, std::wstring picName, CPo
 		CRect(CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT), parent ,NULL ,NULL); 
 
 	m_showWnd->ShowWindow(SW_HIDE);
-
-	m_showWnd->MoveWindow(pt.x, pt.y, width, height);
+	m_showWnd->MoveWindow(pt.x, pt.y, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 	m_showWndList.insert(std::make_pair(id, m_showWnd));
 }
 
 
-void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins, int coinsOneLife ,CPoint pt, int width/* = 0*/ , int height/* = 0*/)
+void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins, int coinsOneLife ,CPoint pt, int imageWidth/* = 0*/ , int imageHeight/* = 0*/)
 {
-	if ( width == 0 || height == 0)
-	{
-		width = GetSystemMetrics(SM_CXSCREEN);
-		height = GetSystemMetrics(SM_CYSCREEN);
-	}
-
 	CShowCutRectWnd::CutRectList cutRectList = GetCutRectList(life, coins, coinsOneLife);
 
 	std::wstring backgroundPath =picName;
@@ -55,7 +44,7 @@ void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins,
 		CRect(CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT), NULL ,NULL ,NULL); 
 
 	mInsertCointSingleWnd->ShowWindow(SW_HIDE);
-	mInsertCointSingleWnd->MoveWindow(pt.x, pt.y, width, height);
+	mInsertCointSingleWnd->MoveWindow(pt.x, pt.y, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 
 	m_showWndList.insert(std::make_pair(id, mInsertCointSingleWnd));
 }

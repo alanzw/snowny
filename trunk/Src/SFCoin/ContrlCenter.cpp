@@ -29,7 +29,9 @@ LRESULT CALLBACK NewWindowProc(
 	if (inited == FALSE)
 	{
 		parentWnd.Attach(hwnd);
-		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,STANDBYBG,L"SF4Con\\StandbyBG.jpg",CPoint(0,0));
+		int screenWidth =GetSystemMetrics(SM_CXSCREEN);
+		int screentHeight =GetSystemMetrics(SM_CYSCREEN);
+		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,STANDBYBG,L"SF4Con\\StandbyBG.jpg",CPoint(0,0),screenWidth, screentHeight);
 		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,INSERTCOIN,L"SF4Con\\InsertCoin.png",CPoint(g_ContrlCenter.m_ScreenX/2-80,g_ContrlCenter.m_ScreenY-200));
 		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(g_ContrlCenter.m_ScreenX/2-20,200));
 		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,CREDITTEXT,L"SF4Con\\CREDIT.png",CPoint(g_ContrlCenter.m_ScreenX/2-150,g_ContrlCenter.m_ScreenY-100));

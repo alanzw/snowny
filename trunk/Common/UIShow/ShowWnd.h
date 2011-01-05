@@ -8,8 +8,10 @@ class CShowWnd : public CWnd
 	DECLARE_DYNAMIC(CShowWnd)
 
 public:
-	CShowWnd(std::wstring picName,int width = 0, int Heght = 0);
+	CShowWnd(std::wstring picName);
 	virtual ~CShowWnd();
+
+	void SetImageSize(int width, int height);
 
 protected:
 	DECLARE_MESSAGE_MAP()

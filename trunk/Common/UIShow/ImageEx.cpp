@@ -452,12 +452,9 @@ void ImageEx::SetTransprentWindow( bool transprent )
 
 void ImageEx::DrawTransprentWindow()
 {
-	long hmWidth = m_imageWidth;
-	long hmHeight = m_imageHeght;
-
 	HDC hDC = GetDC(m_hWnd);	
 	HDC hdcMemory=CreateCompatibleDC(hDC);
-	HBITMAP hBitMap=CreateCompatibleBitmap(hDC, GetWidth(),GetHeight());
+	HBITMAP hBitMap=CreateCompatibleBitmap(hDC, m_imageWidth, m_imageHeght);
 	SelectObject(hdcMemory,hBitMap);
 	if (hDC)
 	{
@@ -470,37 +467,28 @@ void ImageEx::DrawTransprentWindow()
 
 		TRACE("bbbb ImageEx::DrawTransprentWindow()");
 
+
 		RectF rect;
 		rect.X = m_pt.x;
 		rect.Y = m_pt.y;
-		rect.Width = hmWidth;
-		rect.Height = hmHeight;
-		graphics.DrawImage(this, rect, 0, 0, hmWidth,hmHeight, UnitPixel );
+		rect.Width = m_imageWidth;
+		rect.Height = m_imageHeght;
+		graphics.DrawImage(this, rect, 0, 0, GetWidth(),GetHeight(), UnitPixel );
 
-		TRACE("bbbb gif DrawImage width %d, height %d", hmWidth, hmHeight);
-
-		//RectF rect;
-		//rect.X = 50;
-		//rect.Y = 50;
-		//rect.Width = 20;
-		//rect.Height = 40;
-		//graphics.DrawImage(this, rect, m_pt.x, m_pt.y, 20,40, UnitPixel );
-
-		//rect.X = 20+50;
-		//graphics.DrawImage(this, rect, 0, m_pt.y, 20, 40, UnitPixel );
+		TRACE("bbbb gif DrawImage width %d, height %d", GetWidth(), GetHeight());
 
 
 		RECT rct;
 		::GetWindowRect(m_hWnd, &rct);
 		POINT ptWinPos={0, 0};
-		SIZE sizeWindow={GetWidth() , GetHeight()};
+		SIZE sizeWindow={m_imageWidth , m_imageHeght};
 		BOOL bRet=FALSE;
 		POINT ptSrc={0, 0};
 		DWORD dwExStyle=GetWindowLong(m_hWnd,GWL_EXSTYLE);
 		if((dwExStyle&0x80000)!=0x80000)
 			SetWindowLong(m_hWnd,GWL_EXSTYLE,dwExStyle^0x80000);
 
-		::UpdateLayeredWindow(m_hWnd, hDC, NULL,
+		::UpdateLayeredWindow(m_hWnd, hDC, &ptWinPos,
 			&sizeWindow, hdcMemory, &ptSrc,0, &m_Blend, 2);
 
 		DeleteObject(hBitMap);
@@ -514,16 +502,13 @@ void ImageEx::DrawNormalWindow()
 	HDC hDC = GetDC(m_hWnd);	
 	if (hDC)
 	{
-		long hmWidth = m_imageWidth;
-		long hmHeight = m_imageHeght;
-
 		Graphics graphics(hDC);
 		RectF rect;
 		rect.X = 0;
 		rect.Y = 0;
-		rect.Width = hmWidth;
-		rect.Height = hmHeight;
-		graphics.DrawImage(this, rect, m_pt.x, m_pt.y, hmWidth,hmHeight, UnitPixel );
+		rect.Width = m_imageWidth;
+		rect.Height = m_imageHeght;
+		graphics.DrawImage(this, rect, m_pt.x, m_pt.y, GetWidth(),GetHeight(), UnitPixel );
 		ReleaseDC(m_hWnd, hDC);
 	}
 }

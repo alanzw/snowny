@@ -11,11 +11,11 @@
 
 IMPLEMENT_DYNAMIC(CShowWnd, CWnd)
 
-CShowWnd::CShowWnd(std::wstring picName, int width /*= 0*/, int height/* = 0*/)
+CShowWnd::CShowWnd(std::wstring picName)
 {
 	m_picName = picName;
-	m_bakWidth = width;
-	m_bakHeight = height;
+	m_bakWidth = 0;
+	m_bakHeight = 0;
 }
 
 CShowWnd::~CShowWnd()
@@ -48,13 +48,14 @@ int CShowWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	DWORD ret = GetLastError();
 
 	m_pImage->SetTransprentWindow(true);
-
-	m_bakWidth  =m_pImage->GetWidth();
-	m_bakHeight =m_pImage->GetHeight();
-
+	if (m_bakWidth == 0 || m_bakHeight == 0)
+	{
+		m_bakWidth  =m_pImage->GetWidth();
+		m_bakHeight =m_pImage->GetHeight();
+	}
 
 	TRACE(L"bbbb CShowWnd ImageEx GetWidth: %d   GetHeight: %d", m_bakWidth, m_bakHeight);
-	m_pImage->InitAnimation(this->GetSafeHwnd(), CPoint(0, 0));
+	m_pImage->InitAnimation(this->GetSafeHwnd(), CPoint(0, 0),m_bakWidth, m_bakHeight);
 
 	//ret = SetTimer(1, 100, NULL);
 
@@ -73,4 +74,10 @@ void CShowWnd::OnTimer(UINT_PTR nIDEvent)
 
 	//m_pImage->InitAnimation(this->GetSafeHwnd(), CPoint(0, 0));
 	CWnd::OnTimer(nIDEvent);
+}
+
+void CShowWnd::SetImageSize( int width, int height )
+{
+	m_bakWidth = width;
+	m_bakHeight = height;
 }
