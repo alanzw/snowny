@@ -9,11 +9,12 @@ class CShowCutRectWnd : public CWnd
 	DECLARE_DYNAMIC(CShowCutRectWnd)
 
 public:
-
 	typedef std::vector<RectF> CutRectList;
 	typedef CutRectList::iterator CutRectListIter;
 	CShowCutRectWnd(std::wstring picName, CutRectList cutRectList);
 	virtual ~CShowCutRectWnd();
+
+	void ResetCutRect(const CutRectList &cutRectList);
 private:
 	ImageEx *m_pImage;
 	std::wstring m_picName;
@@ -23,7 +24,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 
 

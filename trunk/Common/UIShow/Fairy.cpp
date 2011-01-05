@@ -35,7 +35,7 @@ void CFairy::CreateTransparentWnd(CWnd *parent,int id, std::wstring picName, CPo
 }
 
 
-void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins, int cointsOneLife ,CPoint pt, int width/* = 0*/ , int height/* = 0*/)
+void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins, int coinsOneLife ,CPoint pt, int width/* = 0*/ , int height/* = 0*/)
 {
 	if ( width == 0 || height == 0)
 	{
@@ -43,7 +43,7 @@ void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins,
 		height = GetSystemMetrics(SM_CYSCREEN);
 	}
 
-	CShowCutRectWnd::CutRectList cutRectList = GetCutRectList(life, coins, cointsOneLife);
+	CShowCutRectWnd::CutRectList cutRectList = GetCutRectList(life, coins, coinsOneLife);
 
 	std::wstring backgroundPath =picName;
 
@@ -58,6 +58,12 @@ void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins,
 	mInsertCointSingleWnd->MoveWindow(pt.x, pt.y, width, height);
 
 	m_showWndList.insert(std::make_pair(id, mInsertCointSingleWnd));
+}
+
+void CFairy::ResetCoinInsert( int life, int coins, int coinsOneLife )
+{
+	CShowCutRectWnd::CutRectList cutRectList = GetCutRectList(life, coins, coinsOneLife);
+	mInsertCointSingleWnd->ResetCutRect(cutRectList);
 }
 
 void CFairy::DestroyWnd( int id )

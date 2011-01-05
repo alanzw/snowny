@@ -164,6 +164,8 @@ void CContrlCenter::Run()
 		//检测状态切换
 		if(g_GameFlow!=oldGameFlow)
 		{
+			// 因为KeyCmd会修改g_GameFlow，所以提前保存oldGameFlow,cxb
+			oldGameFlow = g_GameFlow;
 			TRACE(L"StreetFighter GameFlow change to :%d\n",g_GameFlow);
 			switch(g_GameFlow)
 			{
@@ -180,12 +182,9 @@ void CContrlCenter::Run()
 					bSetting=TRUE;
 					m_bIsBusy=FALSE;
 				}
-				else
-				{
-					m_Fairy.ShowWnd(STANDBYBG);
-				}
 				if(bSetting)
 				{
+					m_Fairy.ShowWnd(STANDBYBG);
 					m_Fairy.ShowWnd(INSERTCOIN);
 					m_Fairy.ShowWnd(CREDITTEXT);
 					m_Fairy.ShowWnd(CREDIT);
@@ -218,8 +217,8 @@ void CContrlCenter::Run()
 					m_Fairy.HideWnd(STANDBYBG);
 					m_Fairy.HideWnd(LOADING);
 					//m_Fairy.CreateTransparentWnd(&m_GameWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(m_ScreenX/2-20,200));
-					//m_Fairy.ShowWnd(TIMECOUNTER);
-					DWORD cunt=20;
+					m_Fairy.ShowWnd(TIMECOUNTER);
+					DWORD cunt=22;// 有延迟，cxb
 					while(cunt-->0)
 					{
 						Sleep(1000);
@@ -229,7 +228,6 @@ void CContrlCenter::Run()
 							break;
 					}
 					m_Fairy.HideWnd(TIMECOUNTER);
-					m_Fairy.DestroyWnd(TIMECOUNTER);
 					//默认角色
 					if(g_GameFlow!=flow_game)
 					{
@@ -242,18 +240,14 @@ void CContrlCenter::Run()
 			default:
 				break;
 			}
-			oldGameFlow = g_GameFlow;
 		}//IF
 		
 		if(m_bCoinsChanged)
 		{
 			TRACE(L"StreetFighter m_bCoinsChanged\n");
-			//m_Fairy.DestroyWnd(CREDIT);
-			TRACE(L"StreetFighter m_bCoinsChanged\n");
 			int life=m_Players[0].GetCoinNumber()/m_Config.UnitCoin;
 			int rem=m_Players[0].GetCoinNumber()%m_Config.UnitCoin;
-			//m_Fairy.CreateCoinInsert(CREDIT, L"SF4Con\\Num.png", life, rem, m_Config.UnitCoin,CPoint(m_ScreenX/2-20,m_ScreenY-100));
-			//m_Fairy.ShowWnd(CREDIT);
+			m_Fairy.ResetCoinInsert(life, rem, m_Config.UnitCoin);
 			m_bCoinsChanged=FALSE;
 		}
 		

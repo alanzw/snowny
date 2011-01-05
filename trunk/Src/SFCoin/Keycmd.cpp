@@ -38,8 +38,8 @@ void CKeycmd::Excute()
 	std::vector<KEYCMD>::iterator it;
 	for(it=m_vCmds.begin();it!=m_vCmds.end();it++)
 	{
-		Sleep( (*it).interval );
-		DIHKeyDown(0,(BYTE)(*it).key_id);
-		TRACE(L"StreetFighter DIHKeyDown:%x\n",(*it).key_id);
+		Sleep(it->interval);
+		DIHKeyDown(0, (BYTE)it->key_id);
+		TRACE(L"StreetFighter DIHKeyDown:%x Internal:%d\n",(*it).key_id, it->interval);
 	}
 }

@@ -353,7 +353,11 @@ void ImageEx::ThreadAnimation()
 ////////////////////////////////////////////////////////////////////////////////
 bool ImageEx::DrawFrameGIF()
 {
-
+	if (!::IsWindowVisible(m_hWnd))
+	{
+		m_nFramePosition = 0;
+		return false;
+	}
 	::WaitForSingleObject(m_hPause, INFINITE);
 	long hmHeight = GetHeight();
 

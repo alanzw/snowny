@@ -20,6 +20,7 @@ public:
 	void HideAllWnd();
 	void DestroyAllWnd();
 	void CreateCoinInsert(int id, std::wstring picName, int life, int coins, int cointsOneLife ,CPoint pt, int width = 0 , int height = 0);
+	void ResetCoinInsert(int life, int coins, int coinsOneLife);
 
 private:
 	CShowCutRectWnd::CutRectList GetCutRectList( int life, int coins, int cointsOneLife );
