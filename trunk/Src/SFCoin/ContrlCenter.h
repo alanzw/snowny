@@ -45,11 +45,7 @@ public:
 	 BOOL m_bCoinsChanged;
 	 BOOL m_bIsBusy;                //判定游戏是否处于设置，状态切换等忙碌状态
 
-	 //CScreen m_CoverScreen;
-	 //CSTreetFightScene m_Scene;
 	 CFairy m_Fairy;
 	 CWnd m_GameWnd;
-	 DWORD m_ScreenX;
-	 DWORD m_ScreenY;
 };
 extern CContrlCenter g_ContrlCenter;

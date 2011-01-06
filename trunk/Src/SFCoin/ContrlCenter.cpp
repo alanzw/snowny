@@ -31,12 +31,13 @@ LRESULT CALLBACK NewWindowProc(
 		parentWnd.Attach(hwnd);
 		int screenWidth =GetSystemMetrics(SM_CXSCREEN);
 		int screentHeight =GetSystemMetrics(SM_CYSCREEN);
-		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,STANDBYBG,L"SF4Con\\StandbyBG.jpg",CPoint(0,0),screenWidth, screentHeight);
-		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,INSERTCOIN,L"SF4Con\\InsertCoin.png",CPoint(g_ContrlCenter.m_ScreenX/2-80,g_ContrlCenter.m_ScreenY-200));
-		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(g_ContrlCenter.m_ScreenX/2-20,200));
-		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,CREDITTEXT,L"SF4Con\\CREDIT.png",CPoint(g_ContrlCenter.m_ScreenX/2-150,g_ContrlCenter.m_ScreenY-100));
-		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,LOADING,L"SF4Con\\Loading.png",CPoint(g_ContrlCenter.m_ScreenX/2-20,g_ContrlCenter.m_ScreenY-200));
-		g_ContrlCenter.m_Fairy.CreateCoinInsert(CREDIT, L"SF4Con\\Num.png", 0, 0, g_ContrlCenter.m_Config.UnitCoin,CPoint(g_ContrlCenter.m_ScreenX/2-20,g_ContrlCenter.m_ScreenY-100));
+		// 这里要用正确的width和height计算坐标，不然窗口可能不显示，cxb
+		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,STANDBYBG,L"SF4Con\\StandbyBG.jpg", CPoint(0,0), screenWidth, screentHeight);
+		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,INSERTCOIN,L"SF4Con\\InsertCoin.png",CPoint(screenWidth/2-80, screentHeight - 200));
+		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(screenWidth/2-20, 200));
+		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,CREDITTEXT,L"SF4Con\\CREDIT.png",CPoint(screenWidth/2-150, screentHeight - 100));
+		g_ContrlCenter.m_Fairy.CreateTransparentWnd(&parentWnd,LOADING,L"SF4Con\\Loading.png",CPoint(screenWidth/2-20, screentHeight - 200));
+		g_ContrlCenter.m_Fairy.CreateCoinInsert(CREDIT, L"SF4Con\\Num.png", 0, 0, g_ContrlCenter.m_Config.UnitCoin,CPoint(screenWidth / 2 - 20, screentHeight - 100));
 		inited = TRUE;
 	}
 
@@ -60,8 +61,6 @@ bool CContrlCenter::Init()
 	OldWindowProc = (WNDPROC)SetWindowLong(wnd, GWL_WNDPROC, (LONG)NewWindowProc);
 
 	TRACE("StreetFighter GAME WND:%d\n",wnd);
-	m_ScreenX=GetSystemMetrics(SM_CXSCREEN);
-	m_ScreenY=GetSystemMetrics(SM_CYSCREEN);
 	DIHSetKDProc(KeyProc);
 
 	//m_Fairy.CreateTransparentWnd(&m_GameWnd,STANDBYBG,L"SF4Con\\StandbyBG.jpg",CPoint(0,0));

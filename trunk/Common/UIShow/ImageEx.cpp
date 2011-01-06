@@ -480,7 +480,7 @@ void ImageEx::DrawTransprentWindow()
 
 		RECT rct;
 		::GetWindowRect(m_hWnd, &rct);
-		POINT ptWinPos={0, 0};
+		POINT ptWinPos={rct.left, rct.top};// 这里要用窗口本身的位置，不能用{0,0}，倒计时跑到窗口左上角就是因为它，cxb
 		SIZE sizeWindow={m_imageWidth , m_imageHeght};
 		BOOL bRet=FALSE;
 		POINT ptSrc={0, 0};
