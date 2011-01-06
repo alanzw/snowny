@@ -18,35 +18,16 @@ void CFairy::CreateTransparentWnd(CWnd *parent,int id, std::wstring picName, CPo
 {
 	m_showWnd = new CShowWnd(picName);
 	m_showWnd->SetImageSize(imageWidth, imageHeight);
-	m_showWnd->CreateEx(WS_EX_TOPMOST   |   WS_EX_TOOLWINDOW,
-		AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW,::LoadCursor(NULL,   IDC_ARROW),  
-		HBRUSH(COLOR_WINDOW+1),   NULL),
-		_T("MyPopupWindow "), WS_POPUP,
-		CRect(CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT), parent ,NULL ,NULL); 
-
-	m_showWnd->ShowWindow(SW_HIDE);
-	m_showWnd->MoveWindow(pt.x, pt.y, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-	m_showWndList.insert(std::make_pair(id, m_showWnd));
+	CreateWnd(parent, m_showWnd, pt, id);
 }
 
 
 void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins, int coinsOneLife ,CPoint pt, int imageWidth/* = 0*/ , int imageHeight/* = 0*/)
 {
 	CShowCutRectWnd::CutRectList cutRectList = GetCutRectList(life, coins, coinsOneLife);
-
 	std::wstring backgroundPath =picName;
-
 	mInsertCointSingleWnd = new CShowCutRectWnd(backgroundPath, cutRectList);
-	mInsertCointSingleWnd->CreateEx(WS_EX_TOPMOST   |   WS_EX_TOOLWINDOW,
-		AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW,::LoadCursor(NULL,   IDC_ARROW),  
-		HBRUSH(COLOR_WINDOW+1),   NULL), 
-		_T("MyPopupWindow "), WS_POPUP,
-		CRect(CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT), NULL ,NULL ,NULL); 
-
-	mInsertCointSingleWnd->ShowWindow(SW_HIDE);
-	mInsertCointSingleWnd->MoveWindow(pt.x, pt.y, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-
-	m_showWndList.insert(std::make_pair(id, mInsertCointSingleWnd));
+	CreateWnd(NULL, mInsertCointSingleWnd, pt, id);
 }
 
 void CFairy::ResetCoinInsert( int life, int coins, int coinsOneLife )
@@ -175,4 +156,16 @@ CShowCutRectWnd::CutRectList CFairy::GetCutRectList( int life, int coins, int co
 	cutRectList.push_back(rect);
 
 	return cutRectList;
+}
+
+void CFairy::CreateWnd( CWnd * parent, CWnd* wnd, CPoint pt, int id )
+{
+	wnd->CreateEx(WS_EX_TOPMOST   |   WS_EX_TOOLWINDOW,
+		AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW,::LoadCursor(NULL,   IDC_ARROW),  
+		HBRUSH(COLOR_WINDOW+1),   NULL),
+		_T("MyPopupWindow "), WS_POPUP,
+		CRect(CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT), parent ,NULL ,NULL); 
+	wnd->ShowWindow(SW_HIDE);
+	wnd->MoveWindow(pt.x, pt.y, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	m_showWndList.insert(std::make_pair(id, wnd));
 }

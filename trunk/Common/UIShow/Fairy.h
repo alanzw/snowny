@@ -13,6 +13,7 @@ public:
 
 	//pt: SHowWnd×óÉÏ½ÇµÄÎ»ÖÃ
 	void CreateTransparentWnd(CWnd *parent, int id, std::wstring picName, CPoint pt, int imageWidth = 0 , int imageHeight = 0);
+
 	void DestroyWnd(int id);
 	void ShowWnd(int id);
 	void HideWnd(int id);
@@ -23,6 +24,7 @@ public:
 	void ResetCoinInsert(int life, int coins, int coinsOneLife);
 
 private:
+	void CreateWnd( CWnd * parent, CWnd* wnd, CPoint pt, int id );
 	CShowCutRectWnd::CutRectList GetCutRectList( int life, int coins, int cointsOneLife );
 	std::vector<int> GetNumList( int number );
 private:
