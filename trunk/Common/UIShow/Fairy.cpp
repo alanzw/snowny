@@ -106,23 +106,14 @@ CShowCutRectWnd::CutRectList CFairy::GetCutRectList( int life, int coins, int co
 {
 	CShowCutRectWnd::CutRectList cutRectList;
 
-	std::vector<int> lifeList;
-	std::vector<int> coinList;
-	std::vector<int> coinsOneLifeList;
-	lifeList = GetNumList(life);
-	coinList = GetNumList(coins);
-	coinsOneLifeList = GetNumList(cointsOneLife);
 	RectF rect;
+	rect.X = 0;
 	rect.Y = 0;
 	rect.Width = 20;
 	rect.Height = 40;
 	//life
-	std::vector<int>::reverse_iterator iter = lifeList.rbegin();
-	for (; iter != lifeList.rend(); ++iter)
-	{
-		rect.X = ( *iter ) * 20;
-		cutRectList.push_back(rect);
-	}
+	AddCutRects(life, rect, cutRectList);
+
 	//:
 	rect.X = 10 * 20;
 	cutRectList.push_back(rect);
@@ -132,24 +123,14 @@ CShowCutRectWnd::CutRectList CFairy::GetCutRectList( int life, int coins, int co
 	cutRectList.push_back(rect);
 
 	//coins
-	iter = coinList.rbegin();
-	for (; iter != coinList.rend(); ++iter)
-	{
-		rect.X = ( *iter ) * 20;
-		cutRectList.push_back(rect);
-	}
+	AddCutRects(coins, rect, cutRectList);
 
 	//  /
 	rect.X = 12 * 20;
 	cutRectList.push_back(rect);
 
 	//cointsOneLife
-	iter = coinsOneLifeList.rbegin();
-	for (; iter != coinsOneLifeList.rend(); ++iter)
-	{
-		rect.X = ( *iter ) * 20;
-		cutRectList.push_back(rect);
-	}
+	AddCutRects(cointsOneLife, rect, cutRectList);
 
 	//  ]
 	rect.X = 13 * 20;
@@ -168,4 +149,16 @@ void CFairy::CreateWnd( CWnd * parent, CWnd* wnd, CPoint pt, int id )
 	wnd->ShowWindow(SW_HIDE);
 	wnd->MoveWindow(pt.x, pt.y, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 	m_showWndList.insert(std::make_pair(id, wnd));
+}
+
+void CFairy::AddCutRects( int number, RectF rect, CShowCutRectWnd::CutRectList &cutRectList )
+{
+	std::vector<int> lifeList;
+	lifeList = GetNumList(number);
+	std::vector<int>::reverse_iterator iter = lifeList.rbegin();
+	for (; iter != lifeList.rend(); ++iter)
+	{
+		rect.X = ( *iter ) * 20;
+		cutRectList.push_back(rect);
+	}
 }

@@ -26,6 +26,8 @@ public:
 private:
 	void CreateWnd( CWnd * parent, CWnd* wnd, CPoint pt, int id );
 	CShowCutRectWnd::CutRectList GetCutRectList( int life, int coins, int cointsOneLife );
+	void AddCutRects( int number, RectF rect, CShowCutRectWnd::CutRectList &cutRectList );
+
 	std::vector<int> GetNumList( int number );
 private:
 	GdiplusStartupInput		m_gdiplusStartupInput;
