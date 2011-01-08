@@ -35,17 +35,25 @@ public:
 	~CContrlCenter(void);
 	bool Init();
 	void Run();
-	 CConfig m_Config;
-	 CKeycmd m_cmdDemo2SelectChar;  //游戏开始，从demo画面到角色选择
-	 CKeycmd m_cmdTitle2SelectChar; //游戏开始，从Title画面到角色选择
-	 CKeycmd m_cmdSetting;          //游戏初始设置
-	 CKeycmd m_cmdMainmenu2Title;   //游戏结束后回到title画面
-	 CPlayer m_Players[2];
-	 BOOL m_bStart;                 //判定玩家是否点击开始
-	 BOOL m_bCoinsChanged;
-	 BOOL m_bIsBusy;                //判定游戏是否处于设置，状态切换等忙碌状态
+	CConfig m_Config;
 
-	 CFairy m_Fairy;
-	 CWnd m_GameWnd;
+	CKeycmd m_cmdDemo2Titile;		//游戏开始，从demo画面到title画面
+	CKeycmd m_cmdtitle2Mainmenu;	//游戏开始，从title画面到Mainmenu画面
+	CKeycmd m_mainmenu2SelectChar;	//游戏开始，从Mainmenu到角色选择
+	CKeycmd m_mainMenu2Title;		//游戏从Mainmenu到title画面
+	CKeycmd m_mainMenuSetting2SelectChar;		//游戏初始设置
+	CKeycmd m_selectChar2mainMenu;				//游戏选角色到主菜单
+	
+	//CKeycmd m_cmdDemo2SelectChar;  //游戏开始，从demo画面到角色选择
+	//CKeycmd m_cmdTitle2SelectChar; //游戏开始，从Title画面到角色选择
+	//CKeycmd m_cmdSetting;          //游戏初始设置
+	//CKeycmd m_cmdMainmenu2Title;   //游戏结束后回到title画面
+	CPlayer m_Players[2];
+	BOOL m_bStart;                 //判定玩家是否点击开始
+	BOOL m_bCoinsChanged;
+	BOOL m_bIsBusy;                //判定游戏是否处于设置，状态切换等忙碌状态
+
+	CFairy m_Fairy;
+	CWnd m_GameWnd;
 };
 extern CContrlCenter g_ContrlCenter;

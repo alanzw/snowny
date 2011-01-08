@@ -7,8 +7,13 @@
 CContrlCenter g_ContrlCenter;
 
 
-CContrlCenter::CContrlCenter(void):m_cmdTitle2SelectChar(L"m_cmdTitle2SelectChar"),m_cmdDemo2SelectChar(L"m_cmdDemo2SelectChar"),
-m_cmdMainmenu2Title(L"m_cmdMainmenu2Title"),m_cmdSetting(L"m_cmdSetting"),m_bIsBusy(FALSE)/*,m_Scene(NULL)*/,m_bCoinsChanged(FALSE)
+CContrlCenter::CContrlCenter(void):m_cmdDemo2Titile(L"m_cmdDemo2Titile")
+,m_cmdtitle2Mainmenu(L"m_cmdtitle2Mainmenu")
+,m_mainmenu2SelectChar(L"m_mainmenu2SelectChar")
+,m_mainMenu2Title(L"m_mainMenu2Title")
+,m_mainMenuSetting2SelectChar(L"m_mainMenuSetting2SelectChar")
+,m_selectChar2mainMenu(L"m_selectChar2mainMenu")
+,m_bIsBusy(FALSE)/*,m_Scene(NULL)*/,m_bCoinsChanged(FALSE)
 {
 	TRACE(L"StreetFighter CContrlCenter::CContrlCenter\n");
 }
@@ -63,95 +68,85 @@ bool CContrlCenter::Init()
 	TRACE("StreetFighter GAME WND:%d\n",wnd);
 	DIHSetKDProc(KeyProc);
 
-	//m_Fairy.CreateTransparentWnd(&m_GameWnd,STANDBYBG,L"SF4Con\\StandbyBG.jpg",CPoint(0,0));
-	//m_Fairy.CreateTransparentWnd(&m_GameWnd,INSERTCOIN,L"SF4Con\\InsertCoin.png",CPoint(m_ScreenX/2-80,m_ScreenY-200));
-	//m_Fairy.CreateTransparentWnd(&m_GameWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(m_ScreenX/2-20,200));
-	//m_Fairy.CreateTransparentWnd(&m_GameWnd,CREDITTEXT,L"SF4Con\\CREDIT.png",CPoint(m_ScreenX/2-150,m_ScreenY-100));
-	//m_Fairy.CreateTransparentWnd(&m_GameWnd,LOADING,L"SF4Con\\Loading.png",CPoint(m_ScreenX/2-20,m_ScreenY-200));
-	//m_Fairy.CreateCoinInsert(CREDIT, L"SF4Con\\Num.png", 0, 0, m_Config.UnitCoin,CPoint(m_ScreenX/2-20,m_ScreenY-100));
+	int interval;
 
-	DWORD interval=500;
-	m_cmdMainmenu2Title.InsertCmd(IDK_BACKSAPCE,interval);
-	m_cmdMainmenu2Title.InsertCmd(IDK_DOWN,interval);
-	m_cmdMainmenu2Title.InsertCmd(IDK_A,interval);
+	{
+		interval = 400;
+		m_cmdDemo2Titile.InsertCmd(IDK_A, interval);
+	}
+	{
+		interval = 400;
+		m_cmdtitle2Mainmenu.InsertCmd(IDK_A, interval);
+		m_cmdtitle2Mainmenu.InsertCmd(IDK_DOWN, interval);
+		m_cmdtitle2Mainmenu.InsertCmd(IDK_A, interval);
+	}
+	{
+		interval = 400;
+		m_mainmenu2SelectChar.InsertCmd(IDK_A, interval);
+		m_mainmenu2SelectChar.InsertCmd(IDK_A, interval);
+		interval = 800;		//这两下更慢点		
+		m_mainmenu2SelectChar.InsertCmd(IDK_A, interval);
+		m_mainmenu2SelectChar.InsertCmd(IDK_A, interval);
+	}
+	{
+		interval = 600;
+		m_mainMenu2Title.InsertCmd(IDK_BACKSAPCE,interval);
+		m_mainMenu2Title.InsertCmd(IDK_DOWN,interval);
+		m_mainMenu2Title.InsertCmd(IDK_A,interval);
+	}
 
-	interval=400;
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval+1000);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_DOWN,interval);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);     //进入mainmenu
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval+1000);
-	interval=1000;
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdTitle2SelectChar.InsertCmd(IDK_A,interval);
+	m_mainMenuSetting2SelectChar.InsertCmd(IDK_A,interval+1000);//进入setting
+	interval= 500;
 
-	interval=400;
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval+1000);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_DOWN,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);//进入mainmenu
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval+1000);
-	interval=1000;
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-	m_cmdDemo2SelectChar.InsertCmd(IDK_A,interval);
-
-
-	//SETTING,原点：title
-	interval=400;
-	m_cmdSetting.InsertCmd(IDK_A,interval+1000);
-	m_cmdSetting.InsertCmd(IDK_DOWN,interval);
-	m_cmdSetting.InsertCmd(IDK_A,interval);     //进入mainmenu
-	m_cmdSetting.InsertCmd(IDK_A,interval+1000);//进入setting
-	interval=200;
 	int j=0;
 	for( j=0;j<abs(m_Config.Difficulty);j++)
 	{
 		if(m_Config.Difficulty>0)
-			m_cmdSetting.InsertCmd(IDK_RIGHT,interval);
+			m_mainMenuSetting2SelectChar.InsertCmd(IDK_RIGHT,interval);
 		else
-			m_cmdSetting.InsertCmd(IDK_LEFT,interval);
+			m_mainMenuSetting2SelectChar.InsertCmd(IDK_LEFT,interval);
 	}
-	m_cmdSetting.InsertCmd(IDK_DOWN,interval);
+	m_mainMenuSetting2SelectChar.InsertCmd(IDK_DOWN,interval);
 	for(j=0;j<abs(m_Config.Rounds);j++)
 	{
 		if(m_Config.Rounds>0)
 		{
 			TRACE("StreetFighter IDK_RIGHT\n");
-			m_cmdSetting.InsertCmd(IDK_RIGHT,interval);
+			m_mainMenuSetting2SelectChar.InsertCmd(IDK_RIGHT,interval);
 		}
 		else
 		{
 			TRACE("StreetFighter IDK_LEFT\n");
-			m_cmdSetting.InsertCmd(IDK_LEFT,interval);
+			m_mainMenuSetting2SelectChar.InsertCmd(IDK_LEFT,interval);
 		}
 	}
-	m_cmdSetting.InsertCmd(IDK_DOWN,interval);
+	m_mainMenuSetting2SelectChar.InsertCmd(IDK_DOWN,interval);
 	for(j=0;j<abs(m_Config.TimeLimit);j++)
 	{
 		if(m_Config.TimeLimit>0)
-			m_cmdSetting.InsertCmd(IDK_RIGHT,interval);
+			m_mainMenuSetting2SelectChar.InsertCmd(IDK_RIGHT,interval);
 		else
-			m_cmdSetting.InsertCmd(IDK_LEFT,interval);
+			m_mainMenuSetting2SelectChar.InsertCmd(IDK_LEFT,interval);
 	}
 	//进入select
 	interval=1000;
-	m_cmdSetting.InsertCmd(IDK_A,interval);
-	m_cmdSetting.InsertCmd(IDK_A,interval);
-	m_cmdSetting.InsertCmd(IDK_A,interval);
+	m_mainMenuSetting2SelectChar.InsertCmd(IDK_A,interval);
+	m_mainMenuSetting2SelectChar.InsertCmd(IDK_A,interval);
+	m_mainMenuSetting2SelectChar.InsertCmd(IDK_A,interval);
 
 	//返回到mainmenu
-	interval=1000;
-	m_cmdSetting.InsertCmd(IDK_BACKSAPCE,4000);
-	m_cmdSetting.InsertCmd(IDK_UP,interval);
-	m_cmdSetting.InsertCmd(IDK_A,interval);
+	//interval=1000;
+	m_selectChar2mainMenu.InsertCmd(IDK_BACKSAPCE,4000);
+	m_selectChar2mainMenu.InsertCmd(IDK_UP,interval);
+	m_selectChar2mainMenu.InsertCmd(IDK_A,interval);
 	TRACE(L"StreetFighter CContrlCenter::Init() compelet\n");
 	return true;
 }
 void CContrlCenter::Run()
 {
 	GAMEFLOW oldGameFlow=flow_start;
-	BOOL bSetting=FALSE;
+	GAMEFLOW oldStartGameFlow=flow_mainmenu;
+	BOOL bSetted=FALSE;
 	Sleep(2000);
 	//快速跨越开机动画
 	while(flow_titlemenu!=g_GameFlow)
@@ -173,16 +168,14 @@ void CContrlCenter::Run()
 				break;
 			case flow_titlemenu:
 				//初始设置
-				if(!bSetting)
+				if(!bSetted)
 				{
+					TRACE("aaaa bSetted m_cmdtitle2Mainmenu");
 					m_bIsBusy=TRUE;
-					m_cmdSetting.Excute();
-					Sleep(2000);
-					m_cmdMainmenu2Title.Excute();
-					bSetting=TRUE;
+					m_cmdtitle2Mainmenu.Excute();
 					m_bIsBusy=FALSE;
 				}
-				if(bSetting)
+				if(bSetted)
 				{
 					m_Fairy.ShowWnd(STANDBYBG);
 					m_Fairy.ShowWnd(INSERTCOIN);
@@ -191,7 +184,7 @@ void CContrlCenter::Run()
 				}
 				break;
 			case flow_demo:
-				if(bSetting)
+				if(bSetted)
 				{
 					m_Fairy.HideWnd(STANDBYBG);
 					m_Fairy.ShowWnd(INSERTCOIN);
@@ -200,8 +193,27 @@ void CContrlCenter::Run()
 				}
 				break;
 			case flow_mainmenu:
+				Sleep(500);
+				if (!bSetted)
+				{
+					if(oldGameFlow == flow_titlemenu)
+					{
+						TRACE("aaaa bSetted m_mainMenuSetting2SelectChar");
+						m_bIsBusy = TRUE;
+						m_mainMenuSetting2SelectChar.Excute();
+						m_bIsBusy = FALSE;
+					}
+					else if (oldGameFlow == flow_selectchar)
+					{
+						TRACE("aaaa bSetted m_mainMenu2Title");
+						m_bIsBusy = TRUE;
+						m_mainMenu2Title.Excute();
+						m_bIsBusy = FALSE;
+						bSetted = TRUE;
+					}
+				}
 				//游戏结束后回到mainmenu
-				if(oldGameFlow==flow_continue)
+				else if(oldGameFlow==flow_continue)
 				{
 					m_Fairy.ShowWnd(STANDBYBG);
 					m_Fairy.ShowWnd(CREDITTEXT);
@@ -209,11 +221,21 @@ void CContrlCenter::Run()
 					m_bIsBusy=TRUE;
 					Sleep(1500);
 					DIHKeyDown(0,IDK_A);      //画廊里有很多画
-					m_cmdMainmenu2Title.Excute();
+					m_mainMenu2Title.Excute();
 					m_bIsBusy=FALSE;
 				}
 				break;
 			case flow_selectchar:
+				Sleep(100);
+				TRACE("aaaa flow_selectchar bSetted %d", bSetted);
+				if (!bSetted)
+				{
+					TRACE("aaaa bSetted m_selectChar2mainMenu");
+					m_bIsBusy = TRUE;
+					m_selectChar2mainMenu.Excute();
+					m_bIsBusy = FALSE;
+				}
+				else
 				{
 					m_Fairy.HideWnd(INSERTCOIN);
 					m_Fairy.HideWnd(STANDBYBG);
@@ -259,32 +281,45 @@ void CContrlCenter::Run()
 		
 		if(m_bStart)
 		{
-			TRACE(L"SF4 Start game, %d coins and unit coins is %d", m_Players[0].GetCoinNumber(), m_Config.UnitCoin);
-			if(m_Players[0].GetCoinNumber() >= m_Config.UnitCoin)
+			TRACE(L"SF4 Start game, %d coins and unit coins is %d gameflow %d"
+				, m_Players[0].GetCoinNumber(), m_Config.UnitCoin, g_GameFlow);
+
+			if(m_Players[0].GetCoinNumber() >= m_Config.UnitCoin &&  g_GameFlow != oldStartGameFlow)//避免重复检测相同场景，执行相同操作
 			{
 				m_Fairy.ShowWnd(STANDBYBG);
-				//m_Fairy.ShowWnd(CREDITTEXT);
-				//m_Fairy.ShowWnd(CREDIT);
 				m_Fairy.ShowWnd(LOADING);
 				m_Fairy.HideWnd(INSERTCOIN);
-				//进入角色选择
-				if(flow_titlemenu==g_GameFlow)
+
+				switch(g_GameFlow)
 				{
-					TRACE(L"SF4 game_flow is flow_titlemenu");
-					// 先减币, cxb
+				case flow_titlemenu:
+					TRACE(L"aaaa SF4 m_bStart is flow_titlemenu");
+					m_bIsBusy = TRUE;
+					m_cmdtitle2Mainmenu.Excute();
+					m_bIsBusy = FALSE;
+					break;
+
+				case flow_demo:
+					TRACE(L"aaaa SF4 m_bStart is flow_demo");
+					m_bIsBusy = TRUE;
+					m_cmdDemo2Titile.Excute();
+					m_bIsBusy = FALSE;
+					/*m_cmdDemo2SelectChar.Excute();*/
+					break;
+				case flow_mainmenu:
+					Sleep(400);
+					m_bIsBusy = TRUE;
+					m_mainmenu2SelectChar.Excute();
+					m_bIsBusy = FALSE;
+					TRACE(L"aaaa SF4 m_bStart is flow_mainmenu");
 					m_Players[0].SetCoinNumber(m_Players[0].GetCoinNumber()-m_Config.UnitCoin);
-					m_cmdTitle2SelectChar.Excute();
+					m_bCoinsChanged=TRUE;
+					m_bStart = FALSE;
+					break;
 				}
-				else if(flow_demo==g_GameFlow)
-				{
-					TRACE(L"SF4 game_flow is flow_titlemenu");
-					// 先减币, cxb
-					m_Players[0].SetCoinNumber(m_Players[0].GetCoinNumber()-m_Config.UnitCoin);
-					m_cmdDemo2SelectChar.Excute();
-				}
-				m_bCoinsChanged=TRUE;
+				oldStartGameFlow = g_GameFlow;
+				m_Fairy.HideWnd(INSERTCOIN);
 			}
-			m_bStart=FALSE;
 		}
 		Sleep(1);
 		//检测是否gameover状态
@@ -303,7 +338,7 @@ VOID KeyProc(BYTE id, KeyState& state)
  		state.coin=0;
  		TRACE(L"StreetFighter insert coin:%d\n",g_ContrlCenter.m_Players[id].GetCoinNumber());
  	}
- 	if(state.start==1&&(flow_titlemenu==g_GameFlow||flow_demo==g_GameFlow))//开始
+ 	if(state.start==1&&(flow_titlemenu == g_GameFlow||flow_demo==g_GameFlow))//开始
  	{
  		TRACE(L"StreetFighter start\n");
  		g_ContrlCenter.m_bStart=TRUE;
