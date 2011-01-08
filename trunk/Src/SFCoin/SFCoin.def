@@ -4,3 +4,4 @@ LIBRARY      "SFCoin"
 
 EXPORTS
     ; Explicit exports can go here
+	ForLoad

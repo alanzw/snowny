@@ -59,17 +59,17 @@ BOOL CSFCoinLuancherApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
-	HKEY appKey = 0;
-	if(ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows"),
-		0, KEY_SET_VALUE, &appKey))
-	{
-		char dll[MAX_PATH] = {0};
-		GetModuleFileNameA(GetModuleHandle(NULL), dll, MAX_PATH);
-		PathRemoveFileSpecA(dll);
- 		strcat_s(dll, MAX_PATH, "\\SFCoin.dll");
- 
- 		if (ERROR_SUCCESS == RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1))
-		{
+	//HKEY appKey = 0;
+	//if(ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows"),
+	//	0, KEY_SET_VALUE, &appKey))
+	//{
+	//	char dll[MAX_PATH] = {0};
+	//	GetModuleFileNameA(GetModuleHandle(NULL), dll, MAX_PATH);
+	//	PathRemoveFileSpecA(dll);
+ //		strcat_s(dll, MAX_PATH, "\\SFCoin.dll");
+ //
+ //		if (ERROR_SUCCESS == RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1))
+	//	{
 			STARTUPINFO si = {0};
 			si.cb = sizeof(si);
 			PROCESS_INFORMATION pi = {0};
@@ -89,12 +89,12 @@ BOOL CSFCoinLuancherApp::InitInstance()
 
 			Sleep(5000);
 
-			dll[0] = 0;
+			//dll[0] = 0;
 
-			RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1);
-			RegCloseKey(appKey);
- 		}
-	}
+			//RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1);
+			//RegCloseKey(appKey);
+ 		//}
+	//}
 
 //	CSFCoinLuancherDlg dlg;
 // 	m_pMainWnd = &dlg;

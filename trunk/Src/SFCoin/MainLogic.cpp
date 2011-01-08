@@ -2,6 +2,12 @@
 #include "GlobalVar.h"
 #include "ContrlCenter.h"
 
+//定义任意导出函数，为了让StreetFighter.exe加载SFCoin.dll
+void ForLoad()
+{
+
+}
+
 DWORD LogicThread(LPVOID pParam)
 {
 	//CPlayer players[2];

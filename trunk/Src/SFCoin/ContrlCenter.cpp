@@ -139,9 +139,10 @@ bool CContrlCenter::Init()
 	m_cmdSetting.InsertCmd(IDK_A,interval);
 	m_cmdSetting.InsertCmd(IDK_A,interval);
 	m_cmdSetting.InsertCmd(IDK_A,interval);
+
 	//返回到mainmenu
 	interval=1000;
-	m_cmdSetting.InsertCmd(IDK_BACKSAPCE,2500);
+	m_cmdSetting.InsertCmd(IDK_BACKSAPCE,4000);
 	m_cmdSetting.InsertCmd(IDK_UP,interval);
 	m_cmdSetting.InsertCmd(IDK_A,interval);
 	TRACE(L"StreetFighter CContrlCenter::Init() compelet\n");
@@ -190,19 +191,21 @@ void CContrlCenter::Run()
 				}
 				break;
 			case flow_demo:
-				m_Fairy.HideWnd(STANDBYBG);
 				if(bSetting)
 				{
+					m_Fairy.HideWnd(STANDBYBG);
 					m_Fairy.ShowWnd(INSERTCOIN);
 					m_Fairy.ShowWnd(CREDITTEXT);
 					m_Fairy.ShowWnd(CREDIT);
 				}
 				break;
 			case flow_mainmenu:
-				m_Fairy.ShowWnd(STANDBYBG);
 				//游戏结束后回到mainmenu
 				if(oldGameFlow==flow_continue)
 				{
+					m_Fairy.ShowWnd(STANDBYBG);
+					m_Fairy.ShowWnd(CREDITTEXT);
+					m_Fairy.ShowWnd(CREDIT);
 					m_bIsBusy=TRUE;
 					Sleep(1500);
 					DIHKeyDown(0,IDK_A);      //画廊里有很多画
@@ -215,7 +218,8 @@ void CContrlCenter::Run()
 					m_Fairy.HideWnd(INSERTCOIN);
 					m_Fairy.HideWnd(STANDBYBG);
 					m_Fairy.HideWnd(LOADING);
-					//m_Fairy.CreateTransparentWnd(&m_GameWnd,TIMECOUNTER,L"SF4Con\\TimeCounter.gif",CPoint(m_ScreenX/2-20,200));
+					m_Fairy.ShowWnd(CREDITTEXT);
+					m_Fairy.ShowWnd(CREDIT);
 					m_Fairy.ShowWnd(TIMECOUNTER);
 					DWORD cunt=22;// 有延迟，cxb
 					while(cunt-->0)
@@ -248,6 +252,8 @@ void CContrlCenter::Run()
 			int life=m_Players[0].GetCoinNumber()/m_Config.UnitCoin;
 			int rem=m_Players[0].GetCoinNumber()%m_Config.UnitCoin;
 			m_Fairy.ResetCoinInsert(life, rem, m_Config.UnitCoin);
+			m_Fairy.ShowWnd(CREDITTEXT);
+			m_Fairy.ShowWnd(CREDIT);
 			m_bCoinsChanged=FALSE;
 		}
 		
@@ -257,7 +263,10 @@ void CContrlCenter::Run()
 			if(m_Players[0].GetCoinNumber() >= m_Config.UnitCoin)
 			{
 				m_Fairy.ShowWnd(STANDBYBG);
+				//m_Fairy.ShowWnd(CREDITTEXT);
+				//m_Fairy.ShowWnd(CREDIT);
 				m_Fairy.ShowWnd(LOADING);
+				m_Fairy.HideWnd(INSERTCOIN);
 				//进入角色选择
 				if(flow_titlemenu==g_GameFlow)
 				{
@@ -273,7 +282,6 @@ void CContrlCenter::Run()
 					m_Players[0].SetCoinNumber(m_Players[0].GetCoinNumber()-m_Config.UnitCoin);
 					m_cmdDemo2SelectChar.Excute();
 				}
-				m_Fairy.HideWnd(INSERTCOIN);
 				m_bCoinsChanged=TRUE;
 			}
 			m_bStart=FALSE;
