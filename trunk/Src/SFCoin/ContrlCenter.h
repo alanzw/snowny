@@ -53,6 +53,7 @@ public:
 	CPlayer m_Players[2];
 	BYTE	m_ActivePlayer;
 	BOOL m_bCoinsChanged;
+	BOOL m_Setted;
 
 	CFairy m_Fairy;
 	CWnd m_GameWnd;

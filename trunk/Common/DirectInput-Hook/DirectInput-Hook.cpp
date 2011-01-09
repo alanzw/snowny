@@ -270,7 +270,14 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 				DeviceInfo &di = g_DeviceTbl[0];
 
 				UpdateKeyState(ks.coin, di.keyState.coin, (kb[DIK_3] & 0x80));
+
+				// 键盘也是1P
 				UpdateKeyState(ks.start, di.keyState.start, (kb[DIK_A] & 0x80));// 保留键盘A作为1P开始键
+				UpdateKeyState(ks.up, di.keyState.up, (kb[DIK_UP] & 0x80));
+				UpdateKeyState(ks.down, di.keyState.down, (kb[DIK_DOWN] & 0x80));
+				UpdateKeyState(ks.left, di.keyState.left, (kb[DIK_LEFT] & 0x80));
+				UpdateKeyState(ks.right, di.keyState.right, (kb[DIK_RIGHT] & 0x80));
+				UpdateKeyState(ks.ok, di.keyState.ok, (kb[DIK_RETURN] & 0x80));
 
 				g_KeydownProc(0, ks);
 			}
@@ -281,7 +288,12 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 				UpdateKeyState(ks.coin, di.keyState.coin, (kb[DIK_4] & 0x80));
 				g_KeydownProc(1, ks);
 			}
-			//memset(data, 0, size);// 键盘锁定，只透几个关心的键
+
+			// 键盘也是1P
+			if (g_DeviceTbl[0].isLocked)
+			{
+				memset(data, 0, size);// 键盘锁定，只透几个关心的键
+			}
 		}
 		else if (size == sizeof(DIJOYSTATE))
 		{
@@ -298,10 +310,8 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 			UpdateKeyState(ks.right, di.keyState.right, joy->lX == 10000);
 			UpdateKeyState(ks.ok, di.keyState.ok, joy->rgbButtons[0x0] & 0x80);
 
-			//if (ks.start == 1 )
-			{
-				g_KeydownProc((BYTE)id, ks);
-			}
+			g_KeydownProc((BYTE)id, ks);
+
 			if (g_DeviceTbl[id].isLocked)
 			{
 				memset(joy->rgbButtons, 0, sizeof(joy->rgbButtons));
