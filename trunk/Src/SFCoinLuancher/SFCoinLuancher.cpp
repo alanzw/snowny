@@ -59,6 +59,10 @@ BOOL CSFCoinLuancherApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
+	// ¹Ø±ÕÈ«ÆÁ
+	TCHAR gameConfigFileName[] = TEXT("C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\CAPCOM\\STREETFIGHTERIV\\config.ini");
+	WritePrivateProfileString(TEXT("DISPLAY"), TEXT("FullScreen"), TEXT("OFF"), gameConfigFileName);
+
 	//HKEY appKey = 0;
 	//if(ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows"),
 	//	0, KEY_SET_VALUE, &appKey))
