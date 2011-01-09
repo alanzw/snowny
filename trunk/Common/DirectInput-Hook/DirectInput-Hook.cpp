@@ -110,13 +110,15 @@ LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam)
 
 struct DeviceInfo
 {
-	LPVOID object;
-	KeyState keyState;
-	BOOL hasSimulateKeyID;
-	BYTE simulateKeyID;
+	LPVOID		object;
+	KeyState	keyState;
+	BOOL		hasSimulateKeyID;
+	BYTE		simulateKeyID;
+	BOOL		isLocked;
 };
 
-std::vector<DeviceInfo> g_DeviceS;
+// 只关心手柄
+std::vector<DeviceInfo> g_DeviceTbl;
 KDPROC	g_KeydownProc = NULL;
 
 void InstallHook()
@@ -133,10 +135,10 @@ void RemoveHook()
 
 void DIHKeyDown(BYTE id, BYTE keyID)
 {
-	assert(id < g_DeviceS.size());
+	assert(id < g_DeviceTbl.size());
 
-	g_DeviceS[id].hasSimulateKeyID = TRUE;
-	g_DeviceS[id].simulateKeyID = keyID;
+	g_DeviceTbl[id].hasSimulateKeyID = TRUE;
+	g_DeviceTbl[id].simulateKeyID = keyID;
 }
 
 void DIHSetKDProc( KDPROC kdProc )
@@ -145,19 +147,60 @@ void DIHSetKDProc( KDPROC kdProc )
 	g_KeydownProc = kdProc;
 }
 
-void CreateDevice(LPVOID obj)
+void DIHLockInput(BYTE id)
 {
-	DeviceInfo di = {0};
-	di.object = obj;
-	
-	g_DeviceS.push_back(di);
+	if (id < g_DeviceTbl.size())
+	{
+		g_DeviceTbl[id].isLocked = TRUE;
+	}
+}
+
+void DIHUnlockInput(BYTE id)
+{
+	if (id < g_DeviceTbl.size())
+	{
+		g_DeviceTbl[id].isLocked = FALSE;
+	}
+}
+
+// 设备排序，保证顺序joy1,joy2,keyboard
+// sf4设备的创建顺序是如此，而别的游戏可能不是
+// 为了按键模拟能通用，且行为一致，作此排序
+void CreateDevice(LPVOID obj, BOOL isKeyboard)
+{
+	if (isKeyboard)
+	{
+		DeviceInfo di = {0};
+		di.object = obj;
+		while (g_DeviceTbl.size() < 3)// 占位
+		{
+			g_DeviceTbl.push_back(di);
+		}
+	}
+	else if (g_DeviceTbl.size() == 3)
+	{
+		if (g_DeviceTbl[0].object == g_DeviceTbl[2].object)
+		{
+			g_DeviceTbl[0].object = obj;
+		}
+		else if (g_DeviceTbl[1].object == g_DeviceTbl[2].object)
+		{
+			g_DeviceTbl[1].object = obj;
+		}
+	}
+	else
+	{
+		DeviceInfo di = {0};
+		di.object = obj;
+		g_DeviceTbl.push_back(di);
+	}
 }
 
 size_t GetDeviceID(LPVOID obj)
 {
-	for (size_t i = 0; i < g_DeviceS.size(); i ++)
+	for (size_t i = 0; i < g_DeviceTbl.size(); i ++)
 	{
-		if (g_DeviceS[i].object == obj)
+		if (g_DeviceTbl[i].object == obj)
 		{
 			return i;
 		}
@@ -167,14 +210,11 @@ size_t GetDeviceID(LPVOID obj)
 	return 0;
 }
 
-DeviceInfo& GetDevive(LPVOID obj)
+void UpdateKeyState( BYTE &newState, BYTE &oldState, BOOL factor) 
 {
-	DeviceInfo &di = g_DeviceS[GetDeviceID(obj)];
-
-	assert(di.object != NULL);
-	return di;
+	newState = factor && oldState == 0 ? 1 : 0;
+	oldState = factor ? 1 : 0;
 }
-
 void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 {
 #ifdef _DEBUG
@@ -200,6 +240,11 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 				ATLTRACE(TEXT("JoyStick Reality 0x%x"), i);
 			}
 		}
+		if (keys->lX != 0 || keys->lY != 0)
+		{
+			ATLTRACE(TEXT("DIH joystick direction:%d, %d"),
+				keys->lX, keys->lY);
+		}
 	}
 	else if (size == sizeof(DIJOYSTATE2))
 	{
@@ -216,50 +261,101 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 
 	if (g_KeydownProc != NULL)
 	{
-		DeviceInfo &di = GetDevive(ths);
-		KeyState ks = di.keyState;
+		// 键盘的投币处理
 		if (size == sizeof(BYTE) * 0x100)
 		{
 			BYTE* kb = static_cast<BYTE*>(data);
-			ks.coin = (kb[DIK_F2] & 0x80 && ks.coin == 0) ? 1 : 0;
-			ks.start = (kb[DIK_A] & 0x80 && ks.start == 0) ? 1 : 0;
-			ks.esc=(kb[DIK_ESCAPE] & 0x80 && ks.esc == 0) ? 1 : 0;
-			ks.backspace=(kb[DIK_BACKSPACE] & 0x80 && ks.backspace == 0) ? 1 : 0;
-			ks.enter=(kb[DIK_RETURN] & 0x80 && ks.enter == 0) ? 1 : 0;
+			{
+				KeyState ks = {0};
+				DeviceInfo &di = g_DeviceTbl[0];
 
-			di.keyState.coin = (kb[DIK_F2] & 0x80) ? 1 : 0;
-			di.keyState.start = (kb[DIK_A] & 0x80) ? 1 : 0;
-			di.keyState.esc = (kb[DIK_ESCAPE] & 0x80) ? 1 : 0;
-			di.keyState.backspace = (kb[DIK_BACKSPACE] & 0x80) ? 1 : 0;
-			di.keyState.enter = (kb[DIK_RETURN] & 0x80) ? 1 : 0;
+				UpdateKeyState(ks.coin, di.keyState.coin, (kb[DIK_3] & 0x80));
+				UpdateKeyState(ks.start, di.keyState.start, (kb[DIK_A] & 0x80));// 保留键盘A作为1P开始键
 
-			g_KeydownProc((BYTE)GetDeviceID(ths), ks);
+				g_KeydownProc(0, ks);
+			}
+			{
+				KeyState ks = {0};
+				DeviceInfo &di = g_DeviceTbl[1];
 
-			kb[DIK_F2] = ks.coin == 1 ? kb[DIK_F2] : 0;
-			kb[DIK_A] = ks.start == 1 ? kb[DIK_A] : 0;
-			kb[DIK_ESCAPE] = ks.esc == 1 ? kb[DIK_ESCAPE] : 0;
-			kb[DIK_BACKSPACE] = ks.backspace == 1 ? kb[DIK_BACKSPACE] : 0;
-			kb[DIK_RETURN] = ks.enter == 1 ? kb[DIK_RETURN] : 0;
+				UpdateKeyState(ks.coin, di.keyState.coin, (kb[DIK_4] & 0x80));
+				g_KeydownProc(1, ks);
+			}
+			//memset(data, 0, size);// 键盘锁定，只透几个关心的键
+		}
+		else if (size == sizeof(DIJOYSTATE))
+		{
+			// 摇杆的开始处理
+			KeyState ks = {0};
+			size_t id = GetDeviceID(ths);
+			DeviceInfo &di = g_DeviceTbl[id];
+			DIJOYSTATE *joy = static_cast<DIJOYSTATE *>(data);
+
+			UpdateKeyState(ks.start, di.keyState.start, joy->rgbButtons[0x7] & 0x80);
+			UpdateKeyState(ks.up, di.keyState.up, joy->lY == -10000);
+			UpdateKeyState(ks.down, di.keyState.down, joy->lY == 10000);
+			UpdateKeyState(ks.left, di.keyState.left, joy->lX == -10000);
+			UpdateKeyState(ks.right, di.keyState.right, joy->lX == 10000);
+			UpdateKeyState(ks.ok, di.keyState.ok, joy->rgbButtons[0x0] & 0x80);
+
+			//if (ks.start == 1 )
+			{
+				g_KeydownProc((BYTE)id, ks);
+			}
+			if (g_DeviceTbl[id].isLocked)
+			{
+				memset(joy->rgbButtons, 0, sizeof(joy->rgbButtons));
+				joy->lX = 0;
+				joy->lY = 0;
+				joy->lZ = 0;
+			}
 		}
 	}
 }
 
 void SimulateKeyDown(LPVOID ths, DWORD size, LPVOID data)
 {
-	DeviceInfo &di = GetDevive(ths);
+	DeviceInfo &di = g_DeviceTbl[GetDeviceID(ths)];
 
 	if (di.hasSimulateKeyID)
 	{
+		ATLTRACE(TEXT("DIH Simulate key %x"), di.simulateKeyID);
 		if (size == sizeof(BYTE) * 0x100)	// 键盘模拟
 		{
 			BYTE* kb = static_cast<BYTE*>(data);
 			kb[di.simulateKeyID] |= 0x80;
-			di.hasSimulateKeyID = FALSE;
 		}
 		else if (size == sizeof(DIJOYSTATE)) // 手柄模拟
 		{
-
+			DIJOYSTATE *joy = static_cast<DIJOYSTATE *>(data);
+			switch (di.simulateKeyID)
+			{
+			case IDK_START:
+			case IDK_CONTINUE:
+				joy->rgbButtons[0x7] |= 0x80;
+				break;
+			case IDK_BACKSPACE:
+				joy->rgbButtons[0x1] |= 0x80;
+				break;
+			case IDK_OK:
+				joy->rgbButtons[0x0] |= 0x80;
+				break;
+			case IDK_UP:
+				joy->lY = -10000;
+				break;
+			case IDK_DOWN:
+				joy->lY = 10000;
+				break;
+			case IDK_LEFT:
+				joy->lX = -10000;
+				break;
+			case IDK_RIGHT:
+				joy->lX = 10000;
+				break;
+			}
 		}
+
+		di.hasSimulateKeyID = FALSE;
 	}
 }
 

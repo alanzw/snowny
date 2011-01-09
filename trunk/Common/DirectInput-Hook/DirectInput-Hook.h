@@ -29,10 +29,21 @@ struct KeyState
 {
 	BYTE coin;
 	BYTE start;
-	BYTE esc;
-	BYTE backspace;
-	BYTE enter;
+	BYTE up;
+	BYTE down;
+	BYTE left;
+	BYTE right;
+	BYTE ok;
 };
+
+#define IDK_START		0x1C	// 键盘-回车 手柄-8号键
+#define IDK_CONTINUE	0x01	// 键盘-esc 手柄-8号键
+#define IDK_OK			0x1e	// 键盘-A 手柄-1号键
+#define IDK_BACKSPACE	0x0e	// 键盘-backspace 手柄-2号键
+#define IDK_UP			0xC8	// 上
+#define IDK_DOWN		0xd0	// 下
+#define IDK_LEFT        0xCB	// 左
+#define IDK_RIGHT		0xCD	// 右
 
 // 模拟按键事件
 // id:		设备标识，如1P、2P对应的设备
@@ -42,3 +53,7 @@ void DIHKeyDown(BYTE id, BYTE keyID);
 typedef void (*KDPROC)(BYTE, KeyState&);
 // 设置按键回调处理函数
 void DIHSetKDProc(KDPROC kdProc);
+
+// 锁定、解锁用户输入（模拟输入不受影响）
+void DIHLockInput(BYTE id);
+void DIHUnlockInput(BYTE id);

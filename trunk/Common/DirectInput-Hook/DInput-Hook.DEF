@@ -4,3 +4,5 @@ EXPORTS
 	RemoveHook
 	DIHKeyDown
 	DIHSetKDProc
+	DIHLockInput
+	DIHUnlockInput

@@ -42,7 +42,7 @@ public:
 			// Return our own keyboard device that checks for injected keypresses
 			*device = new MyDirectDevice(*device);
 
-			::CreateDevice(*device);
+			::CreateDevice(*device, rguid == GUID_SysKeyboard);
 		}
 
 		return hr;

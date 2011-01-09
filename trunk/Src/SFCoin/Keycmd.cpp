@@ -32,14 +32,26 @@ DWORD CKeycmd::InsertCmd(DWORD key,DWORD interval,DWORD pos/* =-1 */)
 		m_vCmds.insert(m_vCmds.begin()+pos,cmd);
 	return 0;
 }
-void CKeycmd::Excute()
+void CKeycmd::Excute( BYTE deviceID )
 {
 	TRACE(L"StreetFighter Excute:%s\n",m_Name);
 	std::vector<KEYCMD>::iterator it;
 	for(it=m_vCmds.begin();it!=m_vCmds.end();it++)
 	{
 		Sleep(it->interval);
-		DIHKeyDown(0, (BYTE)it->key_id);
-		TRACE(L"StreetFighter DIHKeyDown:%x Internal:%d\n",(*it).key_id, it->interval);
+		DIHKeyDown(deviceID, (BYTE)it->key_id);
+#ifdef _DEBUG
+		CString out;
+		out.Format(L"StreetFighter DIHKeyDown:%s Internal:%d\n",
+			it->key_id == IDK_START ? L"start" : 
+			it->key_id == IDK_OK ? L"ok" :
+			it->key_id == IDK_UP ? L"up" :
+			it->key_id == IDK_DOWN ? L"down" :
+			it->key_id == IDK_LEFT ? L"left" :
+			it->key_id == IDK_RIGHT ? L"right" :
+			it->key_id == IDK_BACKSPACE ? L"back" :
+			it->key_id == IDK_CONTINUE ? L"continue" : L"unknown" , it->interval);
+		TRACE((LPCTSTR)out);
+#endif
 	}
 }

@@ -1,13 +1,5 @@
 #pragma once
 #include <vector>
-#define IDK_A		0x1e
-#define IDK_UP		0xC8
-#define IDK_DOWN	0xd0
-#define IDK_RIGHT    0xCD
-#define IDK_LEFT           0xCB
-#define IDK_BACKSAPCE  0x0e
-#define IDK_ESC        0x01
-
 
 class CKeycmd
 {
@@ -22,7 +14,7 @@ public:
 	bool ReadCmdFile(const char* fileName);
 	bool SaveCmdFile(const char* fileName);
 	DWORD InsertCmd(DWORD key,DWORD interval,DWORD pos=-1);
-	void Excute();
+	void Excute(BYTE deviceID);// 对指定的设备模拟
 private:
 	std::vector<KEYCMD> m_vCmds;
 	CString m_Name;

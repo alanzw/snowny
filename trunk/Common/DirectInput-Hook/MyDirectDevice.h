@@ -5,7 +5,7 @@
 
 void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data);
 void SimulateKeyDown(LPVOID ths, DWORD size, LPVOID data);
-void CreateDevice(LPVOID ths);
+void CreateDevice(LPVOID ths, BOOL isKeyboard);
 
 /*
 Class: MyDirectDevice
@@ -257,5 +257,4 @@ public:
 
 private:
 	IDirectInputDevice8* m_device;
-	std::string m_Key;
 };

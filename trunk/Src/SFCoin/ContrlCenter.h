@@ -35,6 +35,8 @@ public:
 	~CContrlCenter(void);
 	bool Init();
 	void Run();
+
+	void UpdateCoinShow();
 	CConfig m_Config;
 
 	CKeycmd m_cmdDemo2Titile;		//游戏开始，从demo画面到title画面
@@ -49,9 +51,8 @@ public:
 	//CKeycmd m_cmdSetting;          //游戏初始设置
 	//CKeycmd m_cmdMainmenu2Title;   //游戏结束后回到title画面
 	CPlayer m_Players[2];
-	BOOL m_bStart;                 //判定玩家是否点击开始
+	BYTE	m_ActivePlayer;
 	BOOL m_bCoinsChanged;
-	BOOL m_bIsBusy;                //判定游戏是否处于设置，状态切换等忙碌状态
 
 	CFairy m_Fairy;
 	CWnd m_GameWnd;

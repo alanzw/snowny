@@ -7,7 +7,7 @@ public:
 public:
 	~CConfig(void);
 	BOOL ReadConfig(LPCWSTR fileName);
-	LONG CoinMode;
+	LONG CoinMode;		// 投币模式，0-单式，1-双式
 	LONG Difficulty;
 	LONG Rounds;
 	LONG TimeLimit;
