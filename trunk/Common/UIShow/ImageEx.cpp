@@ -344,6 +344,7 @@ void ImageEx::ThreadAnimation()
 	while (bExit == false)
 	{
 		bExit = DrawFrameGIF();
+		Sleep(1);
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
