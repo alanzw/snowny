@@ -1,4 +1,8 @@
 #pragma once
+#include <windows.h>
+
+#define COINMODE_SINGLE 0
+#define COINMODE_DOUBLE 1
 
 class CConfig
 {
