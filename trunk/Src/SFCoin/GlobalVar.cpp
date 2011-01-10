@@ -82,12 +82,17 @@ void GameFlowUpdate()
 	PVOID pCunterTime=(PVOID)0x00a44ffc;
 	try
 	{
-		if(*(DWORD*)pCunterTime!=0&&g_GameFlow!=flow_continue)
+		if(g_GameFlow == flow_game && *(DWORD*)pCunterTime != 0)
 		{
 			EnterCriticalSection(&g_sc_gameflow);
 			g_GameFlow=flow_continue;
 			LeaveCriticalSection(&g_sc_gameflow);
 			TRACE(L"StreetFighter g_GameFlow: %d\n",g_GameFlow);
+		}
+		else if (g_GameFlow != flow_continue) // 游戏在再次进入continue状态时才重置，帮助游戏清零，cxb
+		{
+			*(DWORD*)pCunterTime = 0;
+			TRACE(L"StreetFighter reset continue time: %d\n", *(DWORD*)pCunterTime);
 		}
 	}
 	catch (CException* e)
