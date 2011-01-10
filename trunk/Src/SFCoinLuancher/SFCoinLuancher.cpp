@@ -62,6 +62,10 @@ BOOL CSFCoinLuancherApp::InitInstance()
 	// ¹Ø±ÕÈ«ÆÁ
 	TCHAR gameConfigFileName[] = TEXT("C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\CAPCOM\\STREETFIGHTERIV\\config.ini");
 	WritePrivateProfileString(TEXT("DISPLAY"), TEXT("FullScreen"), TEXT("OFF"), gameConfigFileName);
+	CString resolution;
+	resolution.Format(TEXT("%dx%d"), GetSystemMetrics(SM_CXFULLSCREEN), GetSystemMetrics(SM_CYFULLSCREEN));
+	WritePrivateProfileString(TEXT("DISPLAY"), TEXT("Resolution"), (LPCTSTR)resolution, gameConfigFileName);
+
 
 	//HKEY appKey = 0;
 	//if(ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows"),
