@@ -92,7 +92,7 @@ void GameFlowUpdate()
 		else if (g_GameFlow != flow_continue) // 游戏在再次进入continue状态时才重置，帮助游戏清零，cxb
 		{
 			*(DWORD*)pCunterTime = 0;
-			TRACE(L"StreetFighter reset continue time: %d\n", *(DWORD*)pCunterTime);
+			//TRACE(L"StreetFighter reset continue time: %d\n", *(DWORD*)pCunterTime);
 		}
 	}
 	catch (CException* e)
