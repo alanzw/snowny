@@ -6,3 +6,4 @@ EXPORTS
 	DIHSetKDProc
 	DIHLockInput
 	DIHUnlockInput
+	DIHLockInputOnce

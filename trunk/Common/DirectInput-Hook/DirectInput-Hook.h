@@ -57,3 +57,4 @@ void DIHSetKDProc(KDPROC kdProc);
 // 锁定、解锁用户输入（模拟输入不受影响）
 void DIHLockInput(BYTE id);
 void DIHUnlockInput(BYTE id);
+void DIHLockInputOnce(BYTE id);	// 当用户输入了不允许的输入时，锁定档次输入

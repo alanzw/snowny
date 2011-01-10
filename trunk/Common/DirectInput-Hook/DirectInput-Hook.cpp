@@ -115,6 +115,7 @@ struct DeviceInfo
 	BOOL		hasSimulateKeyID;
 	BYTE		simulateKeyID;
 	BOOL		isLocked;
+	BOOL		isLockedOnce;
 };
 
 // 只关心手柄
@@ -160,6 +161,14 @@ void DIHUnlockInput(BYTE id)
 	if (id < g_DeviceTbl.size())
 	{
 		g_DeviceTbl[id].isLocked = FALSE;
+	}
+}
+
+void DIHLockInputOnce(BYTE id)
+{
+	if (id < g_DeviceTbl.size())
+	{
+		g_DeviceTbl[id].isLockedOnce = TRUE;
 	}
 }
 
@@ -290,9 +299,10 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 			}
 
 			// 键盘也是1P
-			if (g_DeviceTbl[0].isLocked)
+			if (g_DeviceTbl[0].isLocked || g_DeviceTbl[0].isLockedOnce)
 			{
 				memset(data, 0, size);// 键盘锁定，只透几个关心的键
+				g_DeviceTbl[0].isLockedOnce = FALSE;
 			}
 		}
 		else if (size == sizeof(DIJOYSTATE))
@@ -312,8 +322,9 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 
 			g_KeydownProc((BYTE)id, ks);
 
-			if (g_DeviceTbl[id].isLocked)
+			if (g_DeviceTbl[id].isLocked || g_DeviceTbl[id].isLockedOnce)
 			{
+				g_DeviceTbl[id].isLockedOnce = FALSE;
 				memset(joy->rgbButtons, 0, sizeof(joy->rgbButtons));
 				joy->lX = 0;
 				joy->lY = 0;
