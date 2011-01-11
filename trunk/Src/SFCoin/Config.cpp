@@ -22,13 +22,19 @@ BOOL CConfig::ReadConfig(LPCWSTR fileName)
 	UnitCoin=GetPrivateProfileInt(L"UnitCoin",L"Sel",0,fileName);
 	UnitCoin++;
 	//Difficuty的默认值是“中等”，索引为3
-	Difficulty=GetPrivateProfileInt(L"Difficulty",L"Sel",0,fileName);
+	Difficulty=GetPrivateProfileInt(L"Difficulty",L"Sel",-1,fileName);
+	if(-1==Difficulty)
+		return FALSE;
+	TRACE(L"StreetFighter Difficulty:%d\n",Difficulty);
 	Difficulty=Difficulty-3;
 	Rounds=GetPrivateProfileInt(L"Rounds",L"Sel",0,fileName);
 	Rounds=Rounds-1;
 	TimeLimit=GetPrivateProfileInt(L"TimeLimit",L"Sel",0,fileName);
 	TimeLimit=TimeLimit-2;
-	//printf("StreetFighter CoinMode:%d\n",m_CoinMode);
-	//printf("StreetFighter m_UnitCoin:%d\n",m_UnitCoin);
+	TRACE(L"StreetFighter CoinMode:%d\n",CoinMode);
+	TRACE(L"StreetFighter m_UnitCoin:%d\n",UnitCoin);
+	TRACE(L"StreetFighter Difficulty:%d\n",Difficulty);
+	TRACE(L"StreetFighter Rounds:%d\n",Rounds);
+	TRACE(L"StreetFighter TimeLimit:%d\n",TimeLimit);
 	return TRUE;
 } 

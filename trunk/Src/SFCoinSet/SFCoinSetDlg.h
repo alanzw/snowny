@@ -39,4 +39,6 @@ protected:
 	
 public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+protected:
+	virtual void OnOK();
 };

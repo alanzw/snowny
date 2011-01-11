@@ -76,3 +76,10 @@ BOOL CSFCoinSetApp::InitInstance()
 	//  application, rather than start the application's message pump.
 	return FALSE;
 }
+
+int CSFCoinSetApp::ExitInstance()
+{
+	// TODO: Add your specialized code here and/or call the base class
+	//MessageBox(NULL,L"ExitInstance",NULL,MB_OK);
+	return CWinApp::ExitInstance();
+}

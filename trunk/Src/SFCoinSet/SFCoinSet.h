@@ -26,6 +26,8 @@ public:
 // Implementation
 
 	DECLARE_MESSAGE_MAP()
+public:
+	virtual int ExitInstance();
 };
 
 extern CSFCoinSetApp theApp;

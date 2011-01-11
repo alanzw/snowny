@@ -288,3 +288,14 @@ void CSFCoinSetDlg::ReadConfig()
 
 	m_SettingRect.bottom = m_SettingRect.top + ITEMHEIGHT * (m_SetItems.size() + 2);
 }
+//回车，退出设置，启动游戏
+//esc，退出设置，
+void CSFCoinSetDlg::OnOK()
+{
+	STARTUPINFO si = {0};
+	si.cb = sizeof(si);
+	PROCESS_INFORMATION pi = {0};
+	CreateProcessW(TEXT("SFCoinLuancher.exe"), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+
+	CDialog::OnOK();
+}
