@@ -56,6 +56,6 @@ public:
 	BOOL m_Setted;
 
 	CFairy m_Fairy;
-	CWnd m_GameWnd;
+	HWND   m_GameWnd;
 };
 extern CContrlCenter g_ContrlCenter;
