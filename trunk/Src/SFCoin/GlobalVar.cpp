@@ -10,7 +10,7 @@ CString g_strStarVs=L"Game\\Menu\\ENG\\vs.ems.emz";
 CString g_strDemo=L"Game\\Logo\\capcom";
 GAMEFLOW g_GameFlow=flow_start;
 CRITICAL_SECTION g_sc_gameflow;
-
+CConfig  g_Config;
 
 HANDLE (WINAPI* Real_CreateFileW)(
 								  LPCWSTR lpFileName,

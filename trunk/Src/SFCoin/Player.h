@@ -1,18 +1,36 @@
 #pragma once
 
 #include <windows.h>
+#include "GlobalVar.h"
 
 class CPlayer
 {
 public:
-	CPlayer(DWORD id=0);
-	DWORD GetCoinNumber(){return m_dCoins;}
-	VOID SetCoinNumber(DWORD number){m_dCoins=number;}
+	enum PlayerStatus{
+		PS_IDLE = 0,
+		PS_CLICKSTART,
+		PS_STARTTING,
+		PS_GAMING,
+		PS_DEAD,
+		PS_GAMEOVER};
 
-	BOOL ClickStart() const { return m_ClickStart; }
-	void ClickStart(BOOL val) { m_ClickStart = val; }
+	CPlayer(DWORD id=0);
+	DWORD GetCoinNumber();
+	void IncrementCoin();
+	BOOL CoinsChanged();
+
+	BOOL IsClickStart() const { return m_Status == PS_CLICKSTART; }
+	BOOL ClickStart();
+
+	PlayerStatus GetStatus() {return m_Status;}
+	void RefreshStatus(GAMEFLOW gameFlow);
+
 private:
-	BOOL m_ClickStart;	//判定玩家是否点击开始
 	DWORD m_dCoins;
+	DWORD m_OldCoins;
 	DWORD m_dId;
+	PlayerStatus m_Status;
+
+	static DWORD m_UnionCoins;
+	static DWORD m_OldUnionCoins;
 };
