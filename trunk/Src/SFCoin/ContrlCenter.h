@@ -38,12 +38,17 @@ public:
 
 	void UpdateCoinShow();
 
+	// 保持街机模式和对战模式上回合、时间限制一致
+	void Setting();	// 街机模式、对战模式设置
+
 	CKeycmd m_cmdDemo2Titile;		//游戏开始，从demo画面到title画面
 	CKeycmd m_cmdtitle2Mainmenu;	//游戏开始，从title画面到Mainmenu画面
 	CKeycmd m_mainmenu2SelectChar;	//游戏开始，从Mainmenu到角色选择
 	CKeycmd m_mainMenu2Title;		//游戏从Mainmenu到title画面
 	CKeycmd m_mainMenuSetting2SelectChar;		//游戏初始设置
 	CKeycmd m_selectChar2mainMenu;				//游戏选角色到主菜单
+
+	CKeycmd m_VersusSetting;		// 对战模式设置
 	
 	//CKeycmd m_cmdDemo2SelectChar;  //游戏开始，从demo画面到角色选择
 	//CKeycmd m_cmdTitle2SelectChar; //游戏开始，从Title画面到角色选择
