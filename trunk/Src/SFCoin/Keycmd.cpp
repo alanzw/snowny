@@ -2,11 +2,14 @@
 #include "Keycmd.h"
 #pragma comment(lib,"DirectInput-Hook.lib")
 #include "../../Common/DirectInput-Hook/DirectInput-Hook.h"
-CKeycmd::CKeycmd(CString name):m_Name(name)
-{
-	
-}
 
+CKeycmd::CKeycmd( GAMEFLOW fromFlow, GAMEFLOW toFlow, CString name/*=L"No name"*/ )
+: m_FromFlow(fromFlow)
+, m_ToFlow(toFlow)
+, m_Name(name)
+{
+
+}
 CKeycmd::~CKeycmd(void)
 {
 }
@@ -32,9 +35,30 @@ DWORD CKeycmd::InsertCmd(DWORD key,DWORD interval,DWORD pos/* =-1 */)
 		m_vCmds.insert(m_vCmds.begin()+pos,cmd);
 	return 0;
 }
+
+BOOL CheckGameFlow(GAMEFLOW wannaFlow, DWORD timeout)
+{
+	DWORD lastTime = GetTickCount();
+	while (GetTickCount() - lastTime < timeout)
+	{
+		if (g_GameFlow == wannaFlow)
+		{
+			return TRUE;
+		}
+		Sleep(1);
+	}
+	return FALSE;
+}
+
+
 void CKeycmd::Excute( BYTE deviceID )
 {
 	TRACE(L"StreetFighter Excute:%s\n",m_Name);
+	if (!CheckGameFlow(m_FromFlow, 10000))
+	{
+		TRACE(TEXT("SF4 %s fromFlow error!!!!!!!!!!!!!!!!!!!!!!!"), m_Name);
+	}
+
 	std::vector<KEYCMD>::iterator it;
 	for(it=m_vCmds.begin();it!=m_vCmds.end();it++)
 	{
@@ -53,5 +77,10 @@ void CKeycmd::Excute( BYTE deviceID )
 			it->key_id == IDK_CONTINUE ? L"continue" : L"unknown" , it->interval);
 		TRACE((LPCTSTR)out);
 #endif
+	}
+
+	if (!CheckGameFlow(m_ToFlow, 10000))
+	{
+		TRACE(TEXT("SF4 %s toFlow timeout!!!!!!!!!!!!!!!!!!!!!!!"), m_Name);
 	}
 }

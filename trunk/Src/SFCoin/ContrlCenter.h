@@ -38,6 +38,7 @@ public:
 	bool Init();
 	void Run();
 
+	void RefreshPlayerStatus();
 	void UpdateCoinShow();
 
 	// 保持街机模式和对战模式上回合、时间限制一致

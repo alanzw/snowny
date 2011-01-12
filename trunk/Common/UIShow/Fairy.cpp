@@ -67,6 +67,7 @@ void CFairy::DestroyAllWnd()
 }
 void CFairy::ShowWnd( int id )
 {
+	m_showWndList[id]->ShowWindow(SW_HIDE);	// 先hide，再show，会刷新，可以缓解遮挡，cxb
 	m_showWndList[id]->ShowWindow(SW_NORMAL);
 }
 
@@ -154,6 +155,7 @@ void CFairy::CreateWnd( CWnd * parent, CWnd* wnd, CPoint pt, int id )
 		CRect(CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT), parent ,NULL ,NULL); 
 	wnd->ShowWindow(SW_HIDE);
 	wnd->MoveWindow(pt.x, pt.y, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	wnd->EnableWindow(FALSE);
 	m_showWndList.insert(std::make_pair(id, wnd));
 }
 
