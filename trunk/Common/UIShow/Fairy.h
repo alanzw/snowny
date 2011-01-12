@@ -21,7 +21,7 @@ public:
 	void HideAllWnd();
 	void DestroyAllWnd();
 	void CreateCoinInsert(int id, std::wstring picName, int life, int coins, int cointsOneLife ,CPoint pt, int imageWidth = 0 , int imageHeight = 0);
-	void ResetCoinInsert(int life, int coins, int coinsOneLife);
+	void ResetCoinInsert(DWORD id,int life, int coins, int coinsOneLife);
 
 private:
 	void CreateWnd( CWnd * parent, CWnd* wnd, CPoint pt, int id );

@@ -18,13 +18,15 @@
 
 #define STANDBYBG 0
 #define LOADINGBG 1
-#define CREDIT	2
+
 #define IPSTART	3
 #define INSERTCOIN 4
 #define LOADING 5
 #define TIMECOUNTER  6
-#define CREDITTEXT 7
-
+#define CREDITTEXT0 7
+#define CREDIT0	8
+#define CREDITTEXT1 9
+#define CREDIT1	10
 
 
 VOID KeyProc(BYTE, KeyState&);

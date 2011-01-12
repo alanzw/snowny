@@ -30,10 +30,16 @@ void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins,
 	CreateWnd(NULL, mInsertCointSingleWnd, pt, id);
 }
 
-void CFairy::ResetCoinInsert( int life, int coins, int coinsOneLife )
+void CFairy::ResetCoinInsert(DWORD id, int life, int coins, int coinsOneLife )
 {
 	CShowCutRectWnd::CutRectList cutRectList = GetCutRectList(life, coins, coinsOneLife);
-	mInsertCointSingleWnd->ResetCutRect(cutRectList);
+	std::map<int, CWnd*>::iterator iter = m_showWndList.find(id);
+	if (iter == m_showWndList.end())
+	{
+		return;
+	}
+	CShowCutRectWnd* wnd = (CShowCutRectWnd*)(m_showWndList[id]);
+	wnd->ResetCutRect(cutRectList);
 }
 
 void CFairy::DestroyWnd( int id )
