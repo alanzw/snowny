@@ -94,6 +94,51 @@ void GameFlowUpdate()
 			*(DWORD*)pCunterTime = 0;
 			//TRACE(L"StreetFighter reset continue time: %d\n", *(DWORD*)pCunterTime);
 		}
+
+		static DWORD lastTime = GetTickCount();
+		if (GetTickCount() - lastTime > 2000)
+		{
+			TRACE(L"SF4 refresh player status");
+			DWORD getGlobalDataAddr = 0x0043A670,
+				getPlayerDataAddr = 0x00439F80,
+				globalDataAddr = 0,
+				player0Addr = 0, player1Addr = 0;
+			int player0HP = -1, player1HP = -1;
+			
+			__asm
+			{
+				pushad
+				mov eax, getGlobalDataAddr
+				call eax
+				mov globalDataAddr, eax
+
+				push 0
+				mov ecx, globalDataAddr
+				mov edx, getPlayerDataAddr
+				call edx
+				test eax, eax
+ 				jz jmp2
+				mov player0Addr, eax
+ 				movsx edi, word ptr [eax + 51F6h]
+ 				mov player0HP, edi
+
+				push 1
+				mov ecx, globalDataAddr
+ 				mov edx, getPlayerDataAddr
+ 				call edx
+   				test eax, eax
+   				jz jmp2
+ 				mov player1Addr, eax
+ 				movsx edi, word ptr [eax + 51F6h]
+				mov player1HP, edi
+jmp2:
+				popad
+			}
+			lastTime = GetTickCount();
+
+			TRACE(L"SF4 refresh player status end");
+			TRACE(TEXT("GlobalDataAddr 0x%x player0 0x%x %d player1 0x%x %d"), globalDataAddr, player0Addr, player0HP, player1Addr, player1HP);
+		}
 	}
 	catch (CException* e)
 	{
