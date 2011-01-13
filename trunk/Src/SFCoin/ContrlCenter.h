@@ -63,7 +63,7 @@ public:
 	BYTE	m_ActivePlayer;
 	BOOL m_Setted;
 
-	CFairy m_Fairy;
+	CFairy* m_Fairy;
 	HWND   m_GameWnd;
 
 	BOOL	m_IsArcadeMode;		// ½Ö»úÄ£Ê½

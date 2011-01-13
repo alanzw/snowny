@@ -9,90 +9,79 @@
 #pragma once
 #endif // _MSC_VER > 1000
 #include <vector>
+#include <map>
+
+
+/////////////////////////////////////////////////////////////////////
+// Name		Date		Version
+// zyc      2011		2.0			
+// 
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct CutRect
 {
 	RectF srcRect;
 }CutRect;
+typedef enum{WholeRectType, CutRectType} RectType; 
 
-class ImageEx : public Image
+
+typedef struct 
+{
+	CPoint pt;
+	std::vector<RectF> cutRectList;
+}CutRectF;
+
+class ImageExTest:public Image
 {
 public:
-	ImageEx(IN LPCTSTR  sResourceType, IN LPCTSTR  sResource);
-	ImageEx(const WCHAR* filename, BOOL useEmbeddedColorManagement = FALSE);
+	ImageExTest(const WCHAR* filename, BOOL useEmbeddedColorManagement = FALSE);
+	RectF	ImageRect() const;
+	void	ImageRect(RectF val);
+	CutRectF	ImageCutRect() const;
+	void		ImageCutRect(CutRectF val);
+	void	Show() {m_show = true;}
+	void	Hide() {m_show = false;}
+	bool	IsShow() {return m_show;}
+	bool	IsAnimatedGIF() {return m_nFrameCount > 1;}
+	bool	TestForAnimatedGIF();
+	void	SetGifActiveFrame(int nFramePosition);
 
-	
-	~ImageEx();
-public:
-
-	void	Draw(CDC* pDC);
-	CSize	GetSize();
-
-	bool	IsAnimatedGIF() { return m_nFrameCount > 1; }
-	void	SetPause(bool bPause);
-	bool	IsPaused() { return m_bPause; }
-	bool	InitAnimation(HWND hWnd, CPoint pt = CPoint(0,0), int width = 0, int height = 0);
-	void	DrawNormalWindow();
-
-	void	SetTransprentWindow(bool transprent);
-	void	Destroy();
-
-	void    SetCutRectTLPt(CPoint pt);
-	//只能添加Rect的一个元素
-	void	AddCutRect(RectF rect);
+	void	AddCutRect( RectF rect );
 	void	ClearRect();
-	bool	InitCutRectAnimation(HWND hwnd);
-
-protected:
-	void				DrawTransprentWindow();
-	void				DrawTransprentWindowCutRect();
-
-	bool				TestForAnimatedGIF();
-	void				Initialize();
-	bool				DrawFrameGIF();
-
-	IStream*			m_pStream;
 	
-	bool LoadFromBuffer(BYTE* pBuff, int nSize);
-	bool GetResource(LPCTSTR lpName, LPCTSTR lpType, void* pResource, int& nBufSize);
-	bool Load(CString sResourceType, CString sResource);
+	CutRectF GetCutRect();
+	RectType GetShowRectType();
+	
 
-	void ThreadAnimation();
-
-	static UINT WINAPI _ThreadAnimationProc(LPVOID pParam);
-
-	HANDLE			m_hThread;
-	HANDLE			m_hPause;
-	HANDLE			m_hExitEvent;
-	HINSTANCE		m_hInst;
-	HWND			m_hWnd;
+private:
+	void	Initialize();
+public:
 	UINT			m_nFrameCount;
 	UINT			m_nFramePosition;
-	bool			m_bIsInitialized;
-	bool			m_bPause;
 	PropertyItem*	m_pPropertyItem;
-	CPoint			m_pt;
-	bool			m_transparent;
 
-	int				m_imageWidth;
-	int				m_imageHeght;
+
+private:
+	CutRectF		m_imageCutRect;
+	RectF			m_imageRect;
+	bool			m_show;
+	RectType		m_state;
+
+	IStream*		m_pStream;
+	HINSTANCE		m_hInst;
+	HWND			m_hWnd;
+
 	CPoint			m_cutRectPt;
 	std::vector<RectF> m_cutRectList;
 
-
-
 	BLENDFUNCTION	m_Blend;
+
 };
 
-/////////////////////////////////////////////////////////////////////
-// Name		Date		Version	   Comments
-// zyc      29012002	1.0			Origin
-// 
-////////////////////////////////////////////////////////////////////////////////
-class NULLImageEx:public ImageEx
+class NULLImageEx:public ImageExTest
 {
 public:
-	NULLImageEx(const WCHAR* filename, BOOL useEmbeddedColorManagement = FALSE):ImageEx(filename, useEmbeddedColorManagement) {;}
+	NULLImageEx(const WCHAR* filename, BOOL useEmbeddedColorManagement = FALSE):ImageExTest(filename, useEmbeddedColorManagement) {;}
 
 	void	Draw(CDC* pDC) {;}
 	CSize	GetSize() {return true;}
@@ -104,5 +93,43 @@ public:
 	void	Destroy() {;}
 };
 
+class ImageExManager
+{
+public:
+	ImageExManager(HWND hwnd);
+	void CreateImageEx(int id, const WCHAR* filename,CPoint pt, int width = 0, int height = 0, BOOL useEmbeddedColorManagement = FALSE);
+	void CreateCutRectImageEx(int id, const WCHAR* filename,  CutRectF cutRectF ,BOOL useEmbeddedColorManagement = FALSE);
+	void Hide(int id);
+	void HideAll();
+	void Show(int id);
+	void ShowAll();
+	void Reset(int id, CutRectF cutRectF);
+	void Destroy(int id);
+	void DestroyAll();
+
+private:
+	bool IsGifInShow();
+	bool CreateThreadToShow();
+	bool ShowImageExFlag( int id );
+	bool HideImageExFlag(int id);
+	void ProcessShow();
+
+	void DrawImageList( Graphics &graphics );
+	static UINT WINAPI _ThreadAnimationProc(LPVOID pParam);
+	bool DrawFrameGIF(); 
+	void ProcessGifsActiveFrame(int framePosition);
+	ImageExTest *GetMaxFrameGif();
+private:
+	std::map<int, ImageExTest*>	m_ImageExList;
+	HWND					m_hwnd;
+	BLENDFUNCTION			m_Blend;
+	HANDLE					m_hThread;
+	HANDLE					m_hExitEvent;
+
+public:
+	HANDLE					m_hPause;
+	int						m_MaxFrameCount;
+	int						m_curFramePosition;
+};
 
 #endif // !defined(AFX_GDIPLUSHELPER_H__BD5F6266_5686_43E2_B146_5EA1217A56FE__INCLUDED_)

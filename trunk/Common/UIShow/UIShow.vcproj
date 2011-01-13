@@ -169,14 +169,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ShowCutRectWnd.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ShowWnd.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -220,14 +212,6 @@
 			</File>
 			<File
 				RelativePath=".\Resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ShowCutRectWnd.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ShowWnd.h"
 				>
 			</File>
 			<File

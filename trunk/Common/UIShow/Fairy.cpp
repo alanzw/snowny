@@ -1,97 +1,74 @@
 #include "StdAfx.h"
 #include "Fairy.h"
-#include "showwnd.h"
-#include "showcutrectwnd.h"
+#include "ImageEx.h"
 #include <shlwapi.h>
 
-CFairy::CFairy(void)
+CFairy::CFairy()
 {
 	GdiplusStartup(&m_gdiplusToken,&m_gdiplusStartupInput, NULL);
 }
 
 CFairy::~CFairy(void)
 {
+	delete m_imageExManager;
 	GdiplusShutdown(m_gdiplusToken);
 }
 
-void CFairy::CreateTransparentWnd(CWnd *parent,int id, std::wstring picName, CPoint pt, int imageWidth /*= 0*/, int imageHeight/* = 0*/)
+void CFairy::CreateTransparentPic(CWnd *parent,int id, std::wstring picName, CPoint pt, int imageWidth /*= 0*/, int imageHeight/* = 0*/)
 {
-	m_showWnd = new CShowWnd(picName);
-	m_showWnd->SetImageSize(imageWidth, imageHeight);
-	CreateWnd(parent, m_showWnd, pt, id);
+	TRACE(_T("aaaa CreateTransparentPic %s"), picName.c_str());
+	m_imageExManager->CreateImageEx(id, picName.c_str(),pt, imageWidth, imageHeight);
 }
-
 
 void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins, int coinsOneLife ,CPoint pt, int imageWidth/* = 0*/ , int imageHeight/* = 0*/)
 {
-	CShowCutRectWnd::CutRectList cutRectList = GetCutRectList(life, coins, coinsOneLife);
-	std::wstring backgroundPath =picName;
-	mInsertCointSingleWnd = new CShowCutRectWnd(backgroundPath, cutRectList);
-	CreateWnd(NULL, mInsertCointSingleWnd, pt, id);
+	CutRectF rect;
+	rect.pt = pt;
+	rect.cutRectList = GetCutRectList(life, coins, coinsOneLife);
+	m_imageExManager->CreateCutRectImageEx(id, picName.c_str(), rect);
 }
 
 void CFairy::ResetCoinInsert(DWORD id, int life, int coins, int coinsOneLife )
 {
-	CShowCutRectWnd::CutRectList cutRectList = GetCutRectList(life, coins, coinsOneLife);
-	std::map<int, CWnd*>::iterator iter = m_showWndList.find(id);
-	if (iter == m_showWndList.end())
-	{
-		return;
-	}
-	CShowCutRectWnd* wnd = (CShowCutRectWnd*)(m_showWndList[id]);
-	wnd->ResetCutRect(cutRectList);
+	TRACE(_T("aaaa CreateTransparentPic life:%d, conis:%d, coinsonelife : %d", life, coins, coinsOneLife)
+		, life, coins, coinsOneLife);
+	CutRectF rect;
+	rect.cutRectList = GetCutRectList(life, coins, coinsOneLife);
+	m_imageExManager->Reset(id, rect);
 }
 
-void CFairy::DestroyWnd( int id )
+void CFairy::DestroyPic( int id )
 {
-	std::map<int, CWnd*>::iterator iter = m_showWndList.find(id);
-	if (iter == m_showWndList.end())
-	{
-		return;
-	}
-	CWnd* wnd = m_showWndList[id];
-	wnd->DestroyWindow();
-	delete wnd;
-	m_showWndList.erase(iter);
+	m_imageExManager->Destroy(id);
 }
 
-void CFairy::DestroyAllWnd()
+void CFairy::DestroyAllPic()
 {
-	std::map<int, CWnd*>::iterator iter  = m_showWndList.begin();
-	for (; iter != m_showWndList.end(); ++iter)
-	{
-		(*iter).second->DestroyWindow();
-		delete (*iter).second;
-	}
-	m_showWndList.clear();
-}
-void CFairy::ShowWnd( int id )
-{
-	//m_showWndList[id]->ShowWindow(SW_HIDE);	// 先hide，再show，会刷新，可以缓解遮挡，cxb
-	m_showWndList[id]->ShowWindow(SW_NORMAL);
+	m_imageExManager->DestroyAll();
 }
 
-void CFairy::HideWnd( int id )
+void CFairy::ShowPic( int id )
 {
-	m_showWndList[id]->ShowWindow(SW_HIDE);
+	m_showWnd->ShowWindow(SW_NORMAL);
+	m_imageExManager->Show(id);
 }
 
-void CFairy::ShowAllWnd()
+void CFairy::HidePic( int id )
 {
-	std::map<int, CWnd*>::iterator iter  = m_showWndList.begin();
-	for (; iter != m_showWndList.end(); ++iter)
-	{
-		(*iter).second->ShowWindow(SW_NORMAL);
-	}
+	m_showWnd->ShowWindow(SW_HIDE);
+	m_imageExManager->Hide(id);
 }
 
-void CFairy::HideAllWnd()
+void CFairy::ShowAllPic()
 {
-	std::map<int, CWnd*>::iterator iter  = m_showWndList.begin();
-	for (; iter != m_showWndList.end(); ++iter)
-	{
-		(*iter).second->ShowWindow(SW_HIDE);
-	}
+	m_showWnd->ShowWindow(SW_NORMAL);
+	m_imageExManager->ShowAll();
+}
+
+void CFairy::HideAllPic()
+{
+	m_showWnd->ShowWindow(SW_HIDE);
+	m_imageExManager->HideAll();
 }
 
 std::vector<int> CFairy::GetNumList( int number )
@@ -109,9 +86,9 @@ std::vector<int> CFairy::GetNumList( int number )
 	return numList;
 }
 
-CShowCutRectWnd::CutRectList CFairy::GetCutRectList( int life, int coins, int cointsOneLife )
+std::vector<RectF> CFairy::GetCutRectList( int life, int coins, int cointsOneLife )
 {
-	CShowCutRectWnd::CutRectList cutRectList;
+	std::vector<RectF> cutRectList;
 
 	RectF rect;
 	rect.X = 0;
@@ -146,20 +123,7 @@ CShowCutRectWnd::CutRectList CFairy::GetCutRectList( int life, int coins, int co
 	return cutRectList;
 }
 
-void CFairy::CreateWnd( CWnd * parent, CWnd* wnd, CPoint pt, int id )
-{
-	wnd->CreateEx(WS_EX_TOPMOST   |   WS_EX_TOOLWINDOW,
-		AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW,::LoadCursor(NULL,   IDC_ARROW),  
-		HBRUSH(COLOR_WINDOW+1),   NULL),
-		_T("MyPopupWindow "), WS_POPUP,
-		CRect(CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT), parent ,NULL ,NULL); 
-	wnd->ShowWindow(SW_HIDE);
-	wnd->MoveWindow(pt.x, pt.y, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-	wnd->EnableWindow(FALSE);
-	m_showWndList.insert(std::make_pair(id, wnd));
-}
-
-void CFairy::AddCutRects( int number, RectF rect, CShowCutRectWnd::CutRectList &cutRectList )
+void CFairy::AddCutRects( int number, RectF rect, std::vector<RectF> &cutRectList )
 {
 	std::vector<int> lifeList;
 	lifeList = GetNumList(number);
@@ -169,4 +133,27 @@ void CFairy::AddCutRects( int number, RectF rect, CShowCutRectWnd::CutRectList &
 		rect.X = ( *iter ) * 20;
 		cutRectList.push_back(rect);
 	}
+}
+
+void CFairy::CreateBKWnd()
+{
+	m_showWnd = new CWnd;
+	int width = GetSystemMetrics(SM_CXSCREEN);
+	int height = GetSystemMetrics(SM_CYSCREEN);
+
+	m_showWnd->CreateEx(WS_EX_TOPMOST   |   WS_EX_TOOLWINDOW,
+		AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW,::LoadCursor(NULL,   IDC_ARROW),  
+		HBRUSH(COLOR_WINDOW+1),   NULL), 
+		_T("MyPopupWindow "), WS_POPUP,
+		CRect(0,0,width,height), NULL ,NULL ,NULL); 
+
+	m_showWnd->ShowWindow(SW_HIDE);
+	TRACE("aaaa ImageExManager a ");
+	m_imageExManager = new ImageExManager(m_showWnd->GetSafeHwnd());
+	TRACE("aaaa ImageExManager b ");
+}
+
+void CFairy::SetParent( CWnd* parentWnd )
+{
+	m_showWnd->SetParent(parentWnd);
 }
