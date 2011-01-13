@@ -53,7 +53,7 @@ BOOL CheckGameFlow(GAMEFLOW wannaFlow, DWORD timeout)
 
 void CKeycmd::Excute( BYTE deviceID )
 {
-	TRACE(L"StreetFighter Excute:%s\n",m_Name);
+	TRACE(L"SF4 CKeycmd Excute:%s devid:%d\n",m_Name, deviceID);
 	if (!CheckGameFlow(m_FromFlow, 10000))
 	{
 		TRACE(TEXT("SF4 %s fromFlow error!!!!!!!!!!!!!!!!!!!!!!!"), m_Name);

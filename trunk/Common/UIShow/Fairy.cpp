@@ -67,7 +67,7 @@ void CFairy::DestroyAllWnd()
 }
 void CFairy::ShowWnd( int id )
 {
-	m_showWndList[id]->ShowWindow(SW_HIDE);	// 先hide，再show，会刷新，可以缓解遮挡，cxb
+	//m_showWndList[id]->ShowWindow(SW_HIDE);	// 先hide，再show，会刷新，可以缓解遮挡，cxb
 	m_showWndList[id]->ShowWindow(SW_NORMAL);
 }
 

@@ -51,7 +51,9 @@ public:
 	CKeycmd m_mainMenuSetting2SelectChar;		//游戏初始设置
 	CKeycmd m_selectChar2mainMenu;				//游戏选角色到主菜单
 
-	CKeycmd m_VersusSetting;		// 对战模式设置
+	CKeycmd m_VersusSetting;				// 对战模式设置
+	CKeycmd m_VersusMainmenu2SelectChar;	// 对战模式进入选人
+	CKeycmd m_Game2MainMenu;				// 街机模式切换至对战模式，如已在游戏中，退出游戏
 	
 	//CKeycmd m_cmdDemo2SelectChar;  //游戏开始，从demo画面到角色选择
 	//CKeycmd m_cmdTitle2SelectChar; //游戏开始，从Title画面到角色选择
@@ -63,5 +65,7 @@ public:
 
 	CFairy m_Fairy;
 	HWND   m_GameWnd;
+
+	BOOL	m_IsArcadeMode;		// 街机模式
 };
 extern CContrlCenter g_ContrlCenter;
