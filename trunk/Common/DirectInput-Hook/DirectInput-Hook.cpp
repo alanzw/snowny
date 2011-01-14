@@ -112,10 +112,12 @@ struct DeviceInfo
 {
 	LPVOID		object;
 	KeyState	keyState;
+
 	BOOL		hasSimulateKeyID;
 	BYTE		simulateKeyID;
+
 	BOOL		isLocked;
-	BOOL		isLockedOnce;
+	BYTE		lockedKey;
 };
 
 // 只关心手柄
@@ -148,11 +150,12 @@ void DIHSetKDProc( KDPROC kdProc )
 	g_KeydownProc = kdProc;
 }
 
-void DIHLockInput(BYTE id)
+void DIHLockInput(BYTE id, BYTE key/*  = 0xFF*/)
 {
 	if (id < g_DeviceTbl.size())
 	{
 		g_DeviceTbl[id].isLocked = TRUE;
+		g_DeviceTbl[id].lockedKey = key;
 	}
 }
 
@@ -164,15 +167,6 @@ void DIHUnlockInput(BYTE id)
 	}
 }
 
-void DIHLockInputOnce(BYTE id)
-{
-	if (id < g_DeviceTbl.size())
-	{
-		g_DeviceTbl[id].isLockedOnce = TRUE;
-	}
-}
-
-// 设备排序，保证顺序joy1,joy2,keyboard
 // sf4设备的创建顺序是如此，而别的游戏可能不是
 // 为了按键模拟能通用，且行为一致，作此排序
 void CreateDevice(LPVOID obj, BOOL isKeyboard)
@@ -299,10 +293,9 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 			}
 
 			// 键盘也是1P
-			if (g_DeviceTbl[0].isLocked || g_DeviceTbl[0].isLockedOnce)
+			if (g_DeviceTbl[0].isLocked)
 			{
 				memset(data, 0, size);// 键盘锁定，只透几个关心的键
-				g_DeviceTbl[0].isLockedOnce = FALSE;
 			}
 		}
 		else if (size == sizeof(DIJOYSTATE))
@@ -322,13 +315,22 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 
 			g_KeydownProc((BYTE)id, ks);
 
-			if (g_DeviceTbl[id].isLocked || g_DeviceTbl[id].isLockedOnce)
+			if (g_DeviceTbl[id].isLocked)
 			{
-				g_DeviceTbl[id].isLockedOnce = FALSE;
-				memset(joy->rgbButtons, 0, sizeof(joy->rgbButtons));
-				joy->lX = 0;
-				joy->lY = 0;
-				joy->lZ = 0;
+				if (g_DeviceTbl[id].lockedKey == 0xFF)// 全键Lock
+				{
+					memset(joy->rgbButtons, 0, sizeof(joy->rgbButtons));
+					joy->lX = 0;
+					joy->lY = 0;
+					joy->lZ = 0;
+				}
+				else
+				{
+					if (g_DeviceTbl[id].lockedKey == IDK_START)
+					{
+						joy->rgbButtons[0x7] = 0;
+					}
+				}
 			}
 		}
 	}

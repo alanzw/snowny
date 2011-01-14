@@ -87,7 +87,7 @@ void GameFlowUpdate()
 			EnterCriticalSection(&g_sc_gameflow);
 			g_GameFlow=flow_continue;
 			LeaveCriticalSection(&g_sc_gameflow);
-			TRACE(L"StreetFighter g_GameFlow: %d\n",g_GameFlow);
+			TRACE(L"StreetFighter g_GameFlow: %d %d\n",g_GameFlow, *(DWORD*)pCunterTime);
 		}
 		else if (g_GameFlow != flow_continue) // 游戏在再次进入continue状态时才重置，帮助游戏清零，cxb
 		{
@@ -95,15 +95,16 @@ void GameFlowUpdate()
 			//TRACE(L"StreetFighter reset continue time: %d\n", *(DWORD*)pCunterTime);
 		}
 
-		static DWORD lastTime = GetTickCount();
-		if (GetTickCount() - lastTime > 2000)
+		//static DWORD lastTime = GetTickCount();
+		//if (GetTickCount() - lastTime > 2000)
 		{
-			TRACE(L"SF4 refresh player status");
+			//TRACE(L"SF4 refresh player status");
 			DWORD getGlobalDataAddr = 0x0043A670,
 				getPlayerDataAddr = 0x00439F80,
 				globalDataAddr = 0,
 				player0Addr = 0, player1Addr = 0;
 			int player0HP = -1, player1HP = -1;
+			static int player0OldHP = 0, player1OldHP = 0;
 			
 			__asm
 			{
@@ -134,10 +135,16 @@ void GameFlowUpdate()
 jmp2:
 				popad
 			}
-			lastTime = GetTickCount();
+			//lastTime = GetTickCount();
 
-			TRACE(L"SF4 refresh player status end");
-			TRACE(TEXT("GlobalDataAddr 0x%x player0 0x%x %d player1 0x%x %d"), globalDataAddr, player0Addr, player0HP, player1Addr, player1HP);
+			if (player0HP != player0OldHP || player1HP != player1OldHP)
+			{
+				player0OldHP = player0HP;
+				player1OldHP = player1HP;
+				TRACE(TEXT("GlobalDataAddr 0x%x player0 0x%x %d player1 0x%x %d"), globalDataAddr, player0Addr, player0HP, player1Addr, player1HP);
+			}
+			//TRACE(L"SF4 refresh player status end");
+			
 		}
 	}
 	catch (CException* e)

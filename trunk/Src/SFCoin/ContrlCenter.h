@@ -38,6 +38,8 @@ public:
 	bool Init();
 	void Run();
 
+	static void KeyProc(BYTE id, KeyState& state);
+
 	void RefreshPlayerStatus();
 	void UpdateCoinShow();
 

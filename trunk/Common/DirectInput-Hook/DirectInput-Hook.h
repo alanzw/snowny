@@ -55,6 +55,6 @@ typedef void (*KDPROC)(BYTE, KeyState&);
 void DIHSetKDProc(KDPROC kdProc);
 
 // 锁定、解锁用户输入（模拟输入不受影响）
-void DIHLockInput(BYTE id);
+// 0xFF指全键盘或手柄按键，可以指定特定按键，一次只能指定一个
+void DIHLockInput(BYTE id, BYTE key = 0xFF);
 void DIHUnlockInput(BYTE id);
-void DIHLockInputOnce(BYTE id);	// 当用户输入了不允许的输入时，锁定档次输入

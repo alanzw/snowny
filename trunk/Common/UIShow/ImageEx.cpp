@@ -179,7 +179,7 @@ void ImageExManager::ProcessShow()
 			&sizeWindow, hdcMemory, &ptSrc,0, &m_Blend, 2);
 
 		DeleteObject(hBitMap);
-		ReleaseDC(m_hwnd, hdcMemory);
+		DeleteObject(hdcMemory); // 资源泄露，在测试机上表现的很卡，cxb
 		ReleaseDC(m_hwnd, hDC);
 	}
 }
@@ -347,8 +347,8 @@ void ImageExManager::DrawImageList( Graphics &graphics )
 				TRACE("bbbb cutrect count:%d", cutRect.cutRectList.size());
 				for (; cutRectIter !=  cutRect.cutRectList.end(); ++cutRectIter)
 				{
-					TRACE("bbbb destRect x: %f, y: %f, width: %f, height: %f", rect.X, rect.Y, cutRectIter->Width, cutRectIter->Height);
-					TRACE("bbbb RectF x: %f, y: %f, width:%f, height: %f",cutRectIter->X, cutRectIter->Y, cutRectIter->Width, cutRectIter->Height);
+					//TRACE("bbbb destRect x: %f, y: %f, width: %f, height: %f", rect.X, rect.Y, cutRectIter->Width, cutRectIter->Height);
+					//TRACE("bbbb RectF x: %f, y: %f, width:%f, height: %f",cutRectIter->X, cutRectIter->Y, cutRectIter->Width, cutRectIter->Height);
 					hmWidth += cutRectIter->Width;
 					hmHeight = cutRectIter->Height;
 					rect.Width = cutRectIter->Width;
