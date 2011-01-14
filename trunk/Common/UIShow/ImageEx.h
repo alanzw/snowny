@@ -110,6 +110,7 @@ public:
 private:
 	bool IsGifInShow();
 	bool CreateThreadToShow();
+	void DestroyThreadToShow();
 	bool ShowImageExFlag( int id );
 	bool HideImageExFlag(int id);
 	void ProcessShow();

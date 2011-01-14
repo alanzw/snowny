@@ -191,6 +191,11 @@ void ImageExManager::Hide( int id )
 		TRACE(_T("aaaa not hide\n"));
 		return;
 	}
+	// 退出gif绘制线程，不然会无谓的刷新界面，cxb
+	if (!IsGifInShow())
+	{
+		DestroyThreadToShow();
+	}
 	ProcessShow();
 }
 
@@ -217,7 +222,7 @@ bool ImageExManager::IsGifInShow()
 	std::map<int, ImageExTest*>::iterator iter = m_ImageExList.begin();
 	for (; iter != m_ImageExList.end(); ++iter)
 	{
-		if ((*iter).second->IsAnimatedGIF())
+		if ((*iter).second->IsAnimatedGIF() && iter->second->IsShow())	// 有需要显示的gif，cxb
 		{
 			return true;
 		}
@@ -230,6 +235,9 @@ bool ImageExManager::CreateThreadToShow()
 	if (m_hThread == NULL)
 	{
 		unsigned int nTID = 0;
+		// 清空信号状态，cxb
+		ResetEvent(m_hExitEvent);
+		ResetEvent(m_hPause);
 		m_hThread = (HANDLE) _beginthreadex( NULL, 0, _ThreadAnimationProc, this, CREATE_SUSPENDED,&nTID);
 		if (!m_hThread)
 		{
@@ -331,10 +339,11 @@ void ImageExManager::DrawImageList( Graphics &graphics )
 			case CutRectType:
 				CutRectF cutRect = pImage->GetCutRect();
 				rect.X = cutRect.pt.x;
-				rect.Y = cutRect.pt.x;
+				rect.Y = cutRect.pt.y;	// 这个bug，我找了好久，cxb
 				int hmWidth = 0;
 				int hmHeight = 0;
 				std::vector<RectF>::iterator cutRectIter = cutRect.cutRectList.begin();
+				TRACE("bbbb cutrect count:%d", cutRect.cutRectList.size());
 				for (; cutRectIter !=  cutRect.cutRectList.end(); ++cutRectIter)
 				{
 					TRACE("bbbb destRect x: %f, y: %f, width: %f, height: %f", rect.X, rect.Y, cutRectIter->Width, cutRectIter->Height);
@@ -376,8 +385,8 @@ void ImageExManager::Destroy( int id )
 	if (iter  != m_ImageExList.end())
 	{
 		delete m_ImageExList[id];
+		m_ImageExList.erase(iter);
 	}
-	m_ImageExList.erase(iter);
 }
 
 void ImageExManager::DestroyAll()
@@ -406,4 +415,9 @@ void ImageExManager::ShowAll()
 	{
 		Show((*iter).first);
 	}
+}
+
+void ImageExManager::DestroyThreadToShow()
+{
+	SetEvent(m_hExitEvent);
 }
