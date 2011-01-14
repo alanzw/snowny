@@ -149,6 +149,7 @@ void CFairy::CreateBKWnd()
 		CRect(0,0,width,height), NULL ,NULL ,NULL); 
 
 	m_showWnd->ShowWindow(SW_HIDE);
+	m_showWnd->EnableWindow(FALSE);// 还是需要灰掉窗口，这样窗口不再被激活，因为游戏窗口要在激活的情况下才响应输入，cxb
 	TRACE("aaaa ImageExManager a ");
 	m_imageExManager = new ImageExManager(m_showWnd->GetSafeHwnd());
 	TRACE("aaaa ImageExManager b ");

@@ -234,10 +234,11 @@ bool ImageExManager::CreateThreadToShow()
 {
 	if (m_hThread == NULL)
 	{
+		TRACE(_T("Create thread for gif\n"));
 		unsigned int nTID = 0;
 		// Çå¿ÕÐÅºÅ×´Ì¬£¬cxb
 		ResetEvent(m_hExitEvent);
-		ResetEvent(m_hPause);
+		SetEvent(m_hPause);
 		m_hThread = (HANDLE) _beginthreadex( NULL, 0, _ThreadAnimationProc, this, CREATE_SUSPENDED,&nTID);
 		if (!m_hThread)
 		{
@@ -419,5 +420,10 @@ void ImageExManager::ShowAll()
 
 void ImageExManager::DestroyThreadToShow()
 {
-	SetEvent(m_hExitEvent);
+	if (m_hThread != NULL)
+	{
+		TRACE(_T("Destroy thread for gif\n"));
+		SetEvent(m_hExitEvent);
+		m_hThread = NULL;
+	}
 }
