@@ -51,12 +51,13 @@ BOOL CheckGameFlow(GAMEFLOW wannaFlow, DWORD timeout)
 }
 
 
-void CKeycmd::Excute( BYTE deviceID )
+bool CKeycmd::Excute( BYTE deviceID )
 {
 	TRACE(L"SF4 CKeycmd Excute:%s devid:%d\n",m_Name, deviceID);
-	if (!CheckGameFlow(m_FromFlow, 10000))
+	if (!CheckGameFlow(m_FromFlow, 2000))
 	{
 		TRACE(TEXT("SF4 %s fromFlow error!!!!!!!!!!!!!!!!!!!!!!!"), m_Name);
+		return false;
 	}
 
 	std::vector<KEYCMD>::iterator it;
@@ -81,6 +82,8 @@ void CKeycmd::Excute( BYTE deviceID )
 
 	if (!CheckGameFlow(m_ToFlow, 10000))
 	{
+		return false;
 		TRACE(TEXT("SF4 %s toFlow timeout!!!!!!!!!!!!!!!!!!!!!!!"), m_Name);
 	}
+	return true;
 }

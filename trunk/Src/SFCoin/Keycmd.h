@@ -20,7 +20,7 @@ public:
 	bool ReadCmdFile(const char* fileName);
 	bool SaveCmdFile(const char* fileName);
 	DWORD InsertCmd(DWORD key,DWORD interval,DWORD pos=-1);
-	void Excute(BYTE deviceID);// 对指定的设备模拟，阻塞的，直到跳变到toFlow
+	bool Excute(BYTE deviceID);// 对指定的设备模拟，阻塞的，直到跳变到toFlow
 private:
 	std::vector<KEYCMD> m_vCmds;
 	CString m_Name;

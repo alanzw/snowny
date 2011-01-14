@@ -226,6 +226,11 @@ void CSFCoinSetDlg::OnTimer(UINT_PTR nIDEvent)
 	{
 		m_SetItems[m_CurItem]->ToNext();
 	}
+	// 增加f2退出设置
+	if (GetAsyncKeyState(VK_F2))
+	{
+		OnOK();
+	}
 
 	CDialog::OnTimer(nIDEvent);
 }

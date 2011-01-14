@@ -12,7 +12,9 @@ public:
 		PS_STARTTING,
 		PS_GAMING,
 		PS_DEAD,
-		PS_GAMEOVER};
+		PS_GAMEOVER,
+		PS_WINNER
+	};
 
 	CPlayer(DWORD id=0);
 	DWORD GetCoinNumber();
