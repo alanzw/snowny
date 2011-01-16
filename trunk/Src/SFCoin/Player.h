@@ -12,8 +12,7 @@ public:
 		PS_STARTTING,
 		PS_GAMING,
 		PS_DEAD,
-		PS_GAMEOVER,
-		PS_WINNER
+		PS_GAMEOVER
 	};
 
 	CPlayer(DWORD id=0);
