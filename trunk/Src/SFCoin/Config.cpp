@@ -26,11 +26,11 @@ BOOL CConfig::ReadConfig(LPCWSTR fileName)
 	if(-1==Difficulty)
 		return FALSE;
 	TRACE(L"StreetFighter Difficulty:%d\n",Difficulty);
-	Difficulty=Difficulty-3;
+	//Difficulty=Difficulty-3;
 	Rounds=GetPrivateProfileInt(L"Rounds",L"Sel",0,fileName);
-	Rounds=Rounds-1;
+	//Rounds=Rounds-1;
 	TimeLimit=GetPrivateProfileInt(L"TimeLimit",L"Sel",0,fileName);
-	TimeLimit=TimeLimit-2;
+	//TimeLimit=TimeLimit-2;
 	TRACE(L"StreetFighter CoinMode:%d\n",CoinMode);
 	TRACE(L"StreetFighter m_UnitCoin:%d\n",UnitCoin);
 	TRACE(L"StreetFighter Difficulty:%d\n",Difficulty);

@@ -8,7 +8,9 @@ CString g_strMainmenu=L"mainmenu.emz";
 CString g_strCSelect=L"cselect.ems.emz";
 CString g_strStarVs=L"Game\\Menu\\ENG\\vs.ems.emz";
 CString g_strDemo=L"Game\\Logo\\capcom";
+CString g_strStartDemo = L"Game\\Window\\ENG\\opt13.emz";
 GAMEFLOW g_GameFlow=flow_start;
+BOOL	g_IsStartDemo = FALSE;
 CRITICAL_SECTION g_sc_gameflow;
 CConfig  g_Config;
 
@@ -58,6 +60,10 @@ HANDLE WINAPI Hook_CreateFileW(
 		TRACE(L"StreetFighter ========================CreateFileW:%s",strFileName);
 		TRACE(L"StreetFighter g_GameFlow: %d\n",g_GameFlow);
 	}
+	else if (strFileName.Find(g_strStartDemo) != -1)
+	{
+		g_IsStartDemo = TRUE;
+	}
 	else if(strFileName.Find(g_strStarVs,0)!=-1)
 	{
 		EnterCriticalSection(&g_sc_gameflow);
@@ -79,21 +85,21 @@ HANDLE WINAPI Hook_CreateFileW(
 }
 void GameFlowUpdate()
 {
-	PVOID pCunterTime=(PVOID)0x00a44ffc;
+	PVOID pCunterTime=(PVOID)0x00a44ffc;// 00A4500C
 	try
 	{
-		if(g_GameFlow == flow_game && *(DWORD*)pCunterTime != 0)
-		{
-			EnterCriticalSection(&g_sc_gameflow);
-			g_GameFlow=flow_continue;
-			LeaveCriticalSection(&g_sc_gameflow);
-			TRACE(L"StreetFighter g_GameFlow: %d %d\n",g_GameFlow, *(DWORD*)pCunterTime);
-		}
-		else if (g_GameFlow != flow_continue) // 游戏在再次进入continue状态时才重置，帮助游戏清零，cxb
-		{
-			*(DWORD*)pCunterTime = 0;
-			//TRACE(L"StreetFighter reset continue time: %d\n", *(DWORD*)pCunterTime);
-		}
+// 		if(g_GameFlow == flow_game && *(DWORD*)pCunterTime != 0)
+// 		{
+// 			EnterCriticalSection(&g_sc_gameflow);
+// 			g_GameFlow=flow_continue;
+// 			LeaveCriticalSection(&g_sc_gameflow);
+// 			TRACE(L"StreetFighter g_GameFlow: %d %d\n",g_GameFlow, *(DWORD*)pCunterTime);
+// 		}
+// 		else if (g_GameFlow != flow_continue) // 游戏在再次进入continue状态时才重置，帮助游戏清零，cxb
+// 		{
+// 			*(DWORD*)pCunterTime = 0;
+// 			//TRACE(L"StreetFighter reset continue time: %d\n", *(DWORD*)pCunterTime);
+// 		}
 
 		//static DWORD lastTime = GetTickCount();
 		//if (GetTickCount() - lastTime > 2000)

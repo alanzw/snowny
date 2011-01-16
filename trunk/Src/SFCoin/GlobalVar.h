@@ -19,6 +19,8 @@ extern GAMEFLOW g_GameFlow;
 
 extern CConfig  g_Config;
 
+extern BOOL		g_IsStartDemo;
+
 BOOL InitializeLogic();
 VOID UnInitializeLogic();
 void GameFlowUpdate();

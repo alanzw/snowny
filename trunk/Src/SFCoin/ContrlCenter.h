@@ -63,7 +63,6 @@ public:
 	//CKeycmd m_cmdMainmenu2Title;   //游戏结束后回到title画面
 	CPlayer m_Players[2];
 	BYTE	m_ActivePlayer;
-	BOOL m_Setted;
 
 	CFairy* m_Fairy;
 	HWND   m_GameWnd;

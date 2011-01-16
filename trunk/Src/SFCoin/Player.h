@@ -23,6 +23,7 @@ public:
 
 	BOOL IsClickStart() const { return m_Status == PS_CLICKSTART; }
 	BOOL IsDead() const {return m_Status == PS_DEAD;}
+	BOOL IsIdle() const {return m_Status == PS_IDLE; }
 	BOOL IsInGame() const {return m_Status == PS_GAMING;}
 	BOOL ClickStart();
 
@@ -39,8 +40,8 @@ private:
 	PlayerStatus m_Status;
 	DWORD		 m_StatusChangeTime;
 
-	DWORD		 m_NoHpTime;
-
 	static DWORD m_UnionCoins;
 	static DWORD m_OldUnionCoins;
+
+	DWORD		*m_ContinueVal;
 };

@@ -295,7 +295,14 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 			// 键盘也是1P
 			if (g_DeviceTbl[0].isLocked)
 			{
-				memset(data, 0, size);// 键盘锁定，只透几个关心的键
+				if (g_DeviceTbl[0].lockedKey == 0xFF)
+				{
+					memset(data, 0, size);// 键盘锁定，只透几个关心的键
+				}
+				else if (g_DeviceTbl[0].lockedKey == IDK_START)
+				{
+					kb[DIK_ESCAPE] = 0;
+				}
 			}
 		}
 		else if (size == sizeof(DIJOYSTATE))
@@ -342,7 +349,8 @@ void SimulateKeyDown(LPVOID ths, DWORD size, LPVOID data)
 
 	if (di.hasSimulateKeyID)
 	{
-		ATLTRACE(TEXT("DIH Simulate key %x"), di.simulateKeyID);
+		ATLTRACE(TEXT("DIH Simulate key %x %d %d"),
+			di.simulateKeyID, size, sizeof(DIJOYSTATE));
 		if (size == sizeof(BYTE) * 0x100)	// 键盘模拟
 		{
 			BYTE* kb = static_cast<BYTE*>(data);
