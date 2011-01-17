@@ -7,6 +7,7 @@
 #include <io.h>
 #include <assert.h>
 #include <shlwapi.h>
+#include "Input.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -101,6 +102,11 @@ BOOL CSFCoinSetDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+
+	if (!m_Input.Initialize(GetSafeHwnd()))
+	{
+		MessageBox(TEXT("Joystick initialize failed"));
+	}
 
 #ifndef _DEBUG
 	MoveWindow(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
@@ -198,7 +204,7 @@ void CSFCoinSetDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: Add your message handler code here and/or call default
 
-	if (GetAsyncKeyState(VK_UP))
+	if (m_Input.IsKeyDown(VK_UP))
 	{
 		m_SetItems[m_CurItem]->SetActive(FALSE);
 		m_CurItem --;
@@ -208,7 +214,7 @@ void CSFCoinSetDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 		m_SetItems[m_CurItem]->SetActive(TRUE);
 	}
-	else if (GetAsyncKeyState(VK_DOWN))
+	else if (m_Input.IsKeyDown(VK_DOWN))
 	{
 		m_SetItems[m_CurItem]->SetActive(FALSE);
 		m_CurItem ++;
@@ -218,16 +224,16 @@ void CSFCoinSetDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 		m_SetItems[m_CurItem]->SetActive(TRUE);
 	}
-	if (GetAsyncKeyState(VK_LEFT))
+	if (m_Input.IsKeyDown(VK_LEFT))
 	{
 		m_SetItems[m_CurItem]->ToPrev();
 	}
-	if (GetAsyncKeyState(VK_RIGHT))
+	if (m_Input.IsKeyDown(VK_RIGHT))
 	{
 		m_SetItems[m_CurItem]->ToNext();
 	}
 	// 增加f2退出设置
-	if (GetAsyncKeyState(VK_F2))
+	if (m_Input.IsKeyDown(VK_F2))
 	{
 		OnOK();
 	}

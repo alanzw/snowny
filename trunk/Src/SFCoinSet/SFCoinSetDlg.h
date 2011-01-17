@@ -5,6 +5,7 @@
 
 #include "SetItemWnd.h"
 #include <vector>
+#include "Input.h"
 
 // CSFCoinSetDlg dialog
 class CSFCoinSetDlg : public CDialog
@@ -36,6 +37,8 @@ protected:
 	std::vector<CSetItemWnd *> m_SetItems;
 	int m_CurItem;
 	RECT m_SettingRect;
+
+	CInput m_Input;
 	
 public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
