@@ -48,19 +48,8 @@ public:
 
 	CKeycmd m_cmdDemo2Titile;		//游戏开始，从demo画面到title画面
 	CKeycmd m_cmdtitle2Mainmenu;	//游戏开始，从title画面到Mainmenu画面
-	CKeycmd m_mainmenu2SelectChar;	//游戏开始，从Mainmenu到角色选择
 	CKeycmd m_mainMenu2Title;		//游戏从Mainmenu到title画面
-	CKeycmd m_mainMenuSetting2SelectChar;		//游戏初始设置
-	CKeycmd m_selectChar2mainMenu;				//游戏选角色到主菜单
 
-	CKeycmd m_VersusSetting;				// 对战模式设置
-	CKeycmd m_VersusMainmenu2SelectChar;	// 对战模式进入选人
-	CKeycmd m_Game2MainMenu;				// 街机模式切换至对战模式，如已在游戏中，退出游戏
-	
-	//CKeycmd m_cmdDemo2SelectChar;  //游戏开始，从demo画面到角色选择
-	//CKeycmd m_cmdTitle2SelectChar; //游戏开始，从Title画面到角色选择
-	//CKeycmd m_cmdSetting;          //游戏初始设置
-	//CKeycmd m_cmdMainmenu2Title;   //游戏结束后回到title画面
 	CPlayer m_Players[2];
 	BYTE	m_ActivePlayer;
 

@@ -23,15 +23,15 @@ public:
 	BOOL IsClickStart() const { return m_Status == PS_CLICKSTART; }
 	BOOL IsDead() const {return m_Status == PS_DEAD;}
 	BOOL IsIdle() const {return m_Status == PS_IDLE; }
-	BOOL IsInGame() const {return m_Status == PS_GAMING;}
-	BOOL ClickStart();
+	BOOL IsInGame() const {return m_Status == PS_GAMING && QueryHP() > 0;}
+	BOOL ClickStart(DWORD *continueValAddr);
 
 	PlayerStatus GetStatus() {return m_Status;}
 	void SetStatus(CPlayer::PlayerStatus val) { m_Status = val; m_StatusChangeTime = GetTickCount();}
 	void RefreshStatus(GAMEFLOW gameFlow);
 
 private:
-	int QueryHP();
+	int QueryHP() const;
 
 	DWORD m_dCoins;
 	DWORD m_OldCoins;

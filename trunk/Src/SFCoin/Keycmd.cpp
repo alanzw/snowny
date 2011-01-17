@@ -54,7 +54,7 @@ BOOL CheckGameFlow(GAMEFLOW wannaFlow, DWORD timeout)
 bool CKeycmd::Excute( BYTE deviceID )
 {
 	TRACE(L"SF4 CKeycmd Excute:%s devid:%d\n",m_Name, deviceID);
-	if (!CheckGameFlow(m_FromFlow, 2000))
+	if (!CheckGameFlow(m_FromFlow, 1000))
 	{
 		TRACE(TEXT("SF4 %s fromFlow error!!!!!!!!!!!!!!!!!!!!!!!"), m_Name);
 		return false;
@@ -80,10 +80,10 @@ bool CKeycmd::Excute( BYTE deviceID )
 #endif
 	}
 
-	if (!CheckGameFlow(m_ToFlow, 10000))
+	if (!CheckGameFlow(m_ToFlow, 2000))
 	{
-		return false;
 		TRACE(TEXT("SF4 %s toFlow timeout!!!!!!!!!!!!!!!!!!!!!!!"), m_Name);
+		return false;
 	}
 	return true;
 }
