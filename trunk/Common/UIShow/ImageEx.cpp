@@ -181,6 +181,7 @@ void ImageExManager::ProcessShow()
 		DeleteObject(hBitMap);
 		DeleteObject(hdcMemory); // 资源泄露，在测试机上表现的很卡，cxb
 		ReleaseDC(m_hwnd, hDC);
+		ReleaseDC(m_hwnd, hdcMemory);
 	}
 }
 
