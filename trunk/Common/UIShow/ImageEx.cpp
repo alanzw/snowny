@@ -131,8 +131,15 @@ bool ImageExManager::ShowImageExFlag( int id )
 	std::map<int, ImageExTest*>::iterator iter;
 	if (m_ImageExList.find(id)  != m_ImageExList.end())
 	{
-		m_ImageExList[id]->Show();
-		return true;
+		if (m_ImageExList[id]->IsShow())
+		{
+			return false;
+		}
+		else
+		{
+			m_ImageExList[id]->Show();
+			return true;
+		}
 	}
 	return false;
 }
@@ -142,14 +149,22 @@ bool ImageExManager::HideImageExFlag( int id )
 	std::map<int, ImageExTest*>::iterator iter;
 	if (m_ImageExList.find(id)  != m_ImageExList.end())
 	{
-		m_ImageExList[id]->Hide();
-		return true;
+		if (!m_ImageExList[id]->IsShow())
+		{
+			return false;
+		}
+		else
+		{
+			m_ImageExList[id]->Hide();
+			return true;
+		}
 	}
 	return false;
 }
 
 void ImageExManager::ProcessShow()
 {
+	TRACE("aaaa ProcessShow");
 	CRect winRect;
 	::GetWindowRect(m_hwnd, &winRect);
 	HDC hDC = GetDC(m_hwnd);	

@@ -50,7 +50,12 @@ void CFairy::DestroyAllPic()
 
 void CFairy::ShowPic( int id )
 {
-	m_showWnd->ShowWindow(SW_NORMAL);
+	TRACE("bbbb ShowPic");
+	if (!m_showWnd->IsWindowVisible())
+	{
+		m_showWnd->ShowWindow(SW_NORMAL);
+	}
+	
 	m_imageExManager->Show(id);
 }
 
