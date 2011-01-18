@@ -27,6 +27,7 @@
 #define CREDIT0	8
 #define CREDITTEXT1 9
 #define CREDIT1	10
+#define PLSSTART 11
 
 
 VOID KeyProc(BYTE, KeyState&);
