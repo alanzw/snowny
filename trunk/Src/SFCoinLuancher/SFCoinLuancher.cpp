@@ -33,6 +33,37 @@ CSFCoinLuancherApp theApp;
 
 
 // CSFCoinLuancherApp initialization
+BOOL CopyFolder(LPCTSTR lpszFromPath,LPCTSTR lpszToPath)
+{
+	SHFILEOPSTRUCT FileOp; 
+	ZeroMemory((void*)&FileOp,sizeof(SHFILEOPSTRUCT));
+
+	FileOp.fFlags = FOF_NOCONFIRMATION ; 
+	FileOp.hNameMappings = NULL; 
+	FileOp.hwnd = NULL; 
+	FileOp.lpszProgressTitle = NULL; 
+	FileOp.pFrom = lpszFromPath; 
+	FileOp.pTo = lpszToPath; 
+	FileOp.wFunc = FO_COPY; 
+
+	return SHFileOperation(&FileOp) == 0;
+}
+
+BOOL DeleteFolder(LPCTSTR lpszPath) 
+{ 
+	SHFILEOPSTRUCT FileOp; 
+	ZeroMemory((void*)&FileOp,sizeof(SHFILEOPSTRUCT));
+
+	FileOp.fFlags = FOF_NOCONFIRMATION; 
+	FileOp.hNameMappings = NULL; 
+	FileOp.hwnd = NULL; 
+	FileOp.lpszProgressTitle = NULL; 
+	FileOp.pFrom = lpszPath; 
+	FileOp.pTo = NULL; 
+	FileOp.wFunc = FO_DELETE; 
+
+	return SHFileOperation(&FileOp) == 0;
+}
 
 BOOL CSFCoinLuancherApp::InitInstance()
 {
@@ -58,6 +89,14 @@ BOOL CSFCoinLuancherApp::InitInstance()
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
+
+	bool ret = DeleteFolder(L"C:\\Users\\lenovo\\Documents\\CAPCOM\\STREETFIGHTERIV\0\0");
+	ret =CopyFolder(L"G:\\game\\StreetFighterIV\\3DMGame_SF4_save\\STREETFIGHTERIV\0\0",L"C:\\Users\\lenovo\\Documents\\CAPCOM");
+
+
+	ret =DeleteFolder(L"C:\\Users\\lenovo\\AppData\\Local\\Microsoft\\XLive\0\0");
+	ret =CopyFolder(L"G:\\game\\StreetFighterIV\\3DMGame_SF4_save\\XLive\0\0",L"C:\\Users\\lenovo\\AppData\\Local\\Microsoft");
+
 
 	// ¹Ø±ÕÈ«ÆÁ
 	TCHAR gameConfigFileName[] = TEXT("C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\CAPCOM\\STREETFIGHTERIV\\config.ini");
