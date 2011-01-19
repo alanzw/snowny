@@ -45,7 +45,7 @@ public:
 	void UpdateCoinShow();
 
 	// 保持街机模式和对战模式上回合、时间限制一致
-	void Setting();	// 街机模式、对战模式设置
+	void Loginning();	// 街机模式、对战模式设置
 
 	CKeycmd m_cmdDemo2Titile;		//游戏开始，从demo画面到title画面
 	CKeycmd m_cmdtitle2Mainmenu;	//游戏开始，从title画面到Mainmenu画面
