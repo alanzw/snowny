@@ -131,11 +131,11 @@ bool ImageExManager::ShowImageExFlag( int id )
 	std::map<int, ImageExTest*>::iterator iter;
 	if (m_ImageExList.find(id)  != m_ImageExList.end())
 	{
-		if (m_ImageExList[id]->IsShow())
-		{
-			return false;
-		}
-		else
+		//if (m_ImageExList[id]->IsShow())
+		//{
+		//	return false;
+		//}
+		//else
 		{
 			m_ImageExList[id]->Show();
 			return true;

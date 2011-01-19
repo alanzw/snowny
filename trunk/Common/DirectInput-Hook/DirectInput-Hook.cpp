@@ -213,12 +213,12 @@ size_t GetDeviceID(LPVOID obj)
 	return 0;
 }
 
-void UpdateKeyState( BYTE &newState, BYTE &oldState, BOOL factor) 
+inline void UpdateKeyState( BYTE &newState, BYTE &oldState, BOOL factor) 
 {
 	newState = factor && oldState == 0 ? 1 : 0;
 	oldState = factor ? 1 : 0;
 }
-void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
+inline void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 {
 #ifdef _DEBUG
 	if (size == sizeof(BYTE) * 256)
@@ -343,7 +343,7 @@ void RealityKeyDown(LPVOID ths, DWORD size, LPVOID data)
 	}
 }
 
-void SimulateKeyDown(LPVOID ths, DWORD size, LPVOID data)
+inline void SimulateKeyDown(LPVOID ths, DWORD size, LPVOID data)
 {
 	DeviceInfo &di = g_DeviceTbl[GetDeviceID(ths)];
 
