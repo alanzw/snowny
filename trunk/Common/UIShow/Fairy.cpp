@@ -152,6 +152,10 @@ void CFairy::CreateBKWnd()
 		HBRUSH(COLOR_WINDOW+1),   NULL), 
 		_T("MyPopupWindow "), WS_POPUP,
 		CRect(0,0,width,height), NULL ,NULL ,NULL); 
+	
+	DWORD dwExStyle=GetWindowLong(m_showWnd->GetSafeHwnd(),GWL_EXSTYLE);
+	if((dwExStyle&0x80000)!=0x80000)
+		SetWindowLong(m_showWnd->GetSafeHwnd(),GWL_EXSTYLE,dwExStyle^0x80000);
 
 	m_showWnd->ShowWindow(SW_HIDE);
 	m_showWnd->EnableWindow(FALSE);// 还是需要灰掉窗口，这样窗口不再被激活，因为游戏窗口要在激活的情况下才响应输入，cxb

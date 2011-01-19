@@ -114,8 +114,44 @@ private:
 	bool ShowImageExFlag( int id );
 	bool HideImageExFlag(int id);
 	void ProcessShow();
+	void GenerateRect(RECT &rect)
+	{
+		rect.left = 0x0fffffff;
+		rect.top = 0x0fffffff;
+		rect.bottom = 0;
+		rect.right = 0;
+		std::map<int, ImageExTest*>::iterator iter = m_ImageExList.begin();
+		for (; iter != m_ImageExList.end(); ++iter)
+		{
+			if (iter->second->IsShow())	// 有需要显示的gif，cxb
+			{
+				if (iter->second->GetShowRectType() == WholeRectType)
+				{
+					RectF r = iter->second->ImageRect();
+					rect.left = rect.left > r.X ? r.X : rect.left;
+					rect.top = rect.top > r.Y ? r.Y : rect.top;
+					rect.right = rect.right < r.X + r.Width ? r.X + r.Width : rect.right;
+					rect.bottom = rect.bottom < r.Y + r.Height ? r.Y + r.Height : rect.bottom;
+				}
+				else
+				{
+					CutRectF cr = iter->second->ImageCutRect();
+					rect.left = rect.left > cr.pt.x ? cr.pt.x : rect.left;
+					rect.top = rect.top > cr.pt.y ? cr.pt.y : rect.top;
+					int width = 0, height = 0;
+					for (size_t i = 0;  i < cr.cutRectList.size(); i ++)
+					{
+						width += cr.cutRectList[i].Width;
+						height = height < cr.cutRectList[i].Height ? cr.cutRectList[i].Height : height;
+					}
+					rect.right = rect.right < cr.pt.x + width ? cr.pt.x + width : rect.right;
+					rect.bottom = rect.bottom < cr.pt.y + height ? cr.pt.y + height : rect.bottom;
+				}
+			}
+		}
+	}
 
-	void DrawImageList( Graphics &graphics );
+	void DrawImageList( Graphics &graphics , int offsetX, int offsetY);
 	static UINT WINAPI _ThreadAnimationProc(LPVOID pParam);
 	bool DrawFrameGIF(); 
 	void ProcessGifsActiveFrame(int framePosition);

@@ -166,12 +166,14 @@ void ImageExManager::ProcessShow()
 {
 	TRACE("aaaa ProcessShow");
 	CRect winRect;
-	::GetWindowRect(m_hwnd, &winRect);
+	//::GetWindowRect(m_hwnd, &winRect);
+	GenerateRect(winRect);
+	TRACE("aaaa GenerateRect(%d, %d, %d, %d)", winRect.left, winRect.top, winRect.right, winRect.bottom);
 	HDC hDC = GetDC(m_hwnd);	
 	HDC hdcMemory=CreateCompatibleDC(hDC);
 
 	HBITMAP hBitMap=CreateCompatibleBitmap(hDC, winRect.Width(), winRect.Height());//创建需要大小的dc
-	SelectObject(hdcMemory,hBitMap);
+	HBITMAP hOldBitmap = (HBITMAP)SelectObject(hdcMemory,hBitMap);
 	if (hDC)
 	{
 		m_Blend.BlendOp=0; //theonlyBlendOpdefinedinWindows2000
@@ -180,23 +182,21 @@ void ImageExManager::ProcessShow()
 		m_Blend.SourceConstantAlpha= 255;//AC_SRC_ALPHA
 		Graphics graphics(hdcMemory);
 
-		DrawImageList(graphics);
+		DrawImageList(graphics, winRect.left, winRect.top);
 
 		POINT ptdes={winRect.left,  winRect.top};									//代表指定dc的位置
 		SIZE sizeWindow={winRect.Width() , winRect.Height()};						//指定dc的大小
 		BOOL bRet=FALSE;
 		POINT ptSrc={0, 0};
-		DWORD dwExStyle=GetWindowLong(m_hwnd,GWL_EXSTYLE);
-		if((dwExStyle&0x80000)!=0x80000)
-			SetWindowLong(m_hwnd,GWL_EXSTYLE,dwExStyle^0x80000);
 
 		::UpdateLayeredWindow(m_hwnd, hDC, &ptdes,
 			&sizeWindow, hdcMemory, &ptSrc,0, &m_Blend, 2);
 
+		graphics.ReleaseHDC(hdcMemory);
+		SelectObject(hdcMemory, hOldBitmap);
 		DeleteObject(hBitMap);
-		DeleteObject(hdcMemory); // 资源泄露，在测试机上表现的很卡，cxb
+		DeleteDC(hdcMemory); // 资源泄露，在测试机上表现的很卡，cxb
 		ReleaseDC(m_hwnd, hDC);
-		DeleteDC(hdcMemory);
 	}
 }
 
@@ -337,7 +337,7 @@ ImageExTest * ImageExManager::GetMaxFrameGif()
 	return pMaxImage;
 }
 
-void ImageExManager::DrawImageList( Graphics &graphics )
+void ImageExManager::DrawImageList( Graphics &graphics, int offsetX, int offsetY)
 {
 	std::map<int, ImageExTest*>::iterator iter = m_ImageExList.begin();
 	for (; iter != m_ImageExList.end(); ++iter)
@@ -351,6 +351,8 @@ void ImageExManager::DrawImageList( Graphics &graphics )
 			{
 			case WholeRectType:
 				rect = pImage->ImageRect();
+				rect.X -= offsetX;
+				rect.Y -= offsetY;
 				graphics.DrawImage(pImage, rect, 0, 0, pImage->GetWidth(),pImage->GetHeight(), UnitPixel );
 				break;
 			case CutRectType:
@@ -369,7 +371,10 @@ void ImageExManager::DrawImageList( Graphics &graphics )
 					hmHeight = cutRectIter->Height;
 					rect.Width = cutRectIter->Width;
 					rect.Height = cutRectIter->Height;
-					graphics.DrawImage(pImage, rect,cutRectIter->X, cutRectIter->Y,cutRectIter->Width,cutRectIter->Height, UnitPixel );
+					RectF temp = rect;
+					temp.X -= offsetX;
+					temp.Y -= offsetY;
+					graphics.DrawImage(pImage, temp,cutRectIter->X, cutRectIter->Y,cutRectIter->Width,cutRectIter->Height, UnitPixel );
 					rect.X += cutRectIter->Width;
 				}
 				break;

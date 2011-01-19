@@ -90,12 +90,12 @@ BOOL CSFCoinLuancherApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
-	bool ret = DeleteFolder(L"C:\\Users\\lenovo\\Documents\\CAPCOM\\STREETFIGHTERIV\0\0");
-	ret =CopyFolder(L"G:\\game\\StreetFighterIV\\3DMGame_SF4_save\\STREETFIGHTERIV\0\0",L"C:\\Users\\lenovo\\Documents\\CAPCOM");
+	bool ret = DeleteFolder(L"C:\\Documents and Settings\\Administrator\\My Documents\\CAPCOM\\STREETFIGHTERIV\0\0");
+	ret =CopyFolder(L".\\SF4Con\\STREETFIGHTERIV\0\0",L"C:\\Documents and Settings\\Administrator\\My Documents\\CAPCOM");
 
 
-	ret =DeleteFolder(L"C:\\Users\\lenovo\\AppData\\Local\\Microsoft\\XLive\0\0");
-	ret =CopyFolder(L"G:\\game\\StreetFighterIV\\3DMGame_SF4_save\\XLive\0\0",L"C:\\Users\\lenovo\\AppData\\Local\\Microsoft");
+	ret =DeleteFolder(L"C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft\\XLive\0\0");
+	ret =CopyFolder(L".\\SF4Con\\XLive\0\0",L"C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft");
 
 
 	// ¹Ø±ÕÈ«ÆÁ
@@ -106,17 +106,17 @@ BOOL CSFCoinLuancherApp::InitInstance()
 	WritePrivateProfileString(TEXT("DISPLAY"), TEXT("Resolution"), (LPCTSTR)resolution, gameConfigFileName);
 
 
-	//HKEY appKey = 0;
-	//if(ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows"),
-	//	0, KEY_SET_VALUE, &appKey))
-	//{
-	//	char dll[MAX_PATH] = {0};
-	//	GetModuleFileNameA(GetModuleHandle(NULL), dll, MAX_PATH);
-	//	PathRemoveFileSpecA(dll);
- //		strcat_s(dll, MAX_PATH, "\\SFCoin.dll");
- //
- //		if (ERROR_SUCCESS == RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1))
-	//	{
+	HKEY appKey = 0;
+	if(ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows"),
+		0, KEY_SET_VALUE, &appKey))
+	{
+		char dll[MAX_PATH] = {0};
+		GetModuleFileNameA(GetModuleHandle(NULL), dll, MAX_PATH);
+		PathRemoveFileSpecA(dll);
+ 		strcat_s(dll, MAX_PATH, "\\SFCoin.dll");
+ 
+ 		if (ERROR_SUCCESS == RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1))
+		{
 			STARTUPINFO si = {0};
 			si.cb = sizeof(si);
 			PROCESS_INFORMATION pi = {0};
@@ -136,12 +136,12 @@ BOOL CSFCoinLuancherApp::InitInstance()
 
 			Sleep(5000);
 
-			//dll[0] = 0;
+			dll[0] = 0;
 
-			//RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1);
-			//RegCloseKey(appKey);
- 		//}
-	//}
+			RegSetValueExA(appKey, "AppInit_Dlls", 0, REG_SZ, (BYTE *)dll, strlen(dll) + 1);
+			RegCloseKey(appKey);
+ 		}
+	}
 
 //	CSFCoinLuancherDlg dlg;
 // 	m_pMainWnd = &dlg;
