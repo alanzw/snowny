@@ -90,12 +90,12 @@ BOOL CSFCoinLuancherApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
-	bool ret = DeleteFolder(L"C:\\Documents and Settings\\Administrator\\My Documents\\CAPCOM\\STREETFIGHTERIV\0\0");
-	ret =CopyFolder(L".\\SF4Con\\STREETFIGHTERIV\0\0",L"C:\\Documents and Settings\\Administrator\\My Documents\\CAPCOM");
-
-
-	ret =DeleteFolder(L"C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft\\XLive\0\0");
-	ret =CopyFolder(L".\\SF4Con\\XLive\0\0",L"C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft");
+// 	bool ret = DeleteFolder(L"C:\\Documents and Settings\\Administrator\\My Documents\\CAPCOM\\STREETFIGHTERIV\0\0");
+// 	ret =CopyFolder(L".\\SF4Con\\STREETFIGHTERIV\0\0",L"C:\\Documents and Settings\\Administrator\\My Documents\\CAPCOM");
+// 
+// 
+// 	ret =DeleteFolder(L"C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft\\XLive\0\0");
+// 	ret =CopyFolder(L".\\SF4Con\\XLive\0\0",L"C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft");
 
 
 	// ¹Ø±ÕÈ«ÆÁ
