@@ -16,4 +16,5 @@ public:
 	LONG Rounds;
 	LONG TimeLimit;
 	LONG UnitCoin;
+	LONG IsFree;
 };

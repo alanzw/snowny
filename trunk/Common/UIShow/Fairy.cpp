@@ -36,6 +36,7 @@ void CFairy::ResetCoinInsert(DWORD id, int life, int coins, int coinsOneLife )
 	CutRectF rect;
 	rect.cutRectList = GetCutRectList(life, coins, coinsOneLife);
 	m_imageExManager->Reset(id, rect);
+	m_imageExManager->Show(id);
 }
 
 void CFairy::DestroyPic( int id )

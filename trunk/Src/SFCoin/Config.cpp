@@ -31,6 +31,7 @@ BOOL CConfig::ReadConfig(LPCWSTR fileName)
 	//Rounds=Rounds-1;
 	TimeLimit=GetPrivateProfileInt(L"TimeLimit",L"Sel",0,fileName);
 	//TimeLimit=TimeLimit-2;
+	IsFree=GetPrivateProfileInt(L"IsFree",L"Sel",0,fileName);
 	TRACE(L"StreetFighter CoinMode:%d\n",CoinMode);
 	TRACE(L"StreetFighter m_UnitCoin:%d\n",UnitCoin);
 	TRACE(L"StreetFighter Difficulty:%d\n",Difficulty);
