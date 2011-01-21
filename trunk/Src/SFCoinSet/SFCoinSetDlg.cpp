@@ -233,7 +233,7 @@ void CSFCoinSetDlg::OnTimer(UINT_PTR nIDEvent)
 		m_SetItems[m_CurItem]->ToNext();
 	}
 	// 增加f2退出设置
-	if (m_Input.IsKeyDown(VK_F2))
+	if (m_Input.IsKeyDown(VK_F7))
 	{
 		OnOK();
 	}

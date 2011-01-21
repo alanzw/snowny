@@ -180,7 +180,7 @@ BOOL CInput::IsKeyDown( BYTE keyid )
 		return g_js.lX < 0;
 	case VK_RIGHT:
 		return g_js.lX > 0;
-	case VK_F2:
+	case VK_F7:
 		return g_js.rgbButtons[0] & 0x80; 
 	}
 
