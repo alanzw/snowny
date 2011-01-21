@@ -165,6 +165,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FlashFairy.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ImageEx.cpp"
 				>
 			</File>
@@ -204,6 +208,10 @@
 			>
 			<File
 				RelativePath=".\Fairy.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FlashFairy.h"
 				>
 			</File>
 			<File

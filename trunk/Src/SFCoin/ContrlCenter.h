@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "../../Common/DirectInput-Hook/DirectInput-Hook.h"
 #include "../../Common/UIShow/Fairy.h"
+#include "../../Common/UIShow/FlashFairy.h"
 
 #define MOST_SIMPLE (-3)
 #define VERY_SIMPLE (-2)
@@ -18,16 +19,13 @@
 
 #define STANDBYBG 0
 #define LOADINGBG 1
-
 #define IPSTART	3
-#define INSERTCOIN 4
 #define LOADING 5
 #define TIMECOUNTER  6
 #define CREDITTEXT0 7
 #define CREDIT0	8
 #define CREDITTEXT1 9
 #define CREDIT1	10
-#define PLSSTART 11
 
 
 VOID KeyProc(BYTE, KeyState&);
@@ -55,6 +53,10 @@ public:
 	BYTE	m_ActivePlayer;
 
 	CFairy* m_Fairy;
+	CFlashFairy *m_FreeingFairy;
+	CFlashFairy *m_InsertCoinFairy;
+	CFlashFairy *m_PressStartFairy;
+
 	HWND   m_GameWnd;
 
 	BOOL	m_IsArcadeMode;		// ½Ö»úÄ£Ê½

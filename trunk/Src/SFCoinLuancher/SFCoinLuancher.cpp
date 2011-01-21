@@ -129,10 +129,7 @@ BOOL CSFCoinLuancherApp::InitInstance()
 			}
 			while (targetWnd != NULL && ::IsWindow(targetWnd))
 			{
-				targetWnd = GetDlgItem(targetWnd, 0x1);
-				SendMessage(targetWnd, WM_LBUTTONDOWN, 0, 0);
-				SendMessage(targetWnd, WM_LBUTTONUP, 0, 0);
-
+				SendMessage(targetWnd, WM_COMMAND, 0x1, 0);
 				Sleep(100);
 			}
 

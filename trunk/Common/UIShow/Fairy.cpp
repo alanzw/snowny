@@ -31,7 +31,7 @@ void CFairy::CreateCoinInsert(int id, std::wstring picName, int life, int coins,
 
 void CFairy::ResetCoinInsert(DWORD id, int life, int coins, int coinsOneLife )
 {
-	TRACE(_T("aaaa CreateTransparentPic life:%d, conis:%d, coinsonelife : %d", life, coins, coinsOneLife)
+	TRACE(_T("aaaa ResetCoinInsert life:%d, conis:%d, coinsonelife : %d", life, coins, coinsOneLife)
 		, life, coins, coinsOneLife);
 	CutRectF rect;
 	rect.cutRectList = GetCutRectList(life, coins, coinsOneLife);
