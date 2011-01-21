@@ -32,6 +32,7 @@ public:
 
 private:
 	int QueryHP() const;
+	void AddCoins(int increCoins);
 
 	DWORD m_dCoins;
 	DWORD m_OldCoins;
