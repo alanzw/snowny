@@ -12,7 +12,7 @@ public:
 	~CFairy(void);
 
 	//pt: SHowWnd×óÉÏ½ÇµÄÎ»ÖÃ
-	void CreateTransparentPic(CWnd *parent, int id, std::wstring picName, CPoint pt, int imageWidth = 0 , int imageHeight = 0);
+	void CreateTransparentPic(int id, std::wstring picName, CPoint pt, int imageWidth = 0 , int imageHeight = 0);
 	void SetParent(CWnd* parentWnd);
 	void DestroyPic(int id);
 	void ShowPic(int id);

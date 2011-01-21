@@ -14,7 +14,7 @@ CFairy::~CFairy(void)
 	GdiplusShutdown(m_gdiplusToken);
 }
 
-void CFairy::CreateTransparentPic(CWnd *parent,int id, std::wstring picName, CPoint pt, int imageWidth /*= 0*/, int imageHeight/* = 0*/)
+void CFairy::CreateTransparentPic(int id, std::wstring picName, CPoint pt, int imageWidth /*= 0*/, int imageHeight/* = 0*/)
 {
 	TRACE(_T("aaaa CreateTransparentPic %s pt(%d, %d)"), picName.c_str(), pt.x, pt.y);
 	m_imageExManager->CreateImageEx(id, picName.c_str(),pt, imageWidth, imageHeight);

@@ -150,7 +150,7 @@ void DIHSetKDProc( KDPROC kdProc )
 	g_KeydownProc = kdProc;
 }
 
-void DIHLockInput(BYTE id, BYTE key/*  = 0xFF*/)
+void DIHLockPlayerInput(BYTE id, BYTE key/*  = 0xFF*/)
 {
 	if (id < g_DeviceTbl.size())
 	{
