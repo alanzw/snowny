@@ -366,10 +366,10 @@ inline void SimulateKeyDown(LPVOID ths, DWORD size, LPVOID data)
 				joy->rgbButtons[0x7] |= 0x80;
 				break;
 			case IDK_BACKSPACE:
-				joy->rgbButtons[0x1] |= 0x80;
+				joy->rgbButtons[0x4] |= 0x80;
 				break;
 			case IDK_OK:
-				joy->rgbButtons[0x0] |= 0x80;
+				joy->rgbButtons[0x3] |= 0x80;
 				break;
 			case IDK_UP:
 				joy->lY = -10000;

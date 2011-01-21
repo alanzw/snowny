@@ -127,11 +127,13 @@ BOOL CSFCoinLuancherApp::InitInstance()
 				Sleep(100);
 				targetWnd = FindWindow(NULL, TEXT("°∂Ω÷Õ∑∞‘ÕıIV°∑"));
 			}
-			if (targetWnd != NULL)
+			while (targetWnd != NULL && ::IsWindow(targetWnd))
 			{
 				targetWnd = GetDlgItem(targetWnd, 0x1);
 				SendMessage(targetWnd, WM_LBUTTONDOWN, 0, 0);
 				SendMessage(targetWnd, WM_LBUTTONUP, 0, 0);
+
+				Sleep(100);
 			}
 
 			Sleep(5000);
