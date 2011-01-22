@@ -211,6 +211,8 @@ void ImageExManager::Hide( int id )
 	if (!IsGifInShow())
 	{
 		DestroyThreadToShow();
+		WaitForSingleObject(m_hThread, INFINITE);
+		m_hThread = NULL;
 	}
 	ProcessShow();
 }
@@ -445,6 +447,5 @@ void ImageExManager::DestroyThreadToShow()
 	{
 		TRACE(_T("Destroy thread for gif\n"));
 		SetEvent(m_hExitEvent);
-		m_hThread = NULL;
 	}
 }

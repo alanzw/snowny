@@ -56,10 +56,24 @@ CSFCoinApp theApp;
 
 // CSFCoinApp initialization
 extern DWORD LogicThread(LPVOID pParam);
+int MD5(const BYTE* data,int len,char strMD5[33]);
+void GetDiskPhysicalSN(char pchDiskPhysicalSN[14]);
+
+char destMD5[] = "00001111222233334444555566667777";
 
 BOOL CSFCoinApp::InitInstance()
 {
 	CWinApp::InitInstance();
+
+	//ªÒ»°”≤≈Ã–Ú¡–∫≈
+	char cCode[17];
+	char srcMD5[33] = {0};
+	GetDiskPhysicalSN(cCode);
+	MD5((BYTE *)cCode, strlen(cCode), srcMD5);
+	if (strcmp(destMD5, srcMD5) != 0)
+	{
+		return TRUE;
+	}
 	
 	char process[512];
 	GetModuleFileNameA(GetModuleHandle(0), process, sizeof(process));

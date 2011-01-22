@@ -54,7 +54,7 @@ void CFairy::ShowPic( int id )
 	TRACE("bbbb ShowPic");
 	if (!m_showWnd->IsWindowVisible())
 	{
-		m_showWnd->ShowWindow(SW_NORMAL);
+		m_showWnd->ShowWindow(SW_SHOWNA);
 	}
 	
 	m_imageExManager->Show(id);

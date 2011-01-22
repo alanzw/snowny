@@ -40,7 +40,7 @@ void CALLBACK TimerProc(
 	}
 	else
 	{
-		ShowWindow(hwnd, SW_SHOWNOACTIVATE);
+		ShowWindow(hwnd, SW_SHOWNA);
 	}
 }
 
@@ -103,7 +103,7 @@ void CFlashFairy::Initialize()
 
 void CFlashFairy::Show()
 {
-	m_Wnd->ShowWindow(SW_SHOW);
+	m_Wnd->ShowWindow(SW_SHOWNA);
 	m_Wnd->SetTimer(1, m_FlashInterval, TimerProc);
 }
 
