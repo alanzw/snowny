@@ -1,15 +1,15 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Coder.rc
+// Used by SFCoinReg.RC
 //
 #define IDR_MAINFRAME					128
 #define IDM_ABOUTBOX					0x0010
 #define IDD_ABOUTBOX					100
 #define IDS_ABOUTBOX					101
-#define IDD_CODER_DIALOG				102
+#define IDD_SFCOINREG_DIALOG				102
 
-// 新对象的下一组默认值
-//
+// Next default values for new objects
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 

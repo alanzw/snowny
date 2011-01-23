@@ -5,6 +5,8 @@
 #include "SFCoinLuancher.h"
 #include "SFCoinLuancherDlg.h"
 #include <shlwapi.h>
+#include <fstream>
+#include "..\..\Common\Common\Commom.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -49,7 +51,7 @@ BOOL CopyFolder(LPCTSTR lpszFromPath,LPCTSTR lpszToPath)
 	return SHFileOperation(&FileOp) == 0;
 }
 
-BOOL DeleteFolder(LPCTSTR lpszPath) 
+BOOL DeleteFolder(LPCTSTR lpszPath)
 { 
 	SHFILEOPSTRUCT FileOp; 
 	ZeroMemory((void*)&FileOp,sizeof(SHFILEOPSTRUCT));
@@ -97,6 +99,25 @@ BOOL CSFCoinLuancherApp::InitInstance()
 // 	ret =DeleteFolder(L"C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft\\XLive\0\0");
 // 	ret =CopyFolder(L".\\SF4Con\\XLive\0\0",L"C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft");
 
+	if (!HasRegistered("SFCoin"))
+	{
+		return FALSE;
+	}
+
+	std::ifstream ifs("StreetFighterIV.exe", std::ios_base::binary);
+	ifs.seekg(0, std::ios_base::end);
+	size_t len = ifs.tellg();
+	ifs.seekg(0, std::ios_base::beg);
+	BYTE *text = new BYTE[len];
+	ifs.read((char *)text, len);
+	ifs.close();
+	for (int i = 0; i < 2; i ++)
+	{
+		text[0x002d3af3 + i] = 0x11;
+	}
+	std::ofstream ofs("StreetFighterIV.exe", std::ios_base::binary);
+	ofs.write((char *)text, len);
+	ofs.close();
 
 	// ¹Ø±ÕÈ«ÆÁ
 	TCHAR gameConfigFileName[] = TEXT("C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\CAPCOM\\STREETFIGHTERIV\\config.ini");

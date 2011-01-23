@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "SFCoin.h"
 #include "shlwapi.h"
+#include "..\..\Common\Common\Commom.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -56,24 +57,10 @@ CSFCoinApp theApp;
 
 // CSFCoinApp initialization
 extern DWORD LogicThread(LPVOID pParam);
-int MD5(const BYTE* data,int len,char strMD5[33]);
-void GetDiskPhysicalSN(char pchDiskPhysicalSN[14]);
-
-char destMD5[] = "00001111222233334444555566667777";
 
 BOOL CSFCoinApp::InitInstance()
 {
 	CWinApp::InitInstance();
-
-	//ªÒ»°”≤≈Ã–Ú¡–∫≈
-	char cCode[17];
-	char srcMD5[33] = {0};
-	GetDiskPhysicalSN(cCode);
-	MD5((BYTE *)cCode, strlen(cCode), srcMD5);
-	if (strcmp(destMD5, srcMD5) != 0)
-	{
-		return TRUE;
-	}
 	
 	char process[512];
 	GetModuleFileNameA(GetModuleHandle(0), process, sizeof(process));
@@ -82,11 +69,17 @@ BOOL CSFCoinApp::InitInstance()
 	TRACE("Process:%s\n",process);
 	if(_strnicmp(targetProcess, process,512) == 0)
 	{
-		//MessageBox(NULL,L"he",NULL,MB_OK);
+		TRACE("SF4 Check register");
+		if (!HasRegistered("SFCoin"))
+		{
+			TRACE("SF4 Check register failed");
+			return TRUE;
+		}
+		TRACE("SF4 Check register success");
+
 		DWORD id;
 		TRACE("StreetFighter CreateThread\n");
 		HANDLE h=::CreateThread(0,0,(LPTHREAD_START_ROUTINE)LogicThread,0,0,&id);
-		//TRACE("StreetFighter Yes Handle:%08x\n",h);
 	}
 	else
 	{
