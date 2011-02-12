@@ -73,6 +73,24 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFCoinReg", "SFCoinReg\SFCo
 		{18DA066B-6288-4494-AFC2-560A68B9FCFE} = {18DA066B-6288-4494-AFC2-560A68B9FCFE}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "emu", "emu", "{503C166D-92BC-47AD-BDF2-B3E1D18F3235}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tvc", "tvc", "{18A3AB1C-EFE4-41E3-9FD7-F6174EE04E12}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TVCUSACore", "TVCUSACore\TVCUSACore.vcproj", "{7A069A0C-4A9C-452D-A890-2C7FCEE501BA}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -111,6 +129,10 @@ Global
 		{8B8ADAEF-312B-420E-882E-C74DE2255B3F}.Debug|Win32.Build.0 = Debug|Win32
 		{8B8ADAEF-312B-420E-882E-C74DE2255B3F}.Release|Win32.ActiveCfg = Release|Win32
 		{8B8ADAEF-312B-420E-882E-C74DE2255B3F}.Release|Win32.Build.0 = Release|Win32
+		{7A069A0C-4A9C-452D-A890-2C7FCEE501BA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7A069A0C-4A9C-452D-A890-2C7FCEE501BA}.Debug|Win32.Build.0 = Debug|Win32
+		{7A069A0C-4A9C-452D-A890-2C7FCEE501BA}.Release|Win32.ActiveCfg = Release|Win32
+		{7A069A0C-4A9C-452D-A890-2C7FCEE501BA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,5 +146,7 @@ Global
 		{B9759212-7BD2-4DB5-B685-2487539D5427} = {B8D97AB8-2F06-4189-AF81-AD5A78C08B3E}
 		{4F92238A-79C9-4D50-9DCE-540C2CBB11D1} = {B8D97AB8-2F06-4189-AF81-AD5A78C08B3E}
 		{8B8ADAEF-312B-420E-882E-C74DE2255B3F} = {B8D97AB8-2F06-4189-AF81-AD5A78C08B3E}
+		{18A3AB1C-EFE4-41E3-9FD7-F6174EE04E12} = {503C166D-92BC-47AD-BDF2-B3E1D18F3235}
+		{7A069A0C-4A9C-452D-A890-2C7FCEE501BA} = {18A3AB1C-EFE4-41E3-9FD7-F6174EE04E12}
 	EndGlobalSection
 EndGlobal
