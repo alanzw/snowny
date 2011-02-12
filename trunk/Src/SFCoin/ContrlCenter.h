@@ -50,7 +50,7 @@ public:
 	CKeycmd m_mainMenu2Title;		//游戏从Mainmenu到title画面
 
 	CPlayer m_Players[2];
-	BYTE	m_ActivePlayer;
+	BYTE	m_FirstStartedPlayer;
 
 	CFairy* m_Fairy;
 	CFlashFairy *m_FreeingFairy;
