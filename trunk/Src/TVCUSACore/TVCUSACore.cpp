@@ -16,8 +16,10 @@ void ForLoad()
 
 }
 
-BYTE  oldCode[7] = {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
-BYTE  newCode[7] = {0xE8, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
+BYTE  oldGuidCode[7] = {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
+BYTE  oldFpsCode[5] = {0x90, 0x90, 0x90, 0x90, 0x90};
+BYTE  newGuidCode[7] = {0xE8, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
+BYTE  newFpsCode[5] = {0xE8, 0x90, 0x90, 0x90, 0x90};
 
 struct SceneInfo
 {
@@ -67,7 +69,7 @@ void DealWithTextureGUID(DWORD textureGuid)
 	}
 }
 
-__declspec(naked) void HookFunc()
+__declspec(naked) void HookGuidFunc()
 {
 	static DWORD textureGuid = 0;
 	__asm
@@ -86,21 +88,39 @@ __declspec(naked) void HookFunc()
 	__asm ret
 }
 
+__declspec(naked) void HookFpsFunc()
+{
+	__asm ret
+}
+
 void DoHook(HMODULE module)
 {
-	BYTE *codeAddr = (BYTE *)module + 0x0000E414;
+	BYTE *guidCodeAddr = (BYTE *)module + 0x0000E414;
 	DWORD oldProtected = 0;
-	bool ret = VirtualProtect(codeAddr, 7, PAGE_EXECUTE_READWRITE, &oldProtected);
+	bool ret = VirtualProtect(guidCodeAddr, 7, PAGE_EXECUTE_READWRITE, &oldProtected);
 	{
-		memcpy(oldCode, codeAddr, 7);
-		DWORD newCodeAddr = (DWORD)HookFunc;
-		newCodeAddr -= ((DWORD)codeAddr + 5);
-		*(DWORD *)&newCode[1] = newCodeAddr;
-		memcpy(codeAddr, newCode, 7);
+		memcpy(oldGuidCode, guidCodeAddr, 7);
+		DWORD newCodeAddr = (DWORD)HookGuidFunc;
+		newCodeAddr -= ((DWORD)guidCodeAddr + 5);
+		*(DWORD *)&newGuidCode[1] = newCodeAddr;
+		memcpy(guidCodeAddr, newGuidCode, 7);
 	}
 	//----zyc: win7或者其他机子有崩溃可能，下面这里调用会提示内存位置访问无效。
 	//这里就不恢复原来的属性
-	ret = VirtualProtect(codeAddr, 7, PAGE_EXECUTE_READWRITE, NULL);
+	ret = VirtualProtect(guidCodeAddr, 7, PAGE_EXECUTE_READWRITE, NULL);
+
+	BYTE *fpsCodeAddr = (BYTE*)module + 0x00033AEC;
+	VirtualProtect(fpsCodeAddr, 5, PAGE_EXECUTE_READWRITE, &oldProtected);
+	{
+		//E8 5F040000 call 3D::font.DrawTextScaled(0, 30, 20, 0.0f, 0xFF00FFFF, buf);
+		memcpy(oldFpsCode, fpsCodeAddr, 5);
+		DWORD newCodeAddr = (DWORD)HookFpsFunc;
+		newCodeAddr = newCodeAddr - (DWORD)fpsCodeAddr - 5;
+		*(DWORD*)&newFpsCode[1] = newCodeAddr;
+		memcpy(fpsCodeAddr, newFpsCode, 5);
+	}
+	ret = VirtualProtect(fpsCodeAddr, 5, PAGE_EXECUTE_READWRITE, NULL);
+	
 }
 
 DWORD HookThread(LPARAM lParam)
