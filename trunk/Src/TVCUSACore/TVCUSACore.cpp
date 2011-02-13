@@ -10,6 +10,12 @@
 #pragma managed(push, off)
 #endif
 
+//定义任意导出函数，为了让StreetFighter.exe加载SFCoin.dll
+void ForLoad()
+{
+
+}
+
 BYTE  oldCode[7] = {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
 BYTE  newCode[7] = {0xE8, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
 
@@ -84,7 +90,7 @@ void DoHook(HMODULE module)
 {
 	BYTE *codeAddr = (BYTE *)module + 0x0000E414;
 	DWORD oldProtected = 0;
-	VirtualProtect(codeAddr, 7, PAGE_READWRITE, &oldProtected);
+	bool ret = VirtualProtect(codeAddr, 7, PAGE_EXECUTE_READWRITE, &oldProtected);
 	{
 		memcpy(oldCode, codeAddr, 7);
 		DWORD newCodeAddr = (DWORD)HookFunc;
@@ -92,7 +98,9 @@ void DoHook(HMODULE module)
 		*(DWORD *)&newCode[1] = newCodeAddr;
 		memcpy(codeAddr, newCode, 7);
 	}
-	VirtualProtect(codeAddr, 7, oldProtected, NULL);
+	//----zyc: win7或者其他机子有崩溃可能，下面这里调用会提示内存位置访问无效。
+	//这里就不恢复原来的属性
+	ret = VirtualProtect(codeAddr, 7, PAGE_EXECUTE_READWRITE, NULL);
 }
 
 DWORD HookThread(LPARAM lParam)
