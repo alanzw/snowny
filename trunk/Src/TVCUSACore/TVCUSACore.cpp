@@ -91,10 +91,8 @@ __declspec(naked) void HookGuidFunc()
 	__asm ret
 }
 
-int PrintFont(float x, float y, float size, float spacing, unsigned int dwColor, const char* strText)
+int PrintFont(float x, float y, float sizeArge, float spacing, unsigned int dwColor, const char* strText)
 {
-	static float sizeTemp1 = size;
-	static float sizeTemp2 = size;
 	static int retValue;
 	__asm
 	{
@@ -102,12 +100,13 @@ int PrintFont(float x, float y, float size, float spacing, unsigned int dwColor,
 		push strText
 		push dwColor
 		push spacing
-		push sizeTemp1
-		push sizeTemp2
+		push sizeArge
+		push sizeArge
 		push y
 		push x
 		mov ecx, RenderThisAddress
 		call FpsFuncAddress
+		sub esp, 0x04			//FpsFuncAddress»á¶àÇå¿Õ¶ÑÕ»¡£
 		mov retValue, eax
 		popad
 	}
@@ -145,7 +144,7 @@ void DoHook(HMODULE module)
 	ret = VirtualProtect(guidCodeAddr, 7, PAGE_EXECUTE_READWRITE, NULL);
 
 	BYTE *fpsCodeAddr = (BYTE*)module + 0x00033AEC;
-	RenderThisAddress = (DWORD)module + 0x00008240;
+	RenderThisAddress = (DWORD)module + 0x00208240;
 	VirtualProtect(fpsCodeAddr, 5, PAGE_EXECUTE_READWRITE, &oldProtected);
 	{
 		//E8 5F040000 call 3D::font.DrawTextScaled(0, 30, 20, 0.0f, 0xFF00FFFF, buf);
