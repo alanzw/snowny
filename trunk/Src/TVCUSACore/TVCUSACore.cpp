@@ -21,6 +21,9 @@ BYTE  oldFpsCode[5] = {0x90, 0x90, 0x90, 0x90, 0x90};
 BYTE  newGuidCode[7] = {0xE8, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
 BYTE  newFpsCode[5] = {0xE8, 0x90, 0x90, 0x90, 0x90};
 
+DWORD FpsFuncAddress;
+DWORD RenderThisAddress;
+
 struct SceneInfo
 {
 	enum SceneID {
@@ -88,10 +91,42 @@ __declspec(naked) void HookGuidFunc()
 	__asm ret
 }
 
+int PrintFont(float x, float y, float size, float spacing, unsigned int dwColor, const char* strText)
+{
+	static float sizeTemp1 = size;
+	static float sizeTemp2 = size;
+	static int retValue;
+	__asm
+	{
+		pushad
+		push strText
+		push dwColor
+		push spacing
+		push sizeTemp1
+		push sizeTemp2
+		push y
+		push x
+		mov ecx, RenderThisAddress
+		call FpsFuncAddress
+		mov retValue, eax
+		popad
+	}
+	return retValue;
+}
+
 __declspec(naked) void HookFpsFunc()
 {
-	__asm ret
+	PrintFont(0, 30, 20, 0.0f, 0xFF00FFFF, "FPS 20");
+	__asm
+	{
+		//push eax
+		//mov eax ,FpsFuncAddress
+		//call eax
+		//pop eax
+		ret
+	}
 }
+
 
 void DoHook(HMODULE module)
 {
@@ -110,10 +145,13 @@ void DoHook(HMODULE module)
 	ret = VirtualProtect(guidCodeAddr, 7, PAGE_EXECUTE_READWRITE, NULL);
 
 	BYTE *fpsCodeAddr = (BYTE*)module + 0x00033AEC;
+	RenderThisAddress = (DWORD)module + 0x00008240;
 	VirtualProtect(fpsCodeAddr, 5, PAGE_EXECUTE_READWRITE, &oldProtected);
 	{
 		//E8 5F040000 call 3D::font.DrawTextScaled(0, 30, 20, 0.0f, 0xFF00FFFF, buf);
 		memcpy(oldFpsCode, fpsCodeAddr, 5);
+		DWORD callDistance = *(DWORD*)&oldFpsCode[1];
+		FpsFuncAddress = callDistance + (DWORD)fpsCodeAddr + 5;
 		DWORD newCodeAddr = (DWORD)HookFpsFunc;
 		newCodeAddr = newCodeAddr - (DWORD)fpsCodeAddr - 5;
 		*(DWORD*)&newFpsCode[1] = newCodeAddr;
