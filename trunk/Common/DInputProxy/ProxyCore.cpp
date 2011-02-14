@@ -1,43 +1,52 @@
 #include "stdafx.h"
 #include "ProxyCore.h"
 #include "DInputProxy.h"
-struct DeviceInfo
-{
-	PlayID		pid;
-	DWORD		devobj;				// 设备对象，与玩家一一绑定
-	KeyID		emuKID;				// 即将模拟的按键
-	KeyID		prevPressKID;		// 记录上次的按键状态，做重复过滤
-	KeyID		lockedKey;			// 锁定的按键
-};
-extern std::map<LPVOID, DWORD> g_Dev_Obj_ID;
-extern DeviceInfo g_DeviceTbl[2];
-extern DInputProxyConfig g_Config;
+
+DeviceInfo g_DeviceTbl[2];
+DInputProxyConfig g_ProxyConfig;
 
 void CreateDevice(LPVOID devobj, DWORD devid)
 {
 	ATLTRACE("DInputProxy: CreateDevice obj 0x%x id %x", devobj, devid);
-	if (g_DeviceTbl[P1].devobj == NULL)
+
+	for (int i = 0; i < 2; i ++)
 	{
-		if (g_Config.P1KeyMapping.devid == devid)
+		PlayID pid  = (PlayID)i;
+		if (g_DeviceTbl[pid].devobj == NULL)
 		{
-			g_DeviceTbl[P1].devobj = devobj;
-		}
-	}
-	else if (g_DeviceTbl[P2].devobj == NULL)
-	{
-		if (g_Config.P2KeyMapping.devid == devid)
-		{
-			g_DeviceTbl[P2].devobj = devobj;
+			if (g_ProxyConfig.KeyMapping[pid].devid == devid)
+			{
+				g_DeviceTbl[pid].devobj = devobj;
+			}
+			break;
 		}
 	}
 }
 
-inline void UpdateKeyState( BYTE &newState, BYTE &oldState, BOOL factor) 
+inline bool UpdateKeyState(KeyID &newState, KeyID &oldState, KeyID kid, BOOL factor)
 {
-	newState = factor && oldState == 0 ? 1 : 0;
-	oldState = factor ? 1 : 0;
+	if (factor)
+	{
+		if ((oldState & kid) == 0)
+		{
+			(int &)oldState |= (int)kid;
+			(int &)newState |= (int)kid;
+			return true;
+		}
+		else
+		{
+			(int &)newState &= (int)~kid;
+		}
+	}
+	else
+	{
+		(int &)oldState &= (int)~kid;
+	}
+
+	return false;
 }
-inline void RealityKeyDown(LPVOID devobj, DWORD size, LPVOID data)
+
+void RealityKeyDown(LPVOID devobj, DWORD size, LPVOID data)
 {
 #ifdef _DEBUG
 	if (size == sizeof(BYTE) * 256)
@@ -81,96 +90,88 @@ inline void RealityKeyDown(LPVOID devobj, DWORD size, LPVOID data)
 	}
 #endif
 
-	static KDPROC proc = g_Config.KeyDownProc;
+	static KDPROC proc = g_ProxyConfig.KeyDownProc;
+	static BYTE P1CoinKV = g_ProxyConfig.KeyMapping[P1].keyvalCOIN;
+	static BYTE P2CoinKV = g_ProxyConfig.KeyMapping[P2].keyvalCOIN;
 	if (proc != NULL)
 	{
+		KeyID	kid = (KeyID)0;
+		// 投币处理
+		if (size == sizeof(BYTE) * 0x100)
+		{
+			BYTE* kb = static_cast<BYTE*>(data);
+			if (UpdateKeyState(kid, g_DeviceTbl[P1].prevPressKID, DIP_COIN, kb[P1CoinKV] & 0x80))
+			{
+				proc(P1, DIP_COIN);
+			}
+
+			if (UpdateKeyState(kid, g_DeviceTbl[P2].prevPressKID, DIP_COIN, kb[P2CoinKV] & 0x80))
+			{
+				proc(P2, DIP_COIN);
+			}
+		}
+
 		PlayID	pid = g_DeviceTbl[P1].devobj == devobj ? P1 :
-			g_DeviceTbl[P2].devobj == devobj ? P2 : -1;
+			g_DeviceTbl[P2].devobj == devobj ? P2 : (PlayID)-1;
 		if (pid == -1)
 		{
 			return;
 		}
-
-		KeyID	kid = 0;
-		KeyID	prevKID = g_DeviceTbl[pid].prevPressKID;
+		KeyMapping &km = g_ProxyConfig.KeyMapping[pid];
+		DeviceInfo &di = g_DeviceTbl[pid];
 		// 键盘处理
 		if (size == sizeof(BYTE) * 0x100)
 		{
 			BYTE* kb = static_cast<BYTE*>(data);
-			// 投币处理
 			{
-				static PlayID pids[] = {P1, P2};
-				for (int i = 0; i < 2; i ++)
+
+				if (UpdateKeyState(kid, di.prevPressKID, DIP_START, kb[km.keyvalSTART] & 0x80) ||
+					UpdateKeyState(kid, di.prevPressKID, DIP_A, kb[km.keyvalA] & 0x80) ||
+					UpdateKeyState(kid, di.prevPressKID, DIP_UP, kb[km.keyvalUP] & 0x80) ||
+					UpdateKeyState(kid, di.prevPressKID, DIP_DOWN, kb[km.keyvalDOWN] & 0x80) ||
+					UpdateKeyState(kid, di.prevPressKID, DIP_LEFT, kb[km.keyvalLEFT] & 0x80) ||
+					UpdateKeyState(kid, di.prevPressKID, DIP_RIGHT, kb[km.keyvalRIGHT] & 0x80))
 				{
-					PlayID temp = pids[i];
-					prevKID = g_DeviceTbl[].prevPressKID;
-					if (kb[g_Config.KeyMapping[temp].keyvalCOIN] & 0x80)
-					{
-						if (prevKID & DIP_COIN == 0)
-						{	
-							proc(temp, DIP_COIN);
-						}
-						g_DeviceTbl[temp].prevPressKID |= DIP_COIN;
-					}
-					else
-					{
-						g_DeviceTbl[temp].prevPressKID &= DIP_COIN;
-					}
+					proc(pid, kid);
 				}
-			}
-			{
-				KeyID kid;
-				
-				KeyState ks = {0};
-				DeviceInfo &di = g_DeviceTbl[0];
-
-				UpdateKeyState(ks.coin, di.keyState.coin, (kb[DIK_3] & 0x80));
-
-				// 键盘也是1P
-				UpdateKeyState(ks.start, di.keyState.start, (kb[DIK_A] & 0x80));// 保留键盘A作为1P开始键
-				UpdateKeyState(ks.up, di.keyState.up, (kb[DIK_UP] & 0x80));
-				UpdateKeyState(ks.down, di.keyState.down, (kb[DIK_DOWN] & 0x80));
-				UpdateKeyState(ks.left, di.keyState.left, (kb[DIK_LEFT] & 0x80));
-				UpdateKeyState(ks.right, di.keyState.right, (kb[DIK_RIGHT] & 0x80));
-				UpdateKeyState(ks.ok, di.keyState.ok, (kb[DIK_RETURN] & 0x80));
-
-				g_KeydownProc(0, ks);
 			}
 			
-
-			// 键盘也是1P
-			if (g_DeviceTbl[0].isLocked)
+			if (di.lockedKID != 0)
 			{
-				if (g_DeviceTbl[0].lockedKey == 0xFF)
+				if (di.lockedKID & DIP_ALL)
 				{
-					memset(data, 0, size);// 键盘锁定，只透几个关心的键
+					memset(data, 0, size);
 				}
-				else if (g_DeviceTbl[0].lockedKey == IDK_START)
+				else
 				{
-					kb[DIK_ESCAPE] = 0;
+					if (di.lockedKID & DIP_START)	kb[km.keyvalSTART]	= 0;
+					if (di.lockedKID & DIP_A)		kb[km.keyvalA]		= 0;
+					if (di.lockedKID & DIP_B)		kb[km.keyvalB]		= 0;
+					if (di.lockedKID & DIP_UP)		kb[km.keyvalUP]		= 0;
+					if (di.lockedKID & DIP_DOWN)	kb[km.keyvalDOWN]	= 0;
+					if (di.lockedKID & DIP_LEFT)	kb[km.keyvalLEFT]	= 0;
+					if (di.lockedKID & DIP_RIGHT)	kb[km.keyvalDOWN]	= 0;
 				}
 			}
 		}
 		else if (size == sizeof(DIJOYSTATE))
 		{
 			// 摇杆的开始处理
-			KeyState ks = {0};
-			size_t id = GetDeviceID(ths);
-			DeviceInfo &di = g_DeviceTbl[id];
 			DIJOYSTATE *joy = static_cast<DIJOYSTATE *>(data);
 
-			UpdateKeyState(ks.start, di.keyState.start, joy->rgbButtons[0x7] & 0x80);
-			UpdateKeyState(ks.up, di.keyState.up, joy->lY == -10000);
-			UpdateKeyState(ks.down, di.keyState.down, joy->lY == 10000);
-			UpdateKeyState(ks.left, di.keyState.left, joy->lX == -10000);
-			UpdateKeyState(ks.right, di.keyState.right, joy->lX == 10000);
-			UpdateKeyState(ks.ok, di.keyState.ok, joy->rgbButtons[0x0] & 0x80);
-
-			g_KeydownProc((BYTE)id, ks);
-
-			if (g_DeviceTbl[id].isLocked)
+			if (UpdateKeyState(kid, di.prevPressKID, DIP_START, joy->rgbButtons[km.keyvalSTART] & 0x80) ||
+				UpdateKeyState(kid, di.prevPressKID, DIP_A, joy->rgbButtons[km.keyvalA] & 0x80) ||
+				UpdateKeyState(kid, di.prevPressKID, DIP_UP, joy->lY == -10000) ||
+				UpdateKeyState(kid, di.prevPressKID, DIP_DOWN, joy->lY == 10000) ||
+				UpdateKeyState(kid, di.prevPressKID, DIP_LEFT, joy->lX == -10000) ||
+				UpdateKeyState(kid, di.prevPressKID, DIP_RIGHT, joy->lX == 10000))
 			{
-				if (g_DeviceTbl[id].lockedKey == 0xFF)// 全键Lock
+				proc(pid, kid);
+			}
+
+			if (di.lockedKID != 0)
+			{
+				if (di.lockedKID & DIP_ALL)
 				{
 					memset(joy->rgbButtons, 0, sizeof(joy->rgbButtons));
 					joy->lX = 0;
@@ -179,59 +180,57 @@ inline void RealityKeyDown(LPVOID devobj, DWORD size, LPVOID data)
 				}
 				else
 				{
-					if (g_DeviceTbl[id].lockedKey == IDK_START)
-					{
-						joy->rgbButtons[0x7] = 0;
-					}
+					if (di.lockedKID & DIP_START)	joy->rgbButtons[km.keyvalSTART]	= 0;
+					if (di.lockedKID & DIP_A)		joy->rgbButtons[km.keyvalA]		= 0;
+					if (di.lockedKID & DIP_B)		joy->rgbButtons[km.keyvalB]		= 0;
+					if (di.lockedKID & DIP_UP)		joy->lY = 0;
+					if (di.lockedKID & DIP_DOWN)	joy->lY = 0;
+					if (di.lockedKID & DIP_LEFT)	joy->lY = 0;
+					if (di.lockedKID & DIP_RIGHT)	joy->lY = 0;
 				}
 			}
 		}
 	}
 }
 
-inline void SimulateKeyDown(LPVOID ths, DWORD size, LPVOID data)
+void SimulateKeyDown(LPVOID devobj, DWORD size, LPVOID data)
 {
-	DeviceInfo &di = g_DeviceTbl[GetDeviceID(ths)];
-
-	if (di.hasSimulateKeyID)
+	PlayID	pid = g_DeviceTbl[P1].devobj == devobj ? P1 :
+		g_DeviceTbl[P2].devobj == devobj ? P2 : (PlayID)-1;
+	if (pid == -1)
 	{
-		ATLTRACE(TEXT("DIH Simulate key %x %d %d"),
-			di.simulateKeyID, size, sizeof(DIJOYSTATE));
+		return;
+	}
+	KeyMapping &km = g_ProxyConfig.KeyMapping[pid];
+	DeviceInfo &di = g_DeviceTbl[pid];
+
+	if (di.emuKID != 0)
+	{
+		ATLTRACE(TEXT("DIH Simulate key %x %d %d"),	di.emuKID, size, sizeof(DIJOYSTATE));
 		if (size == sizeof(BYTE) * 0x100)	// 键盘模拟
 		{
 			BYTE* kb = static_cast<BYTE*>(data);
-			kb[di.simulateKeyID] |= 0x80;
+			if (di.emuKID && DIP_START) kb[km.keyvalSTART] |= 0x80;
+			if (di.emuKID && DIP_A) kb[km.keyvalA] |= 0x80;
+			if (di.emuKID && DIP_B) kb[km.keyvalB] |= 0x80;
+			if (di.emuKID && DIP_UP) kb[km.keyvalUP] |= 0x80;
+			if (di.emuKID && DIP_DOWN) kb[km.keyvalDOWN] |= 0x80;
+			if (di.emuKID && DIP_LEFT) kb[km.keyvalLEFT] |= 0x80;
+			if (di.emuKID && DIP_RIGHT) kb[km.keyvalRIGHT] |= 0x80;
 		}
 		else if (size == sizeof(DIJOYSTATE)) // 手柄模拟
 		{
 			DIJOYSTATE *joy = static_cast<DIJOYSTATE *>(data);
-			switch (di.simulateKeyID)
-			{
-			case IDK_START:
-			case IDK_CONTINUE:
-				joy->rgbButtons[0x7] |= 0x80;
-				break;
-			case IDK_BACKSPACE:
-				joy->rgbButtons[0x4] |= 0x80;
-				break;
-			case IDK_OK:
-				joy->rgbButtons[0x3] |= 0x80;
-				break;
-			case IDK_UP:
-				joy->lY = -10000;
-				break;
-			case IDK_DOWN:
-				joy->lY = 10000;
-				break;
-			case IDK_LEFT:
-				joy->lX = -10000;
-				break;
-			case IDK_RIGHT:
-				joy->lX = 10000;
-				break;
-			}
+			
+			if (di.emuKID && DIP_START) joy->rgbButtons[km.keyvalSTART] |= 0x80;
+			if (di.emuKID && DIP_A)		joy->rgbButtons[km.keyvalA]		|= 0x80;
+			if (di.emuKID && DIP_B)		joy->rgbButtons[km.keyvalB]		|= 0x80;
+			if (di.emuKID && DIP_UP)	joy->lY = -10000;
+			if (di.emuKID && DIP_DOWN)	joy->lY = 10000;
+			if (di.emuKID && DIP_LEFT)	joy->lX = -10000;
+			if (di.emuKID && DIP_RIGHT) joy->lX = 10000;
 		}
 
-		di.hasSimulateKeyID = FALSE;
+		di.emuKID = (KeyID)0;
 	}
 }

@@ -1,10 +1,6 @@
 #pragma once
 
-#include <atltrace.h>
-
-void RealityKeyDown(LPVOID devobj, DWORD size, LPVOID data);
-void SimulateKeyDown(LPVOID devobj, DWORD size, LPVOID data);
-void CreateDevice(LPVOID devobj, DWORD devid);
+#include "ProxyCore.h"
 
 /*
 Class: MyDirectDevice

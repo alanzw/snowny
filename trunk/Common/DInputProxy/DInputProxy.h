@@ -38,6 +38,32 @@ struct DInputProxyConfig
 };
 
 // 初始化，必做
+/*
+// 初始化实例
+DInputProxyConfig config;
+memset(&config, 0, sizeof(config));
+config.KeyMapping[0].pid = P1;
+config.KeyMapping[1].pid = P2;
+config.KeyDownProc = KeyDownProc;
+
+config.KeyMapping[0].devid = 0x6F1D2B61;// 键盘id
+config.KeyMapping[0].keyvalA = 0x24;	// J
+config.KeyMapping[0].keyvalB = 0x25;	// K
+config.KeyMapping[0].keyvalCOIN = 0x04;	// 3
+config.KeyMapping[0].keyvalDOWN = 0xD0;	// down
+config.KeyMapping[0].keyvalLEFT = 0xCB;	// left
+config.KeyMapping[0].keyvalRIGHT= 0xCD; // RIGHT
+config.KeyMapping[0].keyvalSTART= 0x26; // L
+config.KeyMapping[0].keyvalUP	= 0xC8; // up
+
+config.KeyMapping[1].devid = 0x6101f3a70;// 手柄id
+config.KeyMapping[1].keyvalCOIN = 0x05;	// 4
+config.KeyMapping[1].keyvalA = 0x00;	// 1
+config.KeyMapping[1].keyvalB = 0x01;	// 2
+config.KeyMapping[1].keyvalSTART = 0x07;	// 7
+
+InitDInputProxy(config);
+*/
 BOOL InitDInputProxy(const DInputProxyConfig &config);
 
 // 模拟按键事件

@@ -1,22 +1,7 @@
 #include "StdAfx.h"
+#include "ProxyCore.h"
 #include "DInputProxy.h"
 #include "MyDirectInput8.h"
-
-struct DeviceInfo
-{
-	PlayID		pid;
-	DWORD		devobj;				// 设备对象，与玩家一一绑定
-	KeyID		emuKID;				// 即将模拟的按键
-	KeyID		prevPressKID;		// 记录上次的按键状态，做重复过滤
-	KeyID		lockedKey;			// 锁定的按键
-};
-
-// 设备对象与类型对
-// 发现模拟器中会重复创建设备
-std::map<LPVOID, DWORD> g_Dev_Obj_ID;
-
-DeviceInfo g_DeviceTbl[2];
-DInputProxyConfig g_Config;
 
 typedef HRESULT (WINAPI *fpDirectInput8Create)(
 						   HINSTANCE hinst,
@@ -76,15 +61,13 @@ BOOL HookDInput()
 	return HookDirectInput8Create();
 }
 
-BOOL InitDInputPrcxy( const DInputProxyConfig &config )
+BOOL InitDInputProxy( const DInputProxyConfig &config )
 {
 	// 避免用户漏掉设置
-	assert(config.P1KeyMapping.pid == P1 && config.P2KeyMapping.pid == P2);
-	g_Config = config;
+	assert(config.KeyMapping[P1].pid == P1 && config.KeyMapping[P2].pid == P2);
+	g_ProxyConfig = config;
 
 	memset(&g_DeviceTbl, 0, sizeof(g_DeviceTbl));
-	g_DeviceTbl[P1].pid = P1;
-	g_DeviceTbl[P2].pid = P1;
 
 	if (FALSE == HookDInput())
 	{
@@ -102,5 +85,5 @@ void DIPInput( const PlayID &pid, const KeyID &kid )
 
 void DIPInputLock( const PlayID &pid, const KeyID &kid )
 {
-	g_DeviceTbl[pid].lockedKey = kid;
+	g_DeviceTbl[pid].lockedKID = kid;
 }
