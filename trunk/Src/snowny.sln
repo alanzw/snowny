@@ -91,6 +91,30 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TVCUSACore", "TVCUSACore\TV
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DInputProxy", "..\Common\DInputProxy\DInputProxy.vcproj", "{D0E91959-9E1E-48CC-8A9B-C3A05C9E5813}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{E9EBE313-1D5C-4E34-846B-7EBBE3EE6CDE} = {E9EBE313-1D5C-4E34-846B-7EBBE3EE6CDE}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{F1BD6210-54BD-4145-8DFC-D87C8A905DF4}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DInputProxyDemo", "Test\DInputProxyDemo\DInputProxyDemo.vcproj", "{89F3859A-A711-4CFB-B71A-8CE1B333CA52}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{D0E91959-9E1E-48CC-8A9B-C3A05C9E5813} = {D0E91959-9E1E-48CC-8A9B-C3A05C9E5813}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -133,6 +157,14 @@ Global
 		{7A069A0C-4A9C-452D-A890-2C7FCEE501BA}.Debug|Win32.Build.0 = Debug|Win32
 		{7A069A0C-4A9C-452D-A890-2C7FCEE501BA}.Release|Win32.ActiveCfg = Release|Win32
 		{7A069A0C-4A9C-452D-A890-2C7FCEE501BA}.Release|Win32.Build.0 = Release|Win32
+		{D0E91959-9E1E-48CC-8A9B-C3A05C9E5813}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D0E91959-9E1E-48CC-8A9B-C3A05C9E5813}.Debug|Win32.Build.0 = Debug|Win32
+		{D0E91959-9E1E-48CC-8A9B-C3A05C9E5813}.Release|Win32.ActiveCfg = Release|Win32
+		{D0E91959-9E1E-48CC-8A9B-C3A05C9E5813}.Release|Win32.Build.0 = Release|Win32
+		{89F3859A-A711-4CFB-B71A-8CE1B333CA52}.Debug|Win32.ActiveCfg = Debug|Win32
+		{89F3859A-A711-4CFB-B71A-8CE1B333CA52}.Debug|Win32.Build.0 = Debug|Win32
+		{89F3859A-A711-4CFB-B71A-8CE1B333CA52}.Release|Win32.ActiveCfg = Release|Win32
+		{89F3859A-A711-4CFB-B71A-8CE1B333CA52}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,11 +174,13 @@ Global
 		{A181F2F9-5D2C-4AEB-9309-291F50997A37} = {17D9EE71-61BA-4EA2-B74F-B2E3C5C82925}
 		{33D29C18-091F-4FD7-BA94-64F93B442216} = {17D9EE71-61BA-4EA2-B74F-B2E3C5C82925}
 		{18DA066B-6288-4494-AFC2-560A68B9FCFE} = {17D9EE71-61BA-4EA2-B74F-B2E3C5C82925}
+		{D0E91959-9E1E-48CC-8A9B-C3A05C9E5813} = {17D9EE71-61BA-4EA2-B74F-B2E3C5C82925}
 		{545C75C0-03E3-4B97-A9CE-567328CF6E21} = {B8D97AB8-2F06-4189-AF81-AD5A78C08B3E}
 		{B9759212-7BD2-4DB5-B685-2487539D5427} = {B8D97AB8-2F06-4189-AF81-AD5A78C08B3E}
 		{4F92238A-79C9-4D50-9DCE-540C2CBB11D1} = {B8D97AB8-2F06-4189-AF81-AD5A78C08B3E}
 		{8B8ADAEF-312B-420E-882E-C74DE2255B3F} = {B8D97AB8-2F06-4189-AF81-AD5A78C08B3E}
 		{18A3AB1C-EFE4-41E3-9FD7-F6174EE04E12} = {503C166D-92BC-47AD-BDF2-B3E1D18F3235}
 		{7A069A0C-4A9C-452D-A890-2C7FCEE501BA} = {18A3AB1C-EFE4-41E3-9FD7-F6174EE04E12}
+		{89F3859A-A711-4CFB-B71A-8CE1B333CA52} = {F1BD6210-54BD-4145-8DFC-D87C8A905DF4}
 	EndGlobalSection
 EndGlobal
