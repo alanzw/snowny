@@ -10,7 +10,7 @@ enum KeyID{
 	DIP_LEFT	= 1 << 5,	// 左
 	DIP_RIGHT	= 1 << 6,	// 右
 	DIP_COIN	= 1 << 7,	// 我们需要的
-	DIP_ALL		= 1 << 8	// 提供一个全键标识
+	DIP_ALL		= 0xFFFF	// 提供一个全键标识
 };
 
 // 玩家标识
@@ -40,29 +40,45 @@ struct DInputProxyConfig
 // 初始化，必做
 /*
 // 初始化实例
-DInputProxyConfig config;
-memset(&config, 0, sizeof(config));
-config.KeyMapping[0].pid = P1;
-config.KeyMapping[1].pid = P2;
-config.KeyDownProc = KeyDownProc;
+void KeyDownProc(const PlayID &pid, const KeyID &kid)
+{
+	TRACE("DInputProxyDemo player %d, key:%s", pid,
+		kid & DIP_START ? "Start" :
+		kid & DIP_A ? "A" :
+		kid & DIP_B ? "B" :
+		kid & DIP_UP ? "Up" :
+		kid & DIP_DOWN ? "Down" :
+		kid & DIP_LEFT ? "Left" :
+		kid & DIP_RIGHT ? "Right" :
+		kid & DIP_COIN ? "Coin" : "unknown");
+}
+void InitDInputProxy()
+{
+	DInputProxyConfig config;
+	memset(&config, 0, sizeof(config));
+	config.KeyMapping[0].pid = P1;
+	config.KeyMapping[1].pid = P2;
+	config.KeyDownProc = KeyDownProc;
 
-config.KeyMapping[0].devid = 0x6F1D2B61;// 键盘id
-config.KeyMapping[0].keyvalA = 0x24;	// J
-config.KeyMapping[0].keyvalB = 0x25;	// K
-config.KeyMapping[0].keyvalCOIN = 0x04;	// 3
-config.KeyMapping[0].keyvalDOWN = 0xD0;	// down
-config.KeyMapping[0].keyvalLEFT = 0xCB;	// left
-config.KeyMapping[0].keyvalRIGHT= 0xCD; // RIGHT
-config.KeyMapping[0].keyvalSTART= 0x26; // L
-config.KeyMapping[0].keyvalUP	= 0xC8; // up
+	config.KeyMapping[0].devid = 0x6F1D2B61;// 键盘id
+	config.KeyMapping[0].keyvalA = 0x24;	// J
+	config.KeyMapping[0].keyvalB = 0x25;	// K
+	config.KeyMapping[0].keyvalCOIN = 0x04;	// 3
+	config.KeyMapping[0].keyvalDOWN = 0xD0;	// down
+	config.KeyMapping[0].keyvalLEFT = 0xCB;	// left
+	config.KeyMapping[0].keyvalRIGHT= 0xCD; // RIGHT
+	config.KeyMapping[0].keyvalSTART= 0x26; // L
+	config.KeyMapping[0].keyvalUP	= 0xC8; // up
 
-config.KeyMapping[1].devid = 0x6101f3a70;// 手柄id
-config.KeyMapping[1].keyvalCOIN = 0x05;	// 4
-config.KeyMapping[1].keyvalA = 0x00;	// 1
-config.KeyMapping[1].keyvalB = 0x01;	// 2
-config.KeyMapping[1].keyvalSTART = 0x07;	// 7
+	config.KeyMapping[1].devid = 0x6101f3a70;// 手柄id
+	config.KeyMapping[1].keyvalCOIN = 0x05;	// 4
+	config.KeyMapping[1].keyvalA = 0x00;	// 1
+	config.KeyMapping[1].keyvalB = 0x01;	// 2
+	config.KeyMapping[1].keyvalSTART = 0x07;	// 7
+	// ...
 
-InitDInputProxy(config);
+	InitDInputProxy(config);
+}
 */
 BOOL InitDInputProxy(const DInputProxyConfig &config);
 

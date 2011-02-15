@@ -64,7 +64,10 @@ BOOL HookDInput()
 BOOL InitDInputProxy( const DInputProxyConfig &config )
 {
 	// ±‹√‚”√ªß¬©µÙ…Ë÷√
-	assert(config.KeyMapping[P1].pid == P1 && config.KeyMapping[P2].pid == P2);
+	if (config.KeyMapping[P1].pid != P1 || config.KeyMapping[P2].pid != P2)
+	{
+		return false;
+	}
 	g_ProxyConfig = config;
 
 	memset(&g_DeviceTbl, 0, sizeof(g_DeviceTbl));

@@ -127,6 +127,7 @@ void RealityKeyDown(LPVOID devobj, DWORD size, LPVOID data)
 
 				if (UpdateKeyState(kid, di.prevPressKID, DIP_START, kb[km.keyvalSTART] & 0x80) ||
 					UpdateKeyState(kid, di.prevPressKID, DIP_A, kb[km.keyvalA] & 0x80) ||
+					UpdateKeyState(kid, di.prevPressKID, DIP_B, kb[km.keyvalB] & 0x80) ||
 					UpdateKeyState(kid, di.prevPressKID, DIP_UP, kb[km.keyvalUP] & 0x80) ||
 					UpdateKeyState(kid, di.prevPressKID, DIP_DOWN, kb[km.keyvalDOWN] & 0x80) ||
 					UpdateKeyState(kid, di.prevPressKID, DIP_LEFT, kb[km.keyvalLEFT] & 0x80) ||
@@ -138,7 +139,7 @@ void RealityKeyDown(LPVOID devobj, DWORD size, LPVOID data)
 			
 			if (di.lockedKID != 0)
 			{
-				if (di.lockedKID & DIP_ALL)
+				if (di.lockedKID == DIP_ALL)
 				{
 					memset(data, 0, size);
 				}
@@ -161,6 +162,7 @@ void RealityKeyDown(LPVOID devobj, DWORD size, LPVOID data)
 
 			if (UpdateKeyState(kid, di.prevPressKID, DIP_START, joy->rgbButtons[km.keyvalSTART] & 0x80) ||
 				UpdateKeyState(kid, di.prevPressKID, DIP_A, joy->rgbButtons[km.keyvalA] & 0x80) ||
+				UpdateKeyState(kid, di.prevPressKID, DIP_B, joy->rgbButtons[km.keyvalB] & 0x80) ||
 				UpdateKeyState(kid, di.prevPressKID, DIP_UP, joy->lY == -10000) ||
 				UpdateKeyState(kid, di.prevPressKID, DIP_DOWN, joy->lY == 10000) ||
 				UpdateKeyState(kid, di.prevPressKID, DIP_LEFT, joy->lX == -10000) ||
@@ -171,7 +173,7 @@ void RealityKeyDown(LPVOID devobj, DWORD size, LPVOID data)
 
 			if (di.lockedKID != 0)
 			{
-				if (di.lockedKID & DIP_ALL)
+				if (di.lockedKID == DIP_ALL)
 				{
 					memset(joy->rgbButtons, 0, sizeof(joy->rgbButtons));
 					joy->lX = 0;
@@ -210,25 +212,25 @@ void SimulateKeyDown(LPVOID devobj, DWORD size, LPVOID data)
 		if (size == sizeof(BYTE) * 0x100)	// ¼üÅÌÄ£Äâ
 		{
 			BYTE* kb = static_cast<BYTE*>(data);
-			if (di.emuKID && DIP_START) kb[km.keyvalSTART] |= 0x80;
-			if (di.emuKID && DIP_A) kb[km.keyvalA] |= 0x80;
-			if (di.emuKID && DIP_B) kb[km.keyvalB] |= 0x80;
-			if (di.emuKID && DIP_UP) kb[km.keyvalUP] |= 0x80;
-			if (di.emuKID && DIP_DOWN) kb[km.keyvalDOWN] |= 0x80;
-			if (di.emuKID && DIP_LEFT) kb[km.keyvalLEFT] |= 0x80;
-			if (di.emuKID && DIP_RIGHT) kb[km.keyvalRIGHT] |= 0x80;
+			if (di.emuKID & DIP_START)		kb[km.keyvalSTART]	|= 0x80;
+			else if (di.emuKID & DIP_A)		kb[km.keyvalA]		|= 0x80;
+			else if (di.emuKID & DIP_B)		kb[km.keyvalB]		|= 0x80;
+			else if (di.emuKID & DIP_UP)	kb[km.keyvalUP]		|= 0x80;
+			else if (di.emuKID & DIP_DOWN)	kb[km.keyvalDOWN]	|= 0x80;
+			else if (di.emuKID & DIP_LEFT)	kb[km.keyvalLEFT]	|= 0x80;
+			else if (di.emuKID & DIP_RIGHT)	kb[km.keyvalRIGHT]	|= 0x80;
 		}
 		else if (size == sizeof(DIJOYSTATE)) // ÊÖ±úÄ£Äâ
 		{
 			DIJOYSTATE *joy = static_cast<DIJOYSTATE *>(data);
 			
-			if (di.emuKID && DIP_START) joy->rgbButtons[km.keyvalSTART] |= 0x80;
-			if (di.emuKID && DIP_A)		joy->rgbButtons[km.keyvalA]		|= 0x80;
-			if (di.emuKID && DIP_B)		joy->rgbButtons[km.keyvalB]		|= 0x80;
-			if (di.emuKID && DIP_UP)	joy->lY = -10000;
-			if (di.emuKID && DIP_DOWN)	joy->lY = 10000;
-			if (di.emuKID && DIP_LEFT)	joy->lX = -10000;
-			if (di.emuKID && DIP_RIGHT) joy->lX = 10000;
+			if (di.emuKID & DIP_START)		joy->rgbButtons[km.keyvalSTART] |= 0x80;
+			else if (di.emuKID & DIP_A)		joy->rgbButtons[km.keyvalA]		|= 0x80;
+			else if (di.emuKID & DIP_B)		joy->rgbButtons[km.keyvalB]		|= 0x80;
+			else if (di.emuKID & DIP_UP)	joy->lY = -10000;
+			else if (di.emuKID & DIP_DOWN)	joy->lY =  10000;
+			else if (di.emuKID & DIP_LEFT)	joy->lX = -10000;
+			else if (di.emuKID & DIP_RIGHT)	joy->lX =  10000;
 		}
 
 		di.emuKID = (KeyID)0;
